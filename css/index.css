@@ -1,0 +1,36 @@
+body {
+    background-color: #E7E7E7;
+}
+
+header {
+    font-size: x-large;
+    text-align: center;
+}
+
+footer {
+    text-align: center;
+}
+
+.wheelNav {
+    height: 300px;
+    width: 300px;
+    margin: auto;
+}
+
+.wheelNavSmall {
+    height: 150px;
+    width: 150px;
+    margin: auto;
+}
+
+@media (max-width: 480px) {
+  .wheelNav {
+    height: 200px;
+    width: 200px;
+  }
+
+  .wheelNavSmall {
+    height: 100px;
+    width: 100px;
+  }
+}
