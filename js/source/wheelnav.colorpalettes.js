@@ -4,7 +4,7 @@
 //---------------------------------
 
 var colorpalette = {
-    defaultpalette: new Array("#2ECC40", "#FFDC00", "#FF851B", "#FF4136", "#0074D9"),
+    defaultpalette: new Array("#2ECC40", "#FFDC00", "#FF851B", "#FF4136", "#0074D9", "#777"),
     purple: new Array("#4F346B", "#623491", "#9657D6", "#AD74E7", "#CBA3F3"),
     greenred: new Array("#17B92A", "#FF3D00", "#17B92A", "#FF3D00", "#17B92A"),
     oceanfive: new Array("#00A0B0", "#6A4A3C", "#CC333F", "#EB6841", "#EDC951"),

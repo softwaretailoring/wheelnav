@@ -28,11 +28,21 @@
                 textWheel.initWheel();
 
                 var iconWheel = new wheelnav("iconWheel");
-                iconWheel.slicePath = slicePath().halfPie;
-                iconWheel.initWheel([icon.alarm, icon.bell, icon.github, icon.magic, icon.people, icon.star]);
+                iconWheel.slicePath = slicePath().defaultStar;
+                iconWheel.initWheel([icon.star, icon.star, icon.star, icon.star, icon.star]);
 
-                var mixedWheel = new wheelnav("mixedWheel");
-                mixedWheel.initWheel(["yes", icon.no]);
+                var pieWheel = new wheelnav("pieWheel");
+                pieWheel.slicePath = slicePath().defaultMenu;
+                pieWheel.showBaseLine = true;
+                pieWheel.initWheel([icon.github, icon.people, icon.raphael]);
+
+                var cogWheel = new wheelnav("cogWheel");
+                cogWheel.slicePath = slicePath().defaultCog;
+                cogWheel.initWheel([icon.gear, icon.scissors, icon.acw, icon.sun, icon.smile, icon.refresh]);
+                
+                var optionWheel = new wheelnav("optionWheel");
+                optionWheel.initWheel(["yes", icon.no]);
+                
             };
 
         </script>
@@ -44,8 +54,10 @@
 
         <div id="textWheel" class="wheelNav"></div>
         <div id="iconWheel" class="wheelNav"></div>
-        <div id="mixedWheel" class="wheelNavSmall"></div>
-
+        <div id="pieWheel" class="wheelNav"></div>
+        <div id="cogWheel" class="wheelNav"></div>
+        <div id="optionWheel" class="wheelNavSmall"></div>
+        
         <footer>
             <p>&copy; 2014 <a href="http://softwaretailoring.net" target="_blank">softwaretailoring.net</a></p>
         </footer>

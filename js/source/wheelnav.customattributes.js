@@ -3,19 +3,21 @@
 //---------------------------------
 
 function setRaphaelCustomAttributes(raphael) {
-    raphael.customAttributes.guide = function (g) {
+    raphael.customAttributes.alongPath = function (pathString) {
         return {
-            guide: g
+            alongPath: pathString
         };
     };
 
-    raphael.customAttributes.along = function (percent, navWheelSugar) {
-        var g = this.attr("guide");
-        var len = g.getTotalLength();
-        var point = g.getPointAtLength(percent * len);
-        var t = {
-            transform: "t" + (point.x - navWheelSugar).toString() + " " + (point.y - navWheelSugar).toString()
-        };
-        return t;
+    raphael.customAttributes.along = function (percent, centerX, centerY) {
+        var alongPath = this.attr("alongPath");
+        var pathLenght = alongPath.getTotalLength();
+        var point = alongPath.getPointAtLength(percent * pathLenght);
+
+        var transformString = {
+            transform: "t" + (point.x - centerX).toString() + " " + (point.y - centerY).toString()
+            }
+
+        return transformString;
     };
 }
