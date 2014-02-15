@@ -12,14 +12,14 @@ footer {
 }
 
 .wheelNav {
-    height: 300px;
-    width: 300px;
+    height: 350px;
+    width: 350px;
     margin: auto;
 }
 
 .wheelNavSmall {
-    height: 150px;
-    width: 150px;
+    height: 100px;
+    width: 100px;
     margin: auto;
 }
 
@@ -30,7 +30,7 @@ footer {
   }
 
   .wheelNavSmall {
-    height: 100px;
-    width: 100px;
+    height: 80px;
+    width: 80px;
   }
 }

@@ -3,21 +3,55 @@
 //---------------------------------
 
 function setRaphaelCustomAttributes(raphael) {
-    raphael.customAttributes.alongPath = function (pathString) {
+
+    raphael.customAttributes.slicePathFunction = function (pathFunction) {
         return {
-            alongPath: pathString
+            slicePathFunction: pathFunction
         };
     };
 
-    raphael.customAttributes.along = function (percent, centerX, centerY) {
-        var alongPath = this.attr("alongPath");
-        var pathLenght = alongPath.getTotalLength();
-        var point = alongPath.getPointAtLength(percent * pathLenght);
+    raphael.customAttributes.currentTransform = function (tranformString) {
+        return {
+            currentTransform: tranformString
+        };
+    };
 
-        var transformString = {
-            transform: "t" + (point.x - centerX).toString() + " " + (point.y - centerY).toString()
-            }
+    raphael.customAttributes.slicePercentPath = function (centerX, centerY, sliceR, baseAngle, sliceAngle, itemIndex, percent) {
 
-        return transformString;
+        var slicePathFunction = this.attr("slicePathFunction");
+
+        var pathString = slicePathFunction(centerX, centerY, sliceR, baseAngle, sliceAngle, itemIndex, percent).slicePathString;
+        var pathAttr = {
+            path: pathString
+        };
+
+        return pathAttr;
+    }
+
+    raphael.customAttributes.linePercentPath = function (centerX, centerY, sliceR, baseAngle, sliceAngle, itemIndex, percent) {
+
+        var slicePathFunction = this.attr("slicePathFunction");
+
+        var pathString = slicePathFunction(centerX, centerY, sliceR, baseAngle, sliceAngle, itemIndex, percent).linePathString;
+        var pathAttr = {
+            path: pathString
+        };
+
+        return pathAttr;
+    }
+
+    raphael.customAttributes.titlePercentPos = function (centerX, centerY, sliceR, baseAngle, sliceAngle, currentPosX, currentPosY, itemIndex, percent) {
+
+        var slicePathFunction = this.attr("slicePathFunction");
+        var currentTransform = this.attr("currentTransform");
+
+        var navItem = slicePathFunction(centerX, centerY, sliceR, baseAngle, sliceAngle, itemIndex, percent);
+        var transformString = "t,-" + currentPosX + ",-" + currentPosY;
+        transformString += ",t," + navItem.titlePosX + "," + navItem.titlePosY + currentTransform;
+        var transformAttr = {
+            transform: transformString
+        }
+
+        return transformAttr;
     };
 }

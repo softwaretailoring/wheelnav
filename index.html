@@ -19,30 +19,30 @@
 
         <script type="text/javascript" src="js/required/raphael.min.2.1.2.js"></script> 
         <script type="text/javascript" src="js/required/raphael.icons.js"></script>
-        <script type="text/javascript" src="js/wheelnav.js"></script>
+        <script type="text/javascript" src="js/wheelnav.min.js"></script>
         <script type="text/javascript">
 
             window.onload = function () {
 
                 var textWheel = new wheelnav("textWheel");
-                textWheel.initWheel();
-
-                var iconWheel = new wheelnav("iconWheel");
-                iconWheel.slicePath = slicePath().defaultStar;
-                iconWheel.initWheel([icon.star, icon.star, icon.star, icon.star, icon.star]);
-
-                var pieWheel = new wheelnav("pieWheel");
-                pieWheel.slicePath = slicePath().defaultMenu;
-                pieWheel.showBaseLine = true;
-                pieWheel.initWheel([icon.github, icon.people, icon.raphael]);
+                textWheel.createWheel();
 
                 var cogWheel = new wheelnav("cogWheel");
                 cogWheel.slicePath = slicePath().defaultCog;
-                cogWheel.initWheel([icon.gear, icon.scissors, icon.acw, icon.sun, icon.smile, icon.refresh]);
-                
+                cogWheel.createWheel([icon.gear, icon.scissors, icon.acw, icon.sun, icon.smile, icon.refresh]);
+
+                var pieWheel = new wheelnav("pieWheel");
+                pieWheel.slicePath = slicePath().defaultMenu;
+                pieWheel.createWheel([icon.github, icon.people, icon.raphael]);
+                pieWheel.spreadWheel(0, 1);
+
+                var iconWheel = new wheelnav("iconWheel");
+                iconWheel.slicePath = slicePath().defaultStarSpread;
+                iconWheel.createWheel([icon.star, icon.star, icon.star, icon.star, icon.star]);
+                iconWheel.spreadWheel(0, 1);
+               
                 var optionWheel = new wheelnav("optionWheel");
-                optionWheel.initWheel(["yes", icon.no]);
-                
+                optionWheel.createWheel(["yes", "no"]);
             };
 
         </script>
@@ -53,11 +53,10 @@
         </header>
 
         <div id="textWheel" class="wheelNav"></div>
-        <div id="iconWheel" class="wheelNav"></div>
-        <div id="pieWheel" class="wheelNav"></div>
         <div id="cogWheel" class="wheelNav"></div>
+        <div id="pieWheel" class="wheelNav"></div>
+        <div id="iconWheel" class="wheelNav"></div>
         <div id="optionWheel" class="wheelNavSmall"></div>
-        
         <footer>
             <p>&copy; 2014 <a href="http://softwaretailoring.net" target="_blank">softwaretailoring.net</a></p>
         </footer>
