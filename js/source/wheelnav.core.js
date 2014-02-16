@@ -147,6 +147,8 @@ wheelnav.prototype.createWheel = function (titles) {
         spreadOffTitle.click(function () {
             thisWheelNav.spreadWheel(1, 0);
         });
+        spreadOffTitle.toFront();
+        spreadOnTitle.toBack();
     }
 
     return this;
@@ -252,7 +254,7 @@ wheelnav.prototype.rotateWheel = function (clicked) {
         navTitle.toFront();
     }
 
-    this.raphael.getById(this.getSliceId(clicked)).attr({ fill: this.navItems[clicked].fillColor });
+    this.raphael.getById(this.getSliceId(clicked)).attr(this.navItems[clicked].fillAttr);
     this.raphael.getById(this.getTitleId(clicked)).attr(this.navItems[clicked].titleSelectedAttr);
     this.currentClick = clicked;
 };
