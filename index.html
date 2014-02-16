@@ -19,13 +19,18 @@
 
         <script type="text/javascript" src="js/required/raphael.min.2.1.2.js"></script> 
         <script type="text/javascript" src="js/required/raphael.icons.js"></script>
-        <script type="text/javascript" src="js/wheelnav.min.js"></script>
+        <script type="text/javascript" src="js/wheelnav.js"></script>
         <script type="text/javascript">
 
             window.onload = function () {
 
                 var textWheel = new wheelnav("textWheel");
                 textWheel.createWheel();
+                textWheel.spreadWheel(0, 1);
+
+                var textWheelRotatedTitle = new wheelnav("textWheelRotatedTitle");
+                textWheelRotatedTitle.titleRotate = true;
+                textWheelRotatedTitle.createWheel(["title-0", "title-1", "title-2", "title-3", "title-4", "title-5", "title-6", "title-7", "title-8", "title-9", "title-10", "title-11"]);
 
                 var cogWheel = new wheelnav("cogWheel");
                 cogWheel.slicePath = slicePath().defaultCog;
@@ -33,13 +38,14 @@
 
                 var pieWheel = new wheelnav("pieWheel");
                 pieWheel.slicePath = slicePath().defaultMenu;
+                pieWheel.spreaderEnable = true;
                 pieWheel.createWheel([icon.github, icon.people, icon.raphael]);
                 pieWheel.spreadWheel(0, 1);
 
                 var iconWheel = new wheelnav("iconWheel");
                 iconWheel.slicePath = slicePath().defaultStarSpread;
+                iconWheel.spreaderEnable = true;
                 iconWheel.createWheel([icon.star, icon.star, icon.star, icon.star, icon.star]);
-                iconWheel.spreadWheel(0, 1);
                
                 var optionWheel = new wheelnav("optionWheel");
                 optionWheel.createWheel(["yes", "no"]);
@@ -49,10 +55,11 @@
     </head>
     <body>
         <header>
-            <p>This is a test page for wheelnav.js library. For more information please visit <a href="http://wheelnavjs.softwaretailoring.net" target="_blank">http://wheelnav.js</a></p>
+            <p>This is a test page for wheelnav.js library. For more information please visit the <a href="http://wheelnavjs.softwaretailoring.net" target="_blank">project page</a></p>
         </header>
 
         <div id="textWheel" class="wheelNav"></div>
+        <div id="textWheelRotatedTitle" class="wheelNav"></div>
         <div id="cogWheel" class="wheelNav"></div>
         <div id="pieWheel" class="wheelNav"></div>
         <div id="iconWheel" class="wheelNav"></div>

@@ -1,5 +1,5 @@
 ﻿/* ======================================================================================= */
-/*                                   wheelnav.js - v0.88                                   */
+/*                                   wheelnav.js - v1.0                                   */
 /* ======================================================================================= */
 /* This is a small javascript library for animated SVG based wheel navigation.             */
 /* Requires Raphaël JavaScript Vector Library (http://raphaeljs.com)                       */
@@ -27,36 +27,59 @@ wheelnav = function(divId) {
     this.navWheelSugar = 0.95 * canvasWidth / 2;
     this.baseAngle = 0;
     this.sliceAngle = 0;
-
-    this.colors = colorpalette.defaultpalette;
-    this.animateeffect = "bounce";
-    this.animatetime = 1500;
-
+    this.titleRotate = false;
+    
     this.navItemCount = 0;
     this.navItems = new Array();
+    this.colors = colorpalette.defaultpalette;
     this.slicePath = slicePath().defaultPie;
+
+    //NavItem settings. If it remains null, use default settings.
+    this.animateeffect = null;
+    this.animatetime = null;
+    this.slicePathAttr = null;
+    this.sliceHoverAttr = null;
+    this.linePathAttr = null;
+    this.titleAttr = null;
+    this.titleSelectedAttr = null;
+
+    //Spreader settings
+    this.spreaderEnable = false;
+    this.spreaderSugar = 15;
+    this.spreaderCircleAttr = { fill: "#777", "stroke-width": 3 };
+    this.spreaderOnAttr = { font: '100 32px Impact, Charcoal, sans-serif', fill: "#FFF", cursor: 'pointer' };
+    this.spreaderOffAttr = { font: '100 32px Impact, Charcoal, sans-serif', fill: "#FFF", cursor: 'pointer' };
 
     return this;
 }
 
-wheelnavItem = function (slicePathFunction, title) {
+wheelnavItem = function (wheelnav, title) {
 
-    this.animateeffect = "bounce";
-    this.animatetime = 1000;
-    this.fillAttr = { fill: "#CCC" };
-
-    this.slicePathAttr = { stroke: "#111", "stroke-width": 3, cursor: 'pointer' };
-    this.sliceHoverAttr = { fill: "#EEE" };
-
-    this.linePathAttr = { stroke: "#111", "stroke-width": 2 };
+    this.getSlicePath = wheelnav.slicePath;
 
     this.title = title;
-    this.titleAttr = { font: '100 24px Impact, Charcoal, sans-serif', fill: "#111", cursor: 'pointer', stroke: "none" };
-    this.titleSelectedAttr = { font: '100 24px Impact, Charcoal, sans-serif', fill: "#FFF", cursor: 'pointer' };
-    this.titlePosX = 0;
-    this.titlePosY = 0;
+    this.titlePosX = wheelnav.centerX;
+    this.titlePosY = wheelnav.centerY;
 
-    this.getSlicePath = slicePathFunction;
+    this.fillAttr = { fill: "#CCC" };
+
+    if (wheelnav.animateeffect == null) { this.animateeffect = "bounce"; }
+    else { this.animateeffect = wheelnav.animateeffect; }
+    if (wheelnav.animatetime == null) { this.animatetime = 1500; }
+    else { this.animatetime = wheelnav.animatetime; }
+    
+    if (wheelnav.slicePathAttr == null) { this.slicePathAttr = { stroke: "#111", "stroke-width": 3, cursor: 'pointer' }; }
+    else { this.slicePathAttr = wheelnav.slicePathAttr; }
+    if (wheelnav.sliceHoverAttr == null) { this.sliceHoverAttr = { fill: "#EEE" }; }
+    else { this.sliceHoverAttr = wheelnav.sliceHoverAttr; }
+    
+    if (wheelnav.linePathAttr == null) { this.linePathAttr = { stroke: "#111", "stroke-width": 2 }; }
+    else { this.linePathAttr = wheelnav.linePathAttr; }
+
+    if (wheelnav.titleAttr == null) { this.titleAttr = { font: '100 24px Impact, Charcoal, sans-serif', fill: "#111", cursor: 'pointer', stroke: "none" }; }
+    else { this.titleAttr = wheelnav.titleAttr; }
+    if (wheelnav.titleSelectedAttr == null) { this.titleSelectedAttr = { font: '100 24px Impact, Charcoal, sans-serif', fill: "#FFF", cursor: 'pointer' }; }
+    else { this.titleSelectedAttr = wheelnav.titleSelectedAttr; }
 
     return this;
 }
@@ -71,13 +94,13 @@ wheelnav.prototype.initWheel = function (titles) {
         }
 
         for (i = 0; i < titles.length; i++) {
-            var navItem = new wheelnavItem(this.slicePath, titles[i]);
+            var navItem = new wheelnavItem(this, titles[i]);
             this.navItems.push(navItem);
         }
     }
     else {
         for (i = 0; i < this.navItemCount; i++) {
-            var navItem = new wheelnavItem(this.slicePath, "");
+            var navItem = new wheelnavItem(this, "");
             this.navItems.push(navItem);
         }
     }
@@ -106,6 +129,24 @@ wheelnav.prototype.createWheel = function (titles) {
 
     for (i = 0; i < this.navItemCount; i++) {
         this.createNavItem(i);
+    }
+
+    var thisWheelNav = this;
+
+    if (this.spreaderEnable)
+    {
+        var spreaderCircle = this.raphael.circle(this.centerX, this.centerY, this.spreaderSugar).attr(this.spreaderCircleAttr);
+        spreaderCircle.id = "spreadercircle";
+        var spreadOnTitle = this.raphael.text(this.centerX, this.centerY, "+").attr(this.spreaderOnAttr);
+        spreadOnTitle.id = this.getSpreadOnId();
+        spreadOnTitle.click(function () {
+            thisWheelNav.spreadWheel(0, 1);
+        });
+        var spreadOffTitle = this.raphael.text(this.centerX, this.centerY - 3, "–").attr(this.spreaderOffAttr);
+        spreadOffTitle.id = this.getSpreadOffId();
+        spreadOffTitle.click(function () {
+            thisWheelNav.spreadWheel(1, 0);
+        });
     }
 
     return this;
@@ -157,9 +198,9 @@ wheelnav.prototype.createNavItem = function (itemIndex) {
     var titleBaseLine = this.raphael.path(slicePath.linePathString).attr(navItem.linePathAttr).toBack();
     titleBaseLine.id = this.getTitleBaseLineId(itemIndex);
 
-    var itemRotateString = "r,0," + this.centerX + "," + this.centerY + ",r,0";
-    currentTitle.attr({ currentTransform: itemRotateString });
-    currentTitle.attr({ transform: itemRotateString });
+    var titleRotateString = this.getTitleRotateString(itemIndex);
+    currentTitle.attr({ currentTransform: titleRotateString });
+    currentTitle.attr({ transform: titleRotateString });
     
     //Create item set
     var currentItem = this.raphael.set();
@@ -203,7 +244,7 @@ wheelnav.prototype.rotateWheel = function (clicked) {
 
         //Rotate title
         var navTitle = this.raphael.getById(this.getTitleId(i));
-        var titleRotateString = itemRotateString + ",r" + (-this.currentRotate).toString();
+        var titleRotateString = this.getTitleRotateString(i);
         navTitle.attr({ currentTransform: titleRotateString });
         navTitle.animate({ transform: [titleRotateString] }, navItem.animatetime, navItem.animateeffect);
 
@@ -245,41 +286,35 @@ wheelnav.prototype.spreadWheel = function (startPercent, endPercent) {
         });
     }
 
-    var spreadOnTitle = this.raphael.getById(this.getSpreadOnId());
-    if (!spreadOnTitle) {
-        spreadCircle = this.raphael.circle(this.centerX, this.centerY, 15).attr({ fill: "#777", "stroke-width": 3 });
-        spreadCircle.id = "spreadcircle";
-        spreadOnTitle = this.raphael.text(this.centerX, this.centerY, "+").attr(navItem.titleSelectedAttr);
-        spreadOnTitle.attr({ transform: "s1.5" });
-        spreadOnTitle.id = this.getSpreadOnId();
-        spreadOnTitle.click(function () {
-            thisWheelNav.spreadWheel(startPercent, endPercent);
-        });
-    }
+    if (this.spreaderEnable) {
+        this.raphael.getById("spreadercircle").toFront();
+        var spreadOnTitle = this.raphael.getById(this.getSpreadOnId());
+        var spreadOffTitle = this.raphael.getById(this.getSpreadOffId());
 
-    var spreadOffTitle = this.raphael.getById(this.getSpreadOffId());
-    if (!spreadOffTitle) {
-        spreadOffTitle = this.raphael.text(this.centerX, this.centerY - 2, "-").attr(navItem.titleSelectedAttr);
-        spreadOffTitle.attr({ transform: "s1.5" });
-        spreadOffTitle.id = this.getSpreadOffId();
-        spreadOffTitle.click(function () {
-            thisWheelNav.spreadWheel(endPercent, startPercent);
-        });
-    }
-
-    this.raphael.getById("spreadcircle").toFront();
-
-    if (endPercent > startPercent) {
-        spreadOffTitle.toFront();
-        spreadOnTitle.toBack();
-    }
-    else {
-        spreadOffTitle.toBack();
-        spreadOnTitle.toFront();
+        if (endPercent > startPercent) {
+            spreadOffTitle.toFront();
+            spreadOnTitle.toBack();
+        }
+        else {
+            spreadOffTitle.toBack();
+            spreadOnTitle.toFront();
+        }
     }
 
     return this;
 };
+
+wheelnav.prototype.getTitleRotateString = function (itemIndex) {
+    var itemRotateString = "r," + this.currentRotate + "," + this.centerX + "," + this.centerY;
+    var titleRotateString = itemRotateString + ",r" + (-this.currentRotate).toString();
+
+    if (this.titleRotate) {
+        var titleRotate = itemIndex * (360 / this.navItemCount);
+        titleRotateString = itemRotateString + ",r" + titleRotate;
+    }
+
+    return titleRotateString;
+}
 
 wheelnav.prototype.hoverEffect = function (clicked, isEnter) {
 

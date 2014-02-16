@@ -11,7 +11,6 @@ var slicePath = function () {
     this.titlePosX = 0;
     this.titlePosY = 0;
     this.titleSugar = 0;
-    this.titleBaseLinePath = "";
     this.r = 0;
 
     var setBaseValue = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
@@ -59,6 +58,22 @@ var slicePath = function () {
         }
     }
 
+    this.defaultDonut = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+
+        setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+        slicePathString = [["M", x, y],
+                     ["L", r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
+                     ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
+                     ["z"]];
+
+        return {
+            slicePathString: slicePathString,
+            linePathString: "",
+            titlePosX: titlePosX,
+            titlePosY: titlePosY
+        }
+    }
+
     this.defaultStar = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
 
         setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
@@ -84,19 +99,20 @@ var slicePath = function () {
     this.defaultStarSpread = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
 
         setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
-        rbase = rOriginal * 0.5;
 
-        if (percent > 0.1) {
-            slicePathString = [["M", x, y],
+        if (percent > 0.15) {
+            rbase = rOriginal * 0.5;
+        }
+        else
+        {
+            rbase = r * 0.5;
+        }
+
+        slicePathString = [["M", x, y],
                          ["L", (rbase * Math.cos(startTheta)) + x, (rbase * Math.sin(startTheta)) + y],
                          ["L", r * Math.cos(middleTheta) + x, r * Math.sin(middleTheta) + y],
                          ["L", (rbase * Math.cos(endTheta)) + x, (rbase * Math.sin(endTheta)) + y],
                          ["z"]];
-        }
-        else
-        {
-            slicePathString = [["M", x, y]];
-        }
 
         titleSugar = r * 0.44;
         setTitlePos(x, y);
@@ -162,11 +178,11 @@ var slicePath = function () {
         titleSugar = r * 0.63;
         setTitlePos(x, y);
 
-        var menuSugar = 25;
+        var menuSugar = percent * 25;
 
-        if ((percent * rOriginal) < 25)
+        if (menuSugar < 15)
         {
-            menuSugar = (percent * rOriginal);
+            menuSugar = 15;
         }
 
         slicePathString = [["M", titlePosX, titlePosY],
@@ -175,8 +191,11 @@ var slicePath = function () {
                     ["a", menuSugar, menuSugar, 0, 1, 0, -2 * menuSugar, 0],
                     ["z"]];
 
+        lineEndX = (titleSugar - menuSugar) * Math.cos(middleTheta) + x;
+        lineEndY = (titleSugar - menuSugar) * Math.sin(middleTheta) + y;
+
         linePathString = [["M", x, y],
-                    ["L", titlePosX, titlePosY],
+                    ["L", lineEndX, lineEndY],
                     ["z"]];
 
         return {
