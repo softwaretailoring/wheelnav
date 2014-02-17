@@ -39,13 +39,20 @@
                 var pieWheel = new wheelnav("pieWheel");
                 pieWheel.slicePath = slicePath().defaultMenu;
                 pieWheel.spreaderEnable = true;
-                pieWheel.createWheel([icon.github, icon.people, icon.raphael]);
+                pieWheel.navWheelSugar = 200;
+                pieWheel.centerX = 50;
+                pieWheel.centerY = 50;
+                pieWheel.clickModeRotate = false;
+                pieWheel.clickModeSpreadOff = true;
+                pieWheel.createWheel([icon.github, icon.people, icon.raphael, null, null, null, null, null]);
                 pieWheel.spreadWheel(0, 1);
 
                 var iconWheel = new wheelnav("iconWheel");
-                iconWheel.slicePath = slicePath().defaultStarSpread;
+                //iconWheel.slicePath = slicePath().defaultStarSpread;
+                iconWheel.slicePath = slicePath().defaultDonut;
                 iconWheel.spreaderEnable = true;
-                iconWheel.createWheel([icon.star, icon.star, icon.star, icon.star, icon.star]);
+                iconWheel.spreaderSugar = 55;
+                iconWheel.createWheel([icon.star, icon.star, icon.star, icon.star, icon.star, icon.star, icon.star, icon.star]);
                
                 var optionWheel = new wheelnav("optionWheel");
                 optionWheel.createWheel(["yes", "no"]);

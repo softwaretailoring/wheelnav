@@ -61,10 +61,17 @@ var slicePath = function () {
     this.defaultDonut = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
 
         setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
-        slicePathString = [["M", x, y],
-                     ["L", r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
-                     ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
+
+        rbase = r * 0.37;
+
+        slicePathString = [["M", rbase * Math.cos(startTheta) + x, rbase * Math.sin(startTheta) + y],
+                     ["A", rbase, rbase, 0, 0, 1, rbase * Math.cos(endTheta) + x, rbase * Math.sin(endTheta) + y],
+                     ["L", r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
+                     ["A", r, r, 0, 0, 0, r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
                      ["z"]];
+
+        titleSugar = r * 0.7;
+        setTitlePos(x, y);
 
         return {
             slicePathString: slicePathString,

@@ -25,9 +25,11 @@ wheelnav = function(divId) {
     this.centerX = canvasWidth / 2;
     this.centerY = canvasWidth / 2;
     this.navWheelSugar = 0.95 * canvasWidth / 2;
-    this.baseAngle = 0;
+    this.baseAngle = null;
     this.sliceAngle = 0;
     this.titleRotate = false;
+    this.clickModeRotate = true;
+    this.clickModeSpreadOff = false;
     
     this.navItemCount = 0;
     this.navItems = new Array();
@@ -55,11 +57,17 @@ wheelnav = function(divId) {
 
 wheelnavItem = function (wheelnav, title) {
 
-    this.getSlicePath = wheelnav.slicePath;
-
     this.title = title;
     this.titlePosX = wheelnav.centerX;
     this.titlePosY = wheelnav.centerY;
+
+    if (title != null) {
+        this.getSlicePath = wheelnav.slicePath;
+    }
+    else {
+        this.title = "";
+        this.getSlicePath = slicePath().nullSlice;
+    }
 
     this.fillAttr = { fill: "#CCC" };
 
@@ -123,13 +131,15 @@ wheelnav.prototype.createWheel = function (titles) {
     this.navItemCount = this.navItems.length;
     this.sliceAngle = 360 / this.navItemCount;
 
-    if (this.baseAngle == 0) {
+    if (this.baseAngle == null) {
         this.baseAngle = -(360 / this.navItemCount) / 2;
     }
 
     for (i = 0; i < this.navItemCount; i++) {
         this.createNavItem(i);
     }
+
+    this.raphael.getById(this.getTitleId(0)).attr(this.navItems[0].titleSelectedAttr);
 
     var thisWheelNav = this;
 
@@ -194,7 +204,6 @@ wheelnav.prototype.createNavItem = function (itemIndex) {
 
     currentTitle.id = this.getTitleId(itemIndex);
     currentTitle.node.id = currentTitle.id;
-    this.raphael.getById(this.getTitleId(0)).attr(navItem.titleSelectedAttr);
 
     //Create linepath
     var titleBaseLine = this.raphael.path(slicePath.linePathString).attr(navItem.linePathAttr).toBack();
@@ -216,7 +225,16 @@ wheelnav.prototype.createNavItem = function (itemIndex) {
     var thisWheelNav = this;
 
     currentItem.click(function () {
-        thisWheelNav.rotateWheel(itemIndex);
+
+        if (thisWheelNav.clickModeRotate) {
+            thisWheelNav.rotateWheel(itemIndex);
+        }
+
+        thisWheelNav.setAttrs(itemIndex);
+
+        if (thisWheelNav.clickModeSpreadOff) {
+            thisWheelNav.spreadWheel(1,0);
+        }
     });
     currentItem.mouseover(function () {
         thisWheelNav.hoverEffect(itemIndex, true);
@@ -225,6 +243,16 @@ wheelnav.prototype.createNavItem = function (itemIndex) {
         thisWheelNav.hoverEffect(itemIndex, false);
     });
 };
+
+wheelnav.prototype.setAttrs = function (clicked) {
+    for (i = 0; i < this.navItemCount; i++) {
+        this.raphael.getById(this.getTitleId(i)).attr(this.navItems[i].titleAttr);
+    }
+
+    this.raphael.getById(this.getSliceId(clicked)).attr(this.navItems[clicked].fillAttr);
+    this.raphael.getById(this.getTitleId(clicked)).attr(this.navItems[clicked].titleSelectedAttr);
+    this.currentClick = clicked;
+}
 
 wheelnav.prototype.rotateWheel = function (clicked) {
 
@@ -249,14 +277,7 @@ wheelnav.prototype.rotateWheel = function (clicked) {
         var titleRotateString = this.getTitleRotateString(i);
         navTitle.attr({ currentTransform: titleRotateString });
         navTitle.animate({ transform: [titleRotateString] }, navItem.animatetime, navItem.animateeffect);
-
-        this.raphael.getById(this.getTitleId(i)).attr(this.navItems[i].titleAttr);
-        navTitle.toFront();
     }
-
-    this.raphael.getById(this.getSliceId(clicked)).attr(this.navItems[clicked].fillAttr);
-    this.raphael.getById(this.getTitleId(clicked)).attr(this.navItems[clicked].titleSelectedAttr);
-    this.currentClick = clicked;
 };
 
 wheelnav.prototype.spreadWheel = function (startPercent, endPercent) {
@@ -265,7 +286,8 @@ wheelnav.prototype.spreadWheel = function (startPercent, endPercent) {
 
         var thisWheelNav = this;
         var navItem = this.navItems[i];
-        var currentPos = i - this.currentClick;
+        var currentPos = i;
+        if (this.clickModeRotate) { currentPos = i - this.currentClick; }
         if (currentPos < 0) { currentPos += this.navItemCount; }
 
         var navSlice = this.raphael.getById(this.getSliceId(i));
