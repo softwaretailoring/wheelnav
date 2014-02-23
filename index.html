@@ -29,29 +29,34 @@
                 textWheel.spreadWheel(0, 1);
 
                 var textWheelRotatedTitle = new wheelnav("textWheelRotatedTitle");
+                textWheelRotatedTitle.slicePath = slicePath().CogSlice;
                 textWheelRotatedTitle.titleRotate = true;
                 textWheelRotatedTitle.createWheel(["title-0", "title-1", "title-2", "title-3", "title-4", "title-5", "title-6", "title-7", "title-8", "title-9", "title-10", "title-11"]);
 
                 var cogWheel = new wheelnav("cogWheel");
-                cogWheel.slicePath = slicePath().defaultCog;
+                //cogWheel.slicePath = slicePath().CogSlice;
+                cogWheel.slicePath = slicePath().FlowerSlice;
+                cogWheel.spreaderEnable = true;
+
                 cogWheel.createWheel([icon.gear, icon.scissors, icon.acw, icon.sun, icon.smile, icon.refresh]);
 
                 var pieWheel = new wheelnav("pieWheel");
-                pieWheel.slicePath = slicePath().defaultMenu;
+                pieWheel.slicePath = slicePath().MenuSlice;
                 pieWheel.spreaderEnable = true;
                 pieWheel.navWheelSugar = 200;
                 pieWheel.centerX = 50;
-                pieWheel.centerY = 50;
+                pieWheel.centerY = 100;
                 pieWheel.clickModeRotate = false;
                 pieWheel.clickModeSpreadOff = true;
                 pieWheel.createWheel([icon.github, icon.people, icon.raphael, null, null, null, null, null]);
                 pieWheel.spreadWheel(0, 1);
 
                 var iconWheel = new wheelnav("iconWheel");
-                //iconWheel.slicePath = slicePath().defaultStarSpread;
-                iconWheel.slicePath = slicePath().defaultDonut;
+                //iconWheel.slicePath = slicePath().StarSliceSpread;
+                //iconWheel.slicePath = slicePath().DonutSlice;
+                iconWheel.slicePath = slicePath().MenuSlice;
                 iconWheel.spreaderEnable = true;
-                iconWheel.spreaderSugar = 55;
+                //iconWheel.spreaderSugar = 55;
                 iconWheel.createWheel([icon.star, icon.star, icon.star, icon.star, icon.star, icon.star, icon.star, icon.star]);
                
                 var optionWheel = new wheelnav("optionWheel");

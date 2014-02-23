@@ -35,7 +35,7 @@ wheelnav = function(divId) {
     this.navItemCount = 0;
     this.navItems = new Array();
     this.colors = colorpalette.defaultpalette;
-    this.slicePath = slicePath().defaultPie;
+    this.slicePath = slicePath().PieSlice;
 
     //NavItem settings. If it remains null, use default settings.
     this.animateeffect = null;
@@ -67,7 +67,7 @@ wheelnavItem = function (wheelnav, title) {
     }
     else {
         this.title = "";
-        this.getSlicePath = slicePath().nullSlice;
+        this.getSlicePath = slicePath().NullSlice;
     }
 
     this.fillAttr = { fill: "#CCC" };
@@ -226,16 +226,7 @@ wheelnav.prototype.createNavItem = function (itemIndex) {
     var thisWheelNav = this;
 
     currentItem.click(function () {
-
-        if (thisWheelNav.clickModeRotate) {
-            thisWheelNav.rotateWheel(itemIndex);
-        }
-
-        thisWheelNav.setAttrs(itemIndex);
-
-        if (thisWheelNav.clickModeSpreadOff) {
-            thisWheelNav.spreadWheel(1,0);
-        }
+        thisWheelNav.selectNavItem(itemIndex);
     });
     currentItem.mouseover(function () {
         thisWheelNav.hoverEffect(itemIndex, true);
@@ -245,14 +236,40 @@ wheelnav.prototype.createNavItem = function (itemIndex) {
     });
 };
 
-wheelnav.prototype.setAttrs = function (clicked) {
-    for (i = 0; i < this.navItemCount; i++) {
-        this.raphael.getById(this.getTitleId(i)).attr(this.navItems[i].titleAttr);
+wheelnav.prototype.selectNavItem = function (clicked) {
+
+    if (this.clickModeRotate) {
+        this.rotateWheel(clicked);
     }
 
-    this.raphael.getById(this.getSliceId(clicked)).attr(this.navItems[clicked].fillAttr);
-    this.raphael.getById(this.getTitleId(clicked)).attr(this.navItems[clicked].titleSelectedAttr);
     this.currentClick = clicked;
+
+    if (this.clickModeSpreadOff) {
+        this.spreadWheel(1, 0);
+    }
+
+    this.refreshWheel();
+}
+
+wheelnav.prototype.refreshWheel = function () {
+
+    for (i = 0; i < this.navItemCount; i++) {
+
+        var navItem = this.navItems[i];
+        var navSlice = this.raphael.getById(this.getSliceId(i));
+        var navTitle = this.raphael.getById(this.getTitleId(i));
+
+        navTitle.attr(navItem.titleAttr);
+        if (this.slicePathAttr != null) {
+            navItem.slicePathAttr = this.slicePathAttr;
+        }
+        navSlice.attr(navItem.slicePathAttr);
+
+        if (this.currentClick == i) {
+            navSlice.attr(navItem.fillAttr);
+            navTitle.attr(navItem.titleSelectedAttr);
+        }
+    }
 }
 
 wheelnav.prototype.rotateWheel = function (clicked) {
@@ -266,8 +283,8 @@ wheelnav.prototype.rotateWheel = function (clicked) {
         var itemRotateString = "r," + this.currentRotate + "," + this.centerX + "," + this.centerY;
 
         var navSlice = this.raphael.getById(this.getSliceId(i));
+        navSlice.attr({ currentTransform: itemRotateString });
         navSlice.animate({ transform: [itemRotateString] }, navItem.animatetime, navItem.animateeffect);
-        //if (i == clicked) { navSlice.toFront(); }
 
         //Rotate baseLine
         var titleBaseLine = this.raphael.getById(this.getTitleBaseLineId(i));
@@ -278,6 +295,11 @@ wheelnav.prototype.rotateWheel = function (clicked) {
         var titleRotateString = this.getTitleRotateString(i);
         navTitle.attr({ currentTransform: titleRotateString });
         navTitle.animate({ transform: [titleRotateString] }, navItem.animatetime, navItem.animateeffect);
+
+        if (i == clicked) {
+            //navSlice.toFront();
+            navTitle.toFront();
+        }
     }
 };
 
@@ -414,7 +436,7 @@ var slicePath = function () {
             return (angle % 360) * Math.PI / 180;
     }
 
-    this.nullSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+    this.NullSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
         setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
         return {
             slicePathString: "",
@@ -424,7 +446,7 @@ var slicePath = function () {
         }
     }
 
-    this.defaultPie = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+    this.PieSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
        
         setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
         slicePathString = [["M", x, y],
@@ -440,7 +462,7 @@ var slicePath = function () {
         }
     }
 
-    this.defaultDonut = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+    this.DonutSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
 
         setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
 
@@ -463,7 +485,7 @@ var slicePath = function () {
         }
     }
 
-    this.defaultStar = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+    this.StarSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
 
         setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
         rbase = r * 0.5;
@@ -485,7 +507,7 @@ var slicePath = function () {
         }
     }
 
-    this.defaultStarSpread = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+    this.StarSliceSpread = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
 
         setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
 
@@ -514,7 +536,7 @@ var slicePath = function () {
         }
     }
 
-    this.defaultCog = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+    this.CogSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
 
         setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
         rbase = r * 0.95;
@@ -560,7 +582,7 @@ var slicePath = function () {
         }
     }
 
-    this.defaultMenu = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+    this.MenuSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
 
         setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
 
@@ -584,12 +606,32 @@ var slicePath = function () {
         lineEndY = (titleSugar - menuSugar) * Math.sin(middleTheta) + y;
 
         linePathString = [["M", x, y],
-                    ["L", lineEndX, lineEndY],
-                    ["z"]];
+                    ["A", r/2, r/2, 0, 0, 1, lineEndX, lineEndY]];//,
+                    //["L", lineEndX, lineEndY],
+                    //["z"]];
 
         return {
             slicePathString: slicePathString,
             linePathString: linePathString,
+            titlePosX: titlePosX,
+            titlePosY: titlePosY
+        }
+    }
+
+    this.FlowerSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+
+        setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+
+        rbase = r * 0.65;
+
+        slicePathString = [["M", x, y],
+                     ["L", rbase * Math.cos(startTheta) + x, rbase * Math.sin(startTheta) + y],
+                     ["A", r/7, r/7, 0, 0, 1, rbase * Math.cos(endTheta) + x, rbase * Math.sin(endTheta) + y],
+                     ["z"]];
+
+        return {
+            slicePathString: slicePathString,
+            linePathString: "",
             titlePosX: titlePosX,
             titlePosY: titlePosY
         }
