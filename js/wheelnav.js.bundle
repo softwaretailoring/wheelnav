@@ -3,6 +3,7 @@
   <!--The order of the <file> elements determines the order of them when bundled.-->
   <file>/js/source/wheelnav.core.js</file>
   <file>/js/source/wheelnav.slicepath.js</file>
+  <file>/js/source/wheelnav.sliceselecttransform.js</file>
   <file>/js/source/wheelnav.colorpalettes.js</file>
   <file>/js/source/wheelnav.customattributes.js</file>
 </bundle>

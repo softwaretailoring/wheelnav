@@ -24,7 +24,7 @@ wheelnav = function(divId) {
     var canvasWidth = this.raphael.canvas.getAttribute('width');
     this.centerX = canvasWidth / 2;
     this.centerY = canvasWidth / 2;
-    this.navWheelSugar = 0.95 * canvasWidth / 2;
+    this.navWheelSugar = 0.8 * canvasWidth / 2;
     this.baseAngle = null;
     this.sliceAngle = 0;
     this.titleRotate = false;
@@ -35,6 +35,7 @@ wheelnav = function(divId) {
     this.navItems = new Array();
     this.colors = colorpalette.defaultpalette;
     this.slicePath = slicePath().PieSlice;
+    this.sliceSelectTransform = sliceSelectTransform().NullTransform;
 
     //NavItem settings. If it remains null, use default settings.
     this.animateeffect = null;
@@ -88,6 +89,9 @@ wheelnavItem = function (wheelnav, title) {
     else { this.titleAttr = wheelnav.titleAttr; }
     if (wheelnav.titleSelectedAttr == null) { this.titleSelectedAttr = { font: '100 24px Impact, Charcoal, sans-serif', fill: "#FFF", cursor: 'pointer' }; }
     else { this.titleSelectedAttr = wheelnav.titleSelectedAttr; }
+
+    this.getSelectTransform = wheelnav.sliceSelectTransform;
+    this.selectTransform = "";
 
     return this;
 }
@@ -173,6 +177,8 @@ wheelnav.prototype.createNavItem = function (itemIndex) {
     navItem.titlePosX = slicePath.titlePosX;
     navItem.titlePosY = slicePath.titlePosY;
 
+    navItem.selectTransform = navItem.getSelectTransform(this.centerX, this.centerY, this.navWheelSugar, this.baseAngle, this.sliceAngle, itemIndex).sliceTransformString;
+
     //Create slice
     var currentSlice = this.raphael.path(slicePath.slicePathString);
     currentSlice.attr(navItem.slicePathAttr);
@@ -240,6 +246,22 @@ wheelnav.prototype.selectNavItem = function (clicked) {
     if (this.clickModeRotate) {
         this.rotateWheel(clicked);
     }
+    else {
+        for (i = 0; i < this.navItemCount; i++) {
+            var navItem = this.navItems[i];
+            var itemTransform = this.getTitleRotateString(i);
+
+            if (i == clicked) {
+                itemTransform = navItem.selectTransform;
+            }
+
+            var navSlice = this.raphael.getById(this.getSliceId(i));
+            navSlice.attr({ currentTransform: itemTransform });
+            navSlice.animate({ transform: [itemTransform] }, navItem.animatetime, navItem.animateeffect);
+            var navTitle = this.raphael.getById(this.getTitleId(i));
+            navTitle.animate({ transform: [itemTransform] }, navItem.animatetime, navItem.animateeffect);
+        }
+    }
 
     this.currentClick = clicked;
 
@@ -281,6 +303,10 @@ wheelnav.prototype.rotateWheel = function (clicked) {
         //Rotate slice
         var itemRotateString = "r," + this.currentRotate + "," + this.centerX + "," + this.centerY;
 
+        if (i == clicked) {
+            itemRotateString += navItem.selectTransform;
+        }
+
         var navSlice = this.raphael.getById(this.getSliceId(i));
         navSlice.attr({ currentTransform: itemRotateString });
         navSlice.animate({ transform: [itemRotateString] }, navItem.animatetime, navItem.animateeffect);
@@ -292,6 +318,11 @@ wheelnav.prototype.rotateWheel = function (clicked) {
         //Rotate title
         var navTitle = this.raphael.getById(this.getTitleId(i));
         var titleRotateString = this.getTitleRotateString(i);
+
+        if (i == clicked) {
+            titleRotateString += this.navItems[0].selectTransform;
+        }
+
         navTitle.attr({ currentTransform: titleRotateString });
         navTitle.animate({ transform: [titleRotateString] }, navItem.animatetime, navItem.animateeffect);
 
@@ -351,6 +382,7 @@ wheelnav.prototype.spreadWheel = function (startPercent, endPercent) {
 };
 
 wheelnav.prototype.getTitleRotateString = function (itemIndex) {
+
     var itemRotateString = "r," + this.currentRotate + "," + this.centerX + "," + this.centerY;
     var titleRotateString = itemRotateString + ",r" + (-this.currentRotate).toString();
 
