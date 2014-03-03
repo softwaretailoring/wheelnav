@@ -75,7 +75,7 @@ var sliceSelectTransform = function () {
 
         return {
             sliceTransformString: sliceTransformString,
-            lineTransformString: sliceTransformString,
+            lineTransformString: "",
             titleTransformString: sliceTransformString
         }
     }
