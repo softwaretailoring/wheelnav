@@ -19,10 +19,12 @@ function setRaphaelCustomAttributes(raphael) {
     raphael.customAttributes.slicePercentPath = function (centerX, centerY, sliceR, baseAngle, sliceAngle, itemIndex, percent) {
 
         var slicePathFunction = this.attr("slicePathFunction");
+        var currentTransform = this.attr("currentTransform");
 
         var pathString = slicePathFunction(centerX, centerY, sliceR, baseAngle, sliceAngle, itemIndex, percent).slicePathString;
         var pathAttr = {
-            path: pathString
+            path: pathString,
+            transform: currentTransform
         };
 
         return pathAttr;
@@ -31,10 +33,12 @@ function setRaphaelCustomAttributes(raphael) {
     raphael.customAttributes.linePercentPath = function (centerX, centerY, sliceR, baseAngle, sliceAngle, itemIndex, percent) {
 
         var slicePathFunction = this.attr("slicePathFunction");
+        var currentTransform = this.attr("currentTransform");
 
         var pathString = slicePathFunction(centerX, centerY, sliceR, baseAngle, sliceAngle, itemIndex, percent).linePathString;
         var pathAttr = {
-            path: pathString
+            path: pathString,
+            transform: currentTransform
         };
 
         return pathAttr;

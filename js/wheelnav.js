@@ -92,7 +92,7 @@ wheelnavItem = function (wheelnav, title) {
     else { this.titleSelectedAttr = wheelnav.titleSelectedAttr; }
 
     this.getSelectTransform = wheelnav.sliceSelectTransform;
-    this.selectTransform = "";
+    this.selectTransform = null;
 
     return this;
 }
@@ -144,7 +144,7 @@ wheelnav.prototype.createWheel = function (titles) {
         this.createNavItem(i);
     }
 
-    this.raphael.getById(this.getTitleId(0)).attr(this.navItems[0].titleSelectedAttr);
+    this.selectNavItem(0);
 
     var thisWheelNav = this;
 
@@ -178,7 +178,7 @@ wheelnav.prototype.createNavItem = function (itemIndex) {
     navItem.titlePosX = slicePath.titlePosX;
     navItem.titlePosY = slicePath.titlePosY;
 
-    navItem.selectTransform = navItem.getSelectTransform(this.centerX, this.centerY, this.navWheelSugar, this.baseAngle, this.sliceAngle, itemIndex).sliceTransformString;
+    navItem.selectTransform = navItem.getSelectTransform(this.centerX, this.centerY, this.navWheelSugar, this.baseAngle, this.sliceAngle, itemIndex);
 
     //Create slice
     var currentSlice = this.raphael.path(slicePath.slicePathString);
@@ -250,16 +250,23 @@ wheelnav.prototype.selectNavItem = function (clicked) {
     else {
         for (i = 0; i < this.navItemCount; i++) {
             var navItem = this.navItems[i];
-            var itemTransform = this.getTitleRotateString(i);
-
-            if (i == clicked) {
-                itemTransform = navItem.selectTransform;
-            }
 
             var navSlice = this.raphael.getById(this.getSliceId(i));
+            var itemTransform = "";
+            if (i == clicked) { itemTransform = navItem.selectTransform.sliceTransformString; }
             navSlice.attr({ currentTransform: itemTransform });
             navSlice.animate({ transform: [itemTransform] }, navItem.animatetime, navItem.animateeffect);
+
+            var titleBaseLine = this.raphael.getById(this.getTitleBaseLineId(i));
+            itemTransform = "";
+            if (i == clicked) { itemTransform = navItem.selectTransform.lineTransformString; }
+            titleBaseLine.attr({ currentTransform: itemTransform });
+            titleBaseLine.animate({ transform: [itemTransform] }, navItem.animatetime, navItem.animateeffect);
+
             var navTitle = this.raphael.getById(this.getTitleId(i));
+            itemTransform = this.getTitleRotateString(i);
+            if (i == clicked) { itemTransform = navItem.selectTransform.titleTransformString; }
+            navTitle.attr({ currentTransform: itemTransform });
             navTitle.animate({ transform: [itemTransform] }, navItem.animatetime, navItem.animateeffect);
         }
     }
@@ -300,28 +307,31 @@ wheelnav.prototype.rotateWheel = function (clicked) {
     for (i = 0; i < this.navItemCount; i++) {
 
         var navItem = this.navItems[i];
+        var navSlice = this.raphael.getById(this.getSliceId(i));
 
         //Rotate slice
         var itemRotateString = "r," + this.currentRotate + "," + this.centerX + "," + this.centerY;
+        var lineRotateString = itemRotateString;
 
         if (i == clicked) {
-            itemRotateString += navItem.selectTransform;
+            itemRotateString += navItem.selectTransform.sliceTransformString;
+            lineRotateString += navItem.selectTransform.lineTransformString;
         }
-
-        var navSlice = this.raphael.getById(this.getSliceId(i));
+        
         navSlice.attr({ currentTransform: itemRotateString });
         navSlice.animate({ transform: [itemRotateString] }, navItem.animatetime, navItem.animateeffect);
 
         //Rotate baseLine
         var titleBaseLine = this.raphael.getById(this.getTitleBaseLineId(i));
-        titleBaseLine.animate({ transform: [itemRotateString] }, navItem.animatetime, navItem.animateeffect);
+        titleBaseLine.attr({ currentTransform: lineRotateString });
+        titleBaseLine.animate({ transform: [lineRotateString] }, navItem.animatetime, navItem.animateeffect);
 
         //Rotate title
         var navTitle = this.raphael.getById(this.getTitleId(i));
         var titleRotateString = this.getTitleRotateString(i);
 
         if (i == clicked) {
-            titleRotateString += this.navItems[0].selectTransform;
+            titleRotateString += this.navItems[0].selectTransform.titleTransformString;
         }
 
         navTitle.attr({ currentTransform: titleRotateString });
@@ -345,14 +355,31 @@ wheelnav.prototype.spreadWheel = function (startPercent, endPercent) {
         if (currentPos < 0) { currentPos += this.navItemCount; }
 
         var navSlice = this.raphael.getById(this.getSliceId(i));
+        var navTitle = this.raphael.getById(this.getTitleId(i));
+
         navSlice.attr({ slicePathFunction: navItem.getSlicePath });
-        navSlice.attr({ slicePercentPath: [this.centerX, this.centerY, this.navWheelSugar, this.baseAngle, this.sliceAngle, i, startPercent] }).animate({ slicePercentPath: [this.centerX, this.centerY, this.navWheelSugar, this.baseAngle, this.sliceAngle, i, endPercent] }, navItem.animatetime, navItem.animateeffect);
+        navSlice.attr({ slicePercentPath: [this.centerX, this.centerY, this.navWheelSugar, this.baseAngle, this.sliceAngle, i, startPercent] }).animate({ slicePercentPath: [this.centerX, this.centerY, this.navWheelSugar, this.baseAngle, this.sliceAngle, i, endPercent] }, navItem.animatetime, navItem.animateeffect, function () {
+            if (startPercent > endPercent) {
+                this.attr({ transform: "" });
+            }
+            if (endPercent > startPercent) {
+                var currentTransform = this.attr("currentTransform");
+                this.attr({ transform: currentTransform });
+            }
+        });
 
         var titleBaseLine = this.raphael.getById(this.getTitleBaseLineId(i));
         titleBaseLine.attr({ slicePathFunction: navItem.getSlicePath });
-        titleBaseLine.attr({ linePercentPath: [this.centerX, this.centerY, this.navWheelSugar, this.baseAngle, this.sliceAngle, i, startPercent] }).animate({ linePercentPath: [this.centerX, this.centerY, this.navWheelSugar, this.baseAngle, this.sliceAngle, i, endPercent] }, navItem.animatetime, navItem.animateeffect);
+        titleBaseLine.attr({ linePercentPath: [this.centerX, this.centerY, this.navWheelSugar, this.baseAngle, this.sliceAngle, i, startPercent] }).animate({ linePercentPath: [this.centerX, this.centerY, this.navWheelSugar, this.baseAngle, this.sliceAngle, i, endPercent] }, navItem.animatetime, navItem.animateeffect, function () {
+            if (startPercent > endPercent) {
+                this.attr({ transform: "" });
+            }
+            if (endPercent > startPercent) {
+                var currentTransform = this.attr("currentTransform");
+                this.attr({ transform: currentTransform });
+            }
+        });
 
-        var navTitle = this.raphael.getById(this.getTitleId(i));
         var navItemCurrent = this.navItems[currentPos];
         navTitle.attr({ slicePathFunction: navItem.getSlicePath });
         navTitle.attr({ titlePercentPos: [this.centerX, this.centerY, this.navWheelSugar, this.baseAngle, this.sliceAngle, navItemCurrent.titlePosX, navItemCurrent.titlePosY, currentPos, startPercent] });
@@ -422,9 +449,6 @@ wheelnav.prototype.getTitleId = function (index) {
 wheelnav.prototype.getTitleBaseLineId = function (index) {
     return "wheelnav-" + this.holderId + "-titlebaseline-" + index;
 };
-wheelnav.prototype.getTitleBaseLineHideId = function (index) {
-    return "wheelnav-" + this.holderId + "-titlebaselinehide-" + index;
-};
 wheelnav.prototype.getSpreadOnId = function () {
     return "wheelnav-" + this.holderId + "-spreadon";
 };
@@ -433,7 +457,7 @@ wheelnav.prototype.getSpreadOffId = function () {
 };
 
 
-///#source 1 1 /js/source/wheelnav.slicepath.js
+///#source 1 1 /js/source/wheelnav.slicePath.js
 //---------------------------------
 // Slice path definitions
 //---------------------------------
@@ -469,7 +493,7 @@ var slicePath = function () {
     }
 
     this.NullSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
-        setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+
         return {
             slicePathString: "",
             linePathString: "",
@@ -697,10 +721,10 @@ var slicePath = function () {
 
 
 
-///#source 1 1 /js/source/wheelnav.sliceselecttransform.js
-//--------------------------------------
-// Slice transform definitions on select
-//--------------------------------------
+///#source 1 1 /js/source/wheelnav.sliceSelectTransform.js
+//------------------------------------------
+// Slice transform definitions for selection
+//------------------------------------------
 
 var sliceSelectTransform = function () {
 
@@ -732,7 +756,9 @@ var sliceSelectTransform = function () {
         sliceTransformString = "t" + (rOriginal / 10 * Math.cos(middleTheta)).toString() + "," + (rOriginal / 10 * Math.sin(middleTheta)).toString();
 
         return {
-            sliceTransformString: sliceTransformString
+            sliceTransformString: sliceTransformString,
+            lineTransformString: sliceTransformString,
+            titleTransformString: sliceTransformString + ",s1.1"
         }
     }
 
@@ -741,7 +767,9 @@ var sliceSelectTransform = function () {
         sliceTransformString = "r360";
 
         return {
-            sliceTransformString: sliceTransformString
+            sliceTransformString: sliceTransformString,
+            lineTransformString: sliceTransformString,
+            titleTransformString: sliceTransformString
         }
     }
 
@@ -750,7 +778,18 @@ var sliceSelectTransform = function () {
         sliceTransformString = "s1.3";
 
         return {
-            sliceTransformString: sliceTransformString
+            sliceTransformString: sliceTransformString,
+            lineTransformString: "",
+            titleTransformString: sliceTransformString
+        }
+    }
+
+    this.ScaleTitleTransform = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex) {
+
+        return {
+            sliceTransformString: "",
+            lineTransformString: "",
+            titleTransformString: "s1.3"
         }
     }
 
@@ -759,7 +798,9 @@ var sliceSelectTransform = function () {
         sliceTransformString = "r360,s1.3";
 
         return {
-            sliceTransformString: sliceTransformString
+            sliceTransformString: sliceTransformString,
+            lineTransformString: sliceTransformString,
+            titleTransformString: sliceTransformString
         }
     }
 
@@ -768,7 +809,7 @@ var sliceSelectTransform = function () {
 
 
 
-///#source 1 1 /js/source/wheelnav.colorpalettes.js
+///#source 1 1 /js/source/wheelnav.colorPalettes.js
 //---------------------------------
 // Color palettes for slices
 // from http://www.colourlovers.com
@@ -783,7 +824,7 @@ var colorpalette = {
     gamebookers: new Array("#FF9900", "#E9E9E9", "#BCBCBC", "#3299BB", "#424242"),
     parrot: new Array("#D80351", "#F5D908", "#00A3EE", "#929292", "#3F3F3F")
 }
-///#source 1 1 /js/source/wheelnav.customattributes.js
+///#source 1 1 /js/source/wheelnav.customAttributes.js
 //---------------------------------
 // Raphael.js custom attributes
 //---------------------------------
@@ -805,10 +846,12 @@ function setRaphaelCustomAttributes(raphael) {
     raphael.customAttributes.slicePercentPath = function (centerX, centerY, sliceR, baseAngle, sliceAngle, itemIndex, percent) {
 
         var slicePathFunction = this.attr("slicePathFunction");
+        var currentTransform = this.attr("currentTransform");
 
         var pathString = slicePathFunction(centerX, centerY, sliceR, baseAngle, sliceAngle, itemIndex, percent).slicePathString;
         var pathAttr = {
-            path: pathString
+            path: pathString,
+            transform: currentTransform
         };
 
         return pathAttr;
@@ -817,10 +860,12 @@ function setRaphaelCustomAttributes(raphael) {
     raphael.customAttributes.linePercentPath = function (centerX, centerY, sliceR, baseAngle, sliceAngle, itemIndex, percent) {
 
         var slicePathFunction = this.attr("slicePathFunction");
+        var currentTransform = this.attr("currentTransform");
 
         var pathString = slicePathFunction(centerX, centerY, sliceR, baseAngle, sliceAngle, itemIndex, percent).linePathString;
         var pathAttr = {
-            path: pathString
+            path: pathString,
+            transform: currentTransform
         };
 
         return pathAttr;

@@ -1,6 +1,6 @@
-﻿//--------------------------------------
-// Slice transform definitions on select
-//--------------------------------------
+﻿//------------------------------------------
+// Slice transform definitions for selection
+//------------------------------------------
 
 var sliceSelectTransform = function () {
 
@@ -32,7 +32,9 @@ var sliceSelectTransform = function () {
         sliceTransformString = "t" + (rOriginal / 10 * Math.cos(middleTheta)).toString() + "," + (rOriginal / 10 * Math.sin(middleTheta)).toString();
 
         return {
-            sliceTransformString: sliceTransformString
+            sliceTransformString: sliceTransformString,
+            lineTransformString: sliceTransformString,
+            titleTransformString: sliceTransformString + ",s1.1"
         }
     }
 
@@ -41,7 +43,9 @@ var sliceSelectTransform = function () {
         sliceTransformString = "r360";
 
         return {
-            sliceTransformString: sliceTransformString
+            sliceTransformString: sliceTransformString,
+            lineTransformString: sliceTransformString,
+            titleTransformString: sliceTransformString
         }
     }
 
@@ -50,7 +54,18 @@ var sliceSelectTransform = function () {
         sliceTransformString = "s1.3";
 
         return {
-            sliceTransformString: sliceTransformString
+            sliceTransformString: sliceTransformString,
+            lineTransformString: "",
+            titleTransformString: sliceTransformString
+        }
+    }
+
+    this.ScaleTitleTransform = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex) {
+
+        return {
+            sliceTransformString: "",
+            lineTransformString: "",
+            titleTransformString: "s1.3"
         }
     }
 
@@ -59,7 +74,9 @@ var sliceSelectTransform = function () {
         sliceTransformString = "r360,s1.3";
 
         return {
-            sliceTransformString: sliceTransformString
+            sliceTransformString: sliceTransformString,
+            lineTransformString: sliceTransformString,
+            titleTransformString: sliceTransformString
         }
     }
 

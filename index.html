@@ -26,6 +26,8 @@
 
                 var textWheel = new wheelnav("textWheel");
                 textWheel.slicePath = slicePath().PieSliceSpread;
+                textWheel.sliceSelectTransform = sliceSelectTransform().ScaleTitleTransform;
+                textWheel.spreaderEnable = true;
                 textWheel.createWheel();
                 textWheel.spreadWheel(0, 1);
 
@@ -33,12 +35,13 @@
                 textWheelRotatedTitle.slicePath = slicePath().CogSlice;
                 textWheelRotatedTitle.sliceSelectTransform = sliceSelectTransform().MoveMiddleTransform;
                 textWheelRotatedTitle.titleRotate = true;
-                textWheelRotatedTitle.createWheel(["title-0", "title-1", "title-2", "title-3", "title-4", "title-5", "title-6", "title-7", "title-8", "title-9", "title-10", "title-11"]);
+                textWheelRotatedTitle.spreaderEnable = true;
+                textWheelRotatedTitle.createWheel(["title-0", "title-1", "title-2", "title-3", "title-4", "title-5", "title-6", "title-7"]);
 
                 var cogWheel = new wheelnav("cogWheel");
                 //cogWheel.slicePath = slicePath().CogSlice;
                 cogWheel.slicePath = slicePath().FlowerSlice;
-                
+                cogWheel.sliceSelectTransform = sliceSelectTransform().MoveMiddleTransform;
                 cogWheel.spreaderEnable = true;
 
                 cogWheel.createWheel([icon.gear, icon.scissors, icon.acw, icon.sun, icon.smile, icon.refresh]);
