@@ -48,6 +48,9 @@ function setRaphaelCustomAttributes(raphael) {
         var navItem = slicePathFunction(centerX, centerY, sliceR, baseAngle, sliceAngle, itemIndex, percent);
         var transformString = "t,-" + currentPosX + ",-" + currentPosY;
         transformString += ",t," + navItem.titlePosX + "," + navItem.titlePosY + currentTransform;
+
+        if (percent < 0.63) transformString += ",s" + percent * (1/0.63);
+
         var transformAttr = {
             transform: transformString
         }

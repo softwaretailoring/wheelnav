@@ -462,6 +462,29 @@ var slicePath = function () {
         }
     }
 
+    this.PieSliceSpread = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+
+        setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+
+        var deltaTheta = (1 - percent) * (endTheta - startTheta) / 2;
+        startTheta = startTheta + deltaTheta;
+        endTheta = endTheta - deltaTheta;
+
+        rOriginal = percent * rOriginal;
+
+        slicePathString = [["M", x, y],
+                     ["L", r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
+                     ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
+                     ["z"]];
+
+        return {
+            slicePathString: slicePathString,
+            linePathString: "",
+            titlePosX: titlePosX,
+            titlePosY: titlePosY
+        }
+    }
+
     this.DonutSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
 
         setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
@@ -708,6 +731,9 @@ function setRaphaelCustomAttributes(raphael) {
         var navItem = slicePathFunction(centerX, centerY, sliceR, baseAngle, sliceAngle, itemIndex, percent);
         var transformString = "t,-" + currentPosX + ",-" + currentPosY;
         transformString += ",t," + navItem.titlePosX + "," + navItem.titlePosY + currentTransform;
+
+        if (percent < 0.63) transformString += ",s" + percent * (1/0.63);
+
         var transformAttr = {
             transform: transformString
         }

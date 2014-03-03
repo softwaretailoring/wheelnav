@@ -25,6 +25,8 @@
             window.onload = function () {
 
                 var textWheel = new wheelnav("textWheel");
+                textWheel.slicePath = slicePath().PieSliceSpread;
+                textWheel.spreaderEnable = true;
                 textWheel.createWheel();
                 textWheel.spreadWheel(0, 1);
 
