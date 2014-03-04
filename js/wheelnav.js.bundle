@@ -2,6 +2,7 @@
 <bundle minify="true" runOnBuild="true" output="wheelnav.js">
   <!--The order of the <file> elements determines the order of them when bundled.-->
   <file>/js/source/wheelnav.core.js</file>
+  <file>/js/source/wheelnav.navItem.js</file>
   <file>/js/source/wheelnav.slicePath.js</file>
   <file>/js/source/wheelnav.sliceSelectTransform.js</file>
   <file>/js/source/wheelnav.colorPalettes.js</file>

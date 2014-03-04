@@ -37,15 +37,20 @@ wheelnav = function(divId) {
     this.colors = colorpalette.defaultpalette;
     this.slicePath = slicePath().PieSlice;
     this.sliceSelectTransform = sliceSelectTransform().NullTransform;
+    this.titleFont = '100 24px Impact, Charcoal, sans-serif';
 
     //NavItem settings. If it remains null, use default settings.
     this.animateeffect = null;
     this.animatetime = null;
     this.slicePathAttr = null;
     this.sliceHoverAttr = null;
-    this.linePathAttr = null;
+    this.sliceSelectedAttr = null;
     this.titleAttr = null;
+    this.titleHoverAttr = null;
     this.titleSelectedAttr = null;
+    this.linePathAttr = null;
+    this.lineHoverAttr = null;
+    this.lineSelectedAttr = null;
 
     //Spreader settings
     this.spreaderEnable = false;
@@ -53,46 +58,6 @@ wheelnav = function(divId) {
     this.spreaderCircleAttr = { fill: "#777", "stroke-width": 3 };
     this.spreaderOnAttr = { font: '100 32px Impact, Charcoal, sans-serif', fill: "#FFF", cursor: 'pointer' };
     this.spreaderOffAttr = { font: '100 32px Impact, Charcoal, sans-serif', fill: "#FFF", cursor: 'pointer' };
-
-    return this;
-}
-
-wheelnavItem = function (wheelnav, title) {
-
-    this.title = title;
-    this.titlePosX = wheelnav.centerX;
-    this.titlePosY = wheelnav.centerY;
-
-    if (title != null) {
-        this.getSlicePath = wheelnav.slicePath;
-    }
-    else {
-        this.title = "";
-        this.getSlicePath = slicePath().NullSlice;
-    }
-
-    this.fillAttr = { fill: "#CCC" };
-
-    if (wheelnav.animateeffect == null) { this.animateeffect = "bounce"; }
-    else { this.animateeffect = wheelnav.animateeffect; }
-    if (wheelnav.animatetime == null) { this.animatetime = 1500; }
-    else { this.animatetime = wheelnav.animatetime; }
-    
-    if (wheelnav.slicePathAttr == null) { this.slicePathAttr = { stroke: "#111", "stroke-width": 3, cursor: 'pointer' }; }
-    else { this.slicePathAttr = wheelnav.slicePathAttr; }
-    if (wheelnav.sliceHoverAttr == null) { this.sliceHoverAttr = { fill: "#EEE" }; }
-    else { this.sliceHoverAttr = wheelnav.sliceHoverAttr; }
-    
-    if (wheelnav.linePathAttr == null) { this.linePathAttr = { stroke: "#111", "stroke-width": 2 }; }
-    else { this.linePathAttr = wheelnav.linePathAttr; }
-
-    if (wheelnav.titleAttr == null) { this.titleAttr = { font: '100 24px Impact, Charcoal, sans-serif', fill: "#111", cursor: 'pointer', stroke: "none" }; }
-    else { this.titleAttr = wheelnav.titleAttr; }
-    if (wheelnav.titleSelectedAttr == null) { this.titleSelectedAttr = { font: '100 24px Impact, Charcoal, sans-serif', fill: "#FFF", cursor: 'pointer' }; }
-    else { this.titleSelectedAttr = wheelnav.titleSelectedAttr; }
-
-    this.getSelectTransform = wheelnav.sliceSelectTransform;
-    this.selectTransform = null;
 
     return this;
 }
@@ -107,13 +72,13 @@ wheelnav.prototype.initWheel = function (titles) {
         }
 
         for (i = 0; i < titles.length; i++) {
-            var navItem = new wheelnavItem(this, titles[i]);
+            var navItem = new wheelnavItem(this, titles[i], i);
             this.navItems.push(navItem);
         }
     }
     else {
         for (i = 0; i < this.navItemCount; i++) {
-            var navItem = new wheelnavItem(this, "");
+            var navItem = new wheelnavItem(this, "", i);
             this.navItems.push(navItem);
         }
     }
@@ -141,10 +106,10 @@ wheelnav.prototype.createWheel = function (titles) {
     }
 
     for (i = 0; i < this.navItemCount; i++) {
-        this.createNavItem(i);
+        this.navItems[i].createNavItem();
     }
 
-    this.selectNavItem(0);
+    this.navigateWheel(0);
 
     var thisWheelNav = this;
 
@@ -169,106 +134,70 @@ wheelnav.prototype.createWheel = function (titles) {
     return this;
 };
 
-wheelnav.prototype.createNavItem = function (itemIndex) {
+wheelnav.prototype.refreshWheel = function () {
 
-    var navItem = this.navItems[itemIndex];
+    for (i = 0; i < this.navItemCount; i++) {
 
-    //Initialize navItem
-    var slicePath = navItem.getSlicePath(this.centerX, this.centerY, this.navWheelSugar, this.baseAngle, this.sliceAngle, itemIndex, 1);
-    navItem.titlePosX = slicePath.titlePosX;
-    navItem.titlePosY = slicePath.titlePosY;
+        var navItem = this.navItems[i];
+        var navSlice = this.raphael.getById(this.getSliceId(i));
+        var navTitle = this.raphael.getById(this.getTitleId(i));
+        var navLine = this.raphael.getById(this.getLineId(i));
 
-    navItem.selectTransform = navItem.getSelectTransform(this.centerX, this.centerY, this.navWheelSugar, this.baseAngle, this.sliceAngle, itemIndex);
+        //Refresh slice
+        if (this.slicePathAttr != null) { navItem.slicePathAttr = this.slicePathAttr; }
+        if (this.sliceHoverAttr != null) { navItem.sliceHoverAttr = this.sliceHoverAttr; }
+        if (this.sliceSelectedAttr != null) { navItem.sliceSelectedAttr = this.sliceSelectedAttr; }
+        navSlice.attr(navItem.slicePathAttr);
 
-    //Create slice
-    var currentSlice = this.raphael.path(slicePath.slicePathString);
-    currentSlice.attr(navItem.slicePathAttr);
-    currentSlice.attr(navItem.fillAttr);
-    currentSlice.id = this.getSliceId(itemIndex);
-    currentSlice.node.id = currentSlice.id;
+        //Refresh title
+        if (this.titleAttr != null) { navItem.titleAttr = this.titleAttr; }
+        if (this.titleHoverAttr != null) { navItem.titleHoverAttr = this.titleHoverAttr; }
+        if (this.titleSelectedAttr != null) { navItem.titleSelectedAttr = this.titleSelectedAttr; }
+        navTitle.attr(navItem.titleAttr);
 
-    //Create title
-    var currentTitle;
-    //Title defined by path
-    if (navItem.title.substr(0, 1) == "M" &&
-        navItem.title.substr(navItem.title.length - 1, 1) == "z") {
+        //Refresh line
+        if (this.linePathAttr != null) { navItem.linePathAttr = this.linePathAttr; }
+        if (this.lineHoverAttr != null) { navItem.lineHoverAttr = this.lineHoverAttr; }
+        if (this.lineSelectedAttr != null) { navItem.lineSelectedAttr = this.lineSelectedAttr; }
+        navLine.attr(navItem.linePathAttr);
 
-        //Calculate reletive path
-        var relativePath = this.raphael.raphael.pathToRelative(navItem.title);
-        var startX = relativePath[0][1];
-        var startY = relativePath[0][2];
-        var pathBBox = this.raphael.raphael.pathBBox(relativePath);
-        var pathCx = navItem.titlePosX + (startX - pathBBox.cx);
-        var pathCy = navItem.titlePosY + (startY - pathBBox.cy);
-        relativePath[0] = "M," + pathCx + "," + pathCy;
-
-        currentTitle = this.raphael.path(relativePath).attr(navItem.titleAttr);
-    }
-    //Title defined by text
-    else {
-        currentTitle = this.raphael.text(navItem.titlePosX, navItem.titlePosY, navItem.title).attr(navItem.titleAttr);
-    }
-
-    currentTitle.id = this.getTitleId(itemIndex);
-    currentTitle.node.id = currentTitle.id;
-
-    //Create linepath
-    var titleBaseLine = this.raphael.path(slicePath.linePathString).attr(navItem.linePathAttr).toBack();
-    titleBaseLine.id = this.getTitleBaseLineId(itemIndex);
-
-    var titleRotateString = this.getTitleRotateString(itemIndex);
-    currentTitle.attr({ currentTransform: titleRotateString });
-    currentTitle.attr({ transform: titleRotateString });
-    
-    //Create item set
-    var currentItem = this.raphael.set();
-    currentItem.push(
-        currentSlice,
-        currentTitle
-    );
-
-    currentItem.id = this.getItemId(itemIndex);
-
-    var thisWheelNav = this;
-
-    currentItem.click(function () {
-        thisWheelNav.selectNavItem(itemIndex);
-    });
-    currentItem.mouseover(function () {
-        thisWheelNav.hoverEffect(itemIndex, true);
-    });
-    currentItem.mouseout(function () {
-        thisWheelNav.hoverEffect(itemIndex, false);
-    });
-};
-
-wheelnav.prototype.selectNavItem = function (clicked) {
-
-    if (this.clickModeRotate) {
-        this.rotateWheel(clicked);
-    }
-    else {
-        for (i = 0; i < this.navItemCount; i++) {
-            var navItem = this.navItems[i];
-
-            var navSlice = this.raphael.getById(this.getSliceId(i));
-            var itemTransform = "";
-            if (i == clicked) { itemTransform = navItem.selectTransform.sliceTransformString; }
-            navSlice.attr({ currentTransform: itemTransform });
-            navSlice.animate({ transform: [itemTransform] }, navItem.animatetime, navItem.animateeffect);
-
-            var titleBaseLine = this.raphael.getById(this.getTitleBaseLineId(i));
-            itemTransform = "";
-            if (i == clicked) { itemTransform = navItem.selectTransform.lineTransformString; }
-            titleBaseLine.attr({ currentTransform: itemTransform });
-            titleBaseLine.animate({ transform: [itemTransform] }, navItem.animatetime, navItem.animateeffect);
-
-            var navTitle = this.raphael.getById(this.getTitleId(i));
-            itemTransform = this.getTitleRotateString(i);
-            if (i == clicked) { itemTransform = navItem.selectTransform.titleTransformString; }
-            navTitle.attr({ currentTransform: itemTransform });
-            navTitle.animate({ transform: [itemTransform] }, navItem.animatetime, navItem.animateeffect);
+        if (this.currentClick == i) {
+            navSlice.attr(navItem.fillAttr);
+            navSlice.attr(navItem.sliceSelectedAttr);
+            navTitle.attr(navItem.titleSelectedAttr);
+            navTitle.toFront();
+            navLine.attr(navItem.lineSelectedAttr);
         }
+    }
+}
+
+wheelnav.prototype.navigateWheel = function (clicked) {
+
+    for (i = 0; i < this.navItemCount; i++) {
+        var navItem = this.navItems[i];
+        navItem.currentRotate -= (clicked - this.currentClick) * (360 / this.navItemCount);
+
+        var navSlice = this.raphael.getById(this.getSliceId(i));
+        var navTitle = this.raphael.getById(this.getTitleId(i));
+        var navLine = this.raphael.getById(this.getLineId(i));
+
+        var sliceTransform = "";
+        if (this.clickModeRotate) { sliceTransform = navItem.getItemRotateString(); }
+        if (i == clicked) { sliceTransform += navItem.selectTransform.sliceTransformString; }
+        navSlice.attr({ currentTransform: sliceTransform });
+        navSlice.animate({ transform: [sliceTransform] }, navItem.animatetime, navItem.animateeffect);
+
+        var lineTransform = "";
+        if (this.clickModeRotate) { lineTransform = navItem.getItemRotateString(); }
+        if (i == clicked) { lineTransform += navItem.selectTransform.lineTransformString; }
+        navLine.attr({ currentTransform: lineTransform });
+        navLine.animate({ transform: [lineTransform] }, navItem.animatetime, navItem.animateeffect);
+
+        var titleTransform = "";
+        if (this.clickModeRotate) { titleTransform = navItem.getTitleRotateString(); }
+        if (i == clicked) { titleTransform += this.navItems[0].selectTransform.titleTransformString; }
+        navTitle.attr({ currentTransform: titleTransform });
+        navTitle.animate({ transform: [titleTransform] }, navItem.animatetime, navItem.animateeffect);
     }
 
     this.currentClick = clicked;
@@ -280,82 +209,16 @@ wheelnav.prototype.selectNavItem = function (clicked) {
     this.refreshWheel();
 }
 
-wheelnav.prototype.refreshWheel = function () {
-
-    for (i = 0; i < this.navItemCount; i++) {
-
-        var navItem = this.navItems[i];
-        var navSlice = this.raphael.getById(this.getSliceId(i));
-        var navTitle = this.raphael.getById(this.getTitleId(i));
-
-        navTitle.attr(navItem.titleAttr);
-        if (this.slicePathAttr != null) {
-            navItem.slicePathAttr = this.slicePathAttr;
-        }
-        navSlice.attr(navItem.slicePathAttr);
-
-        if (this.currentClick == i) {
-            navSlice.attr(navItem.fillAttr);
-            navTitle.attr(navItem.titleSelectedAttr);
-        }
-    }
-}
-
-wheelnav.prototype.rotateWheel = function (clicked) {
-
-    this.currentRotate -= (clicked - this.currentClick) * (360 / this.navItemCount);
-    for (i = 0; i < this.navItemCount; i++) {
-
-        var navItem = this.navItems[i];
-        var navSlice = this.raphael.getById(this.getSliceId(i));
-
-        //Rotate slice
-        var itemRotateString = "r," + this.currentRotate + "," + this.centerX + "," + this.centerY;
-        var lineRotateString = itemRotateString;
-
-        if (i == clicked) {
-            itemRotateString += navItem.selectTransform.sliceTransformString;
-            lineRotateString += navItem.selectTransform.lineTransformString;
-        }
-        
-        navSlice.attr({ currentTransform: itemRotateString });
-        navSlice.animate({ transform: [itemRotateString] }, navItem.animatetime, navItem.animateeffect);
-
-        //Rotate baseLine
-        var titleBaseLine = this.raphael.getById(this.getTitleBaseLineId(i));
-        titleBaseLine.attr({ currentTransform: lineRotateString });
-        titleBaseLine.animate({ transform: [lineRotateString] }, navItem.animatetime, navItem.animateeffect);
-
-        //Rotate title
-        var navTitle = this.raphael.getById(this.getTitleId(i));
-        var titleRotateString = this.getTitleRotateString(i);
-
-        if (i == clicked) {
-            titleRotateString += this.navItems[0].selectTransform.titleTransformString;
-        }
-
-        navTitle.attr({ currentTransform: titleRotateString });
-        navTitle.animate({ transform: [titleRotateString] }, navItem.animatetime, navItem.animateeffect);
-
-        if (i == clicked) {
-            //navSlice.toFront();
-            navTitle.toFront();
-        }
-    }
-};
-
 wheelnav.prototype.spreadWheel = function (startPercent, endPercent) {
 
     for (i = 0; i < this.navItemCount; i++) {
 
         var thisWheelNav = this;
         var navItem = this.navItems[i];
-        var currentPos = i;
-        if (this.clickModeRotate) { currentPos = i - this.currentClick; }
-        if (currentPos < 0) { currentPos += this.navItemCount; }
 
         var navSlice = this.raphael.getById(this.getSliceId(i));
         var navTitle = this.raphael.getById(this.getTitleId(i));
+        var navLine = this.raphael.getById(this.getLineId(i));
 
         navSlice.attr({ slicePathFunction: navItem.getSlicePath });
         navSlice.attr({ slicePercentPath: [this.centerX, this.centerY, this.navWheelSugar, this.baseAngle, this.sliceAngle, i, startPercent] }).animate({ slicePercentPath: [this.centerX, this.centerY, this.navWheelSugar, this.baseAngle, this.sliceAngle, i, endPercent] }, navItem.animatetime, navItem.animateeffect, function () {
@@ -368,9 +231,8 @@ wheelnav.prototype.spreadWheel = function (startPercent, endPercent) {
             }
         });
 
-        var titleBaseLine = this.raphael.getById(this.getTitleBaseLineId(i));
-        titleBaseLine.attr({ slicePathFunction: navItem.getSlicePath });
-        titleBaseLine.attr({ linePercentPath: [this.centerX, this.centerY, this.navWheelSugar, this.baseAngle, this.sliceAngle, i, startPercent] }).animate({ linePercentPath: [this.centerX, this.centerY, this.navWheelSugar, this.baseAngle, this.sliceAngle, i, endPercent] }, navItem.animatetime, navItem.animateeffect, function () {
+        navLine.attr({ slicePathFunction: navItem.getSlicePath });
+        navLine.attr({ linePercentPath: [this.centerX, this.centerY, this.navWheelSugar, this.baseAngle, this.sliceAngle, i, startPercent] }).animate({ linePercentPath: [this.centerX, this.centerY, this.navWheelSugar, this.baseAngle, this.sliceAngle, i, endPercent] }, navItem.animatetime, navItem.animateeffect, function () {
             if (startPercent > endPercent) {
                 this.attr({ transform: "" });
             }
@@ -380,6 +242,9 @@ wheelnav.prototype.spreadWheel = function (startPercent, endPercent) {
             }
         });
 
+        var currentPos = i;
+        if (this.clickModeRotate) { currentPos = i - this.currentClick; }
+        if (currentPos < 0) { currentPos += this.navItemCount; }
         var navItemCurrent = this.navItems[currentPos];
         navTitle.attr({ slicePathFunction: navItem.getSlicePath });
         navTitle.attr({ titlePercentPos: [this.centerX, this.centerY, this.navWheelSugar, this.baseAngle, this.sliceAngle, navItemCurrent.titlePosX, navItemCurrent.titlePosY, currentPos, startPercent] });
@@ -409,34 +274,6 @@ wheelnav.prototype.spreadWheel = function (startPercent, endPercent) {
     return this;
 };
 
-wheelnav.prototype.getTitleRotateString = function (itemIndex) {
-
-    var itemRotateString = "r," + this.currentRotate + "," + this.centerX + "," + this.centerY;
-    var titleRotateString = itemRotateString + ",r" + (-this.currentRotate).toString();
-
-    if (this.titleRotate) {
-        var titleRotate = itemIndex * (360 / this.navItemCount);
-        titleRotateString = itemRotateString + ",r" + titleRotate;
-    }
-
-    return titleRotateString;
-}
-
-wheelnav.prototype.hoverEffect = function (clicked, isEnter) {
-
-    for (i = 0; i < this.navItemCount; i++) {
-        var navSlice = this.raphael.getById(this.getSliceId(i));
-
-        if (isEnter && i == clicked && i != this.currentClick) {
-            navSlice.attr(this.navItems[i].sliceHoverAttr);
-        }
-        else {
-            navSlice.attr(this.navItems[i].slicePathAttr);
-            navSlice.attr(this.navItems[i].fillAttr);
-        }
-    }
-};
-
 wheelnav.prototype.getItemId = function (index) {
     return "wheelnav-" + this.holderId + "-item-" + index;
 };
@@ -446,8 +283,8 @@ wheelnav.prototype.getSliceId = function (index) {
 wheelnav.prototype.getTitleId = function (index) {
     return "wheelnav-" + this.holderId + "-title-" + index;
 };
-wheelnav.prototype.getTitleBaseLineId = function (index) {
-    return "wheelnav-" + this.holderId + "-titlebaseline-" + index;
+wheelnav.prototype.getLineId = function (index) {
+    return "wheelnav-" + this.holderId + "-line-" + index;
 };
 wheelnav.prototype.getSpreadOnId = function () {
     return "wheelnav-" + this.holderId + "-spreadon";
@@ -457,6 +294,178 @@ wheelnav.prototype.getSpreadOffId = function () {
 };
 
 
+///#source 1 1 /js/source/wheelnav.navItem.js
+//---------------------------------
+// Navigation item
+//---------------------------------
+
+wheelnavItem = function (wheelnav, title, itemIndex) {
+
+    this.wheelnav = wheelnav;
+    this.itemIndex = itemIndex;
+    this.title = title;
+    this.titleFont = wheelnav.titleFont;
+    this.titlePosX = wheelnav.centerX;
+    this.titlePosY = wheelnav.centerY;
+    this.currentRotate = 0;
+
+    if (title != null) {
+        this.getSlicePath = wheelnav.slicePath;
+    }
+    else {
+        this.title = "";
+        this.getSlicePath = slicePath().NullSlice;
+    }
+
+    this.getSelectTransform = wheelnav.sliceSelectTransform;
+    this.selectTransform = null;
+
+    this.fillAttr = { fill: "#CCC" };
+
+    if (wheelnav.animateeffect == null) { this.animateeffect = "bounce"; }
+    else { this.animateeffect = wheelnav.animateeffect; }
+    if (wheelnav.animatetime == null) { this.animatetime = 1500; }
+    else { this.animatetime = wheelnav.animatetime; }
+    
+    if (wheelnav.slicePathAttr == null) { this.slicePathAttr = { stroke: "#111", "stroke-width": 3, cursor: 'pointer' }; }
+    else { this.slicePathAttr = wheelnav.slicePathAttr; }
+    if (wheelnav.sliceHoverAttr == null) { this.sliceHoverAttr = { fill: "#EEE", "stroke-width": 4 }; }
+    else { this.sliceHoverAttr = wheelnav.sliceHoverAttr; }
+    if (wheelnav.sliceSelectedAttr == null) { this.sliceSelectedAttr = { stroke: "#111", "stroke-width": 4 }; }
+    else { this.sliceSelectedAttr = wheelnav.sliceSelectedAttr; }
+
+    if (wheelnav.titleAttr == null) { this.titleAttr = { font: this.titleFont, fill: "#111", stroke: "none", cursor: 'pointer' }; }
+    else { this.titleAttr = wheelnav.titleAttr; }
+    if (wheelnav.titleHoverAttr == null) { this.titleHoverAttr = { font: this.titleFont, fill: "#111", cursor: 'pointer', stroke: "none" }; }
+    else { this.titleHoverAttr = wheelnav.titleHoverAttr; }
+    if (wheelnav.titleSelectedAttr == null) { this.titleSelectedAttr = { font: this.titleFont, fill: "#FFF" }; }
+    else { this.titleSelectedAttr = wheelnav.titleSelectedAttr; }
+
+    if (wheelnav.linePathAttr == null) { this.linePathAttr = { stroke: "#111", "stroke-width": 2 }; }
+    else { this.linePathAttr = wheelnav.linePathAttr; }
+    if (wheelnav.lineHoverAttr == null) { this.lineHoverAttr = { stroke: "#111", "stroke-width": 4 }; }
+    else { this.lineHoverAttr = wheelnav.lineHoverAttr; }
+    if (wheelnav.lineSelectedAttr == null) { this.lineSelectedAttr = { stroke: "#111", "stroke-width": 4 }; }
+    else { this.lineSelectedAttr = wheelnav.lineSelectedAttr; }
+
+    return this;
+}
+
+wheelnavItem.prototype.createNavItem = function () {
+
+    //Initialize navItem
+    var slicePath = this.getSlicePath(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.navWheelSugar, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.itemIndex, 1);
+    this.titlePosX = slicePath.titlePosX;
+    this.titlePosY = slicePath.titlePosY;
+
+    this.selectTransform = this.getSelectTransform(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.navWheelSugar, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.itemIndex);
+
+    //Create slice
+    var currentSlice = this.wheelnav.raphael.path(slicePath.slicePathString);
+    currentSlice.attr(this.slicePathAttr);
+    currentSlice.attr(this.fillAttr);
+    currentSlice.id = this.wheelnav.getSliceId(this.itemIndex);
+    currentSlice.node.id = currentSlice.id;
+
+    //Create title
+    var currentTitle;
+    //Title defined by path
+    if (this.title.substr(0, 1) == "M" &&
+        this.title.substr(this.title.length - 1, 1) == "z") {
+
+        //Calculate reletive path
+        var relativePath = this.wheelnav.raphael.raphael.pathToRelative(this.title);
+        var startX = relativePath[0][1];
+        var startY = relativePath[0][2];
+        var pathBBox = this.wheelnav.raphael.raphael.pathBBox(relativePath);
+        var pathCx = this.titlePosX + (startX - pathBBox.cx);
+        var pathCy = this.titlePosY + (startY - pathBBox.cy);
+        relativePath[0] = "M," + pathCx + "," + pathCy;
+
+        currentTitle = this.wheelnav.raphael.path(relativePath).attr(this.titleAttr);
+    }
+    //Title defined by text
+    else {
+        currentTitle = this.wheelnav.raphael.text(this.titlePosX, this.titlePosY, this.title).attr(this.titleAttr);
+    }
+
+    currentTitle.id = this.wheelnav.getTitleId(this.itemIndex);
+    currentTitle.node.id = currentTitle.id;
+
+    var titleRotateString = this.getTitleRotateString();
+    currentTitle.attr({ currentTransform: titleRotateString });
+    currentTitle.attr({ transform: titleRotateString });
+
+    //Create linepath
+    var navLine = this.wheelnav.raphael.path(slicePath.linePathString).attr(this.linePathAttr).toBack();
+    navLine.id = this.wheelnav.getLineId(this.itemIndex);
+    
+    //Create item set
+    var currentItem = this.wheelnav.raphael.set();
+    currentItem.push(
+        currentSlice,
+        currentTitle
+    );
+
+    currentItem.id = this.wheelnav.getItemId(this.itemIndex);
+
+    var thisWheelNav = this.wheelnav;
+    var thisNavItem = this;
+    var thisItemIndex = this.itemIndex;
+
+    currentItem.click(function () {
+        thisWheelNav.navigateWheel(thisItemIndex);
+    });
+    currentItem.mouseover(function () {
+        thisNavItem.hoverEffect(thisItemIndex, true);
+    });
+    currentItem.mouseout(function () {
+        thisNavItem.hoverEffect(thisItemIndex, false);
+    });
+};
+
+wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
+
+    for (i = 0; i < this.wheelnav.navItemCount; i++) {
+        var navSlice = this.wheelnav.raphael.getById(this.wheelnav.getSliceId(i));
+        var navTitle = this.wheelnav.raphael.getById(this.wheelnav.getTitleId(i));
+        var navLine = this.wheelnav.raphael.getById(this.wheelnav.getLineId(i));
+
+        if (isEnter && i == hovered && i != this.wheelnav.currentClick) {
+            navSlice.attr(this.wheelnav.navItems[i].sliceHoverAttr);
+            navTitle.attr(this.wheelnav.navItems[i].titleHoverAttr);
+            navLine.attr(this.wheelnav.navItems[i].lineHoverAttr);
+        }
+        else {
+            if (i == this.wheelnav.currentClick) {
+                navSlice.attr(this.wheelnav.navItems[i].sliceSelectedAttr);
+                navTitle.attr(this.wheelnav.navItems[i].titleSelectedAttr);
+                navLine.attr(this.wheelnav.navItems[i].lineSelectedAttr);
+            }
+            else {
+                navSlice.attr(this.wheelnav.navItems[i].slicePathAttr);
+                navSlice.attr(this.wheelnav.navItems[i].fillAttr);
+                navTitle.attr(this.wheelnav.navItems[i].titleAttr);
+                navLine.attr(this.wheelnav.navItems[i].linePathAttr);
+            }
+        }
+    }
+};
+
+wheelnavItem.prototype.getItemRotateString = function () {
+    return "r," + this.currentRotate + "," + this.wheelnav.centerX + "," + this.wheelnav.centerY;
+}
+
+wheelnavItem.prototype.getTitleRotateString = function () {
+
+    if (this.wheelnav.titleRotate) {
+        var titleRotate = this.itemIndex * (360 / this.wheelnav.navItemCount);
+        return this.getItemRotateString() + ",r" + titleRotate;
+    }
+    else {
+        return this.getItemRotateString() + ",r" + (-this.currentRotate).toString();
+    }
+}
 ///#source 1 1 /js/source/wheelnav.slicePath.js
 //---------------------------------
 // Slice path definitions
