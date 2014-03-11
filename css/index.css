@@ -25,8 +25,8 @@ footer {
 
 @media (max-width: 480px) {
   .wheelNav {
-    height: 200px;
-    width: 200px;
+    height: 250px;
+    width: 250px;
   }
 
   .wheelNavSmall {

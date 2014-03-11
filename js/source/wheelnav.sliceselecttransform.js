@@ -22,7 +22,9 @@ var sliceSelectTransform = function () {
 
     this.NullTransform = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex) {
         return {
-            sliceTransformString: ""
+            sliceTransformString: "",
+            lineTransformString: "",
+            titleTransformString: ""
         }
     }
 
@@ -41,6 +43,17 @@ var sliceSelectTransform = function () {
     this.RotateTransform = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex) {
 
         sliceTransformString = "r360";
+
+        return {
+            sliceTransformString: sliceTransformString,
+            lineTransformString: sliceTransformString,
+            titleTransformString: sliceTransformString
+        }
+    }
+
+    this.RotateHalfTransform = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex) {
+
+        sliceTransformString = "r90";
 
         return {
             sliceTransformString: sliceTransformString,

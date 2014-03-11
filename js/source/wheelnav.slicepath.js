@@ -45,6 +45,7 @@ var slicePath = function () {
     this.PieSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
        
         setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+        r = r * 0.9;
         slicePathString = [["M", x, y],
                      ["L", r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
                      ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
@@ -85,6 +86,7 @@ var slicePath = function () {
 
         setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
 
+        r = r * 0.95;
         rbase = r * 0.37;
 
         slicePathString = [["M", rbase * Math.cos(startTheta) + x, rbase * Math.sin(startTheta) + y],
@@ -247,6 +249,48 @@ var slicePath = function () {
                      ["L", rbase * Math.cos(startTheta) + x, rbase * Math.sin(startTheta) + y],
                      ["A", r/7, r/7, 0, 0, 1, rbase * Math.cos(endTheta) + x, rbase * Math.sin(endTheta) + y],
                      ["z"]];
+
+        return {
+            slicePathString: slicePathString,
+            linePathString: "",
+            titlePosX: titlePosX,
+            titlePosY: titlePosY
+        }
+    }
+
+    this.EyeSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+
+        setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+        r = r * 0.7;
+        titleSugar = r * 0.87;
+        setTitlePos(x, y);
+
+        slicePathString = [["M", r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
+                    ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
+                    ["A", r, r, 0, 0, 1, r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
+                    ["z"]];
+
+        return {
+            slicePathString: slicePathString,
+            linePathString: "",
+            titlePosX: titlePosX,
+            titlePosY: titlePosY
+        }
+    }
+
+    this.WheelSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+
+        setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+
+        r = r * 0.95;
+
+        slicePathString = [["M", (r * 0.08) * Math.cos(middleTheta) + x, (r * 0.08) * Math.sin(middleTheta) + y],
+                     ["L", (r * 0.08) * Math.cos(middleTheta) + (r * 0.82) * Math.cos(startTheta) + x, (r * 0.08) * Math.sin(middleTheta) + (r * 0.82) * Math.sin(startTheta) + y],
+                     ["A", (r * 0.82), (r * 0.82), 0, 0, 1, (r * 0.08) * Math.cos(middleTheta) + (r * 0.82) * Math.cos(endTheta) + x, (r * 0.08) * Math.sin(middleTheta) + (r * 0.82) * Math.sin(endTheta) + y],
+                     ["z"],
+                     ["M", r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
+                     ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
+                     ["A", r, r, 0, 0, 0, r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y]];
 
         return {
             slicePathString: slicePathString,

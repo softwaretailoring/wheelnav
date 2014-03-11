@@ -10,9 +10,21 @@ function setRaphaelCustomAttributes(raphael) {
         };
     };
 
+    raphael.customAttributes.titlePercentFunction = function (titleFunction) {
+        return {
+            titlePercentFunction: titleFunction
+        };
+    };
+
     raphael.customAttributes.currentTransform = function (tranformString) {
         return {
             currentTransform: tranformString
+        };
+    };
+
+    raphael.customAttributes.currentTitle = function (titleString) {
+        return {
+            currentTitle: titleString
         };
     };
 
@@ -44,19 +56,33 @@ function setRaphaelCustomAttributes(raphael) {
         return pathAttr;
     }
 
-    raphael.customAttributes.titlePercentPos = function (centerX, centerY, sliceR, baseAngle, sliceAngle, currentPosX, currentPosY, itemIndex, percent) {
+    raphael.customAttributes.titlePercentPos = function (centerX, centerY, sliceR, baseAngle, sliceAngle, itemIndex, percent) {
 
         var slicePathFunction = this.attr("slicePathFunction");
+        var titlePercentFunction = this.attr("titlePercentFunction");
         var currentTransform = this.attr("currentTransform");
+        var currentTitle = this.attr("currentTitle");
 
         var navItem = slicePathFunction(centerX, centerY, sliceR, baseAngle, sliceAngle, itemIndex, percent);
-        var transformString = "t,-" + currentPosX + ",-" + currentPosY;
-        transformString += ",t," + navItem.titlePosX + "," + navItem.titlePosY + currentTransform;
 
-        if (percent < 0.63) transformString += ",s" + percent * (1/0.63);
+        percentAttr = titlePercentFunction(navItem.titlePosX, navItem.titlePosY, currentTitle);
 
-        var transformAttr = {
-            transform: transformString
+        if (percent < 0.3) currentTransform += ",s" + percent * (1 / 0.3);
+
+        var transformAttr = {};
+
+        if (this.type == "path") {
+            transformAttr = {
+                path: percentAttr.path,
+                transform: currentTransform
+            }
+        }
+        else {
+            transformAttr = {
+                x: percentAttr.x,
+                y: percentAttr.y,
+                transform: currentTransform
+            }
         }
 
         return transformAttr;

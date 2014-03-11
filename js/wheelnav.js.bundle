@@ -5,6 +5,7 @@
   <file>/js/source/wheelnav.navItem.js</file>
   <file>/js/source/wheelnav.slicePath.js</file>
   <file>/js/source/wheelnav.sliceSelectTransform.js</file>
+  <file>/js/source/wheelnav.spreader.js</file>
   <file>/js/source/wheelnav.colorPalettes.js</file>
   <file>/js/source/wheelnav.customAttributes.js</file>
 </bundle>
