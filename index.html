@@ -34,26 +34,29 @@
                 var textWheelRotatedTitle = new wheelnav("textWheelRotatedTitle");
                 textWheelRotatedTitle.slicePath = slicePath().EyeSlice;
                 textWheelRotatedTitle.sliceSelectTransform = sliceSelectTransform().RotateHalfTransform;
-                textWheelRotatedTitle.titleRotate = true;
                 textWheelRotatedTitle.titleRotateAngle = 270;
                 textWheelRotatedTitle.createWheel(["title-0", "title-1", "title-2", "title-3", "title-4", "title-5"]);
 
                 var cogWheel = new wheelnav("cogWheel");
                 cogWheel.slicePath = slicePath().CogSlice;
                 cogWheel.currentPercent = 0.85;
+                cogWheel.navAngle = 60;
+                cogWheel.titleRotateAngle = -60;
                 cogWheel.sliceSelectTransform = sliceSelectTransform().MoveMiddleTransform;
-                cogWheel.createWheel([icon.gear, icon.scissors, icon.acw, icon.sun, icon.smile, icon.refresh, icon.anonymous, icon.quote]);
+                //cogWheel.createWheel([icon.gear, icon.scissors, icon.acw, icon.sun, icon.smile, icon.refresh, icon.anonymous, icon.quote]);
+                cogWheel.createWheel(["title-0", "title-1", "title-2", "title-3"]);
 
                 var pieWheel = new wheelnav("pieWheel");
                 pieWheel.slicePath = slicePath().MenuSlice;
                 pieWheel.sliceSelectTransform = sliceSelectTransform().ScaleTransform;
                 pieWheel.spreaderEnable = true;
-                pieWheel.navWheelSugar = 1.4 * pieWheel.navWheelSugar;
+                pieWheel.wheelSugar = 1.4 * pieWheel.wheelSugar;
                 pieWheel.centerX = pieWheel.centerX * 0.4;
                 pieWheel.centerY = pieWheel.centerY * 0.4;
                 pieWheel.clickModeRotate = false;
-                pieWheel.createWheel([icon.github, icon.people, icon.raphael, null, null, null, null, null]);
-
+                pieWheel.createWheel([icon.check, icon.check, icon.raphael, null, null, null, null, null]);
+                //pieWheel.createWheel([icon.check, icon.check, icon.check, null, null, null, null, null]);
+                
                 var iconWheel = new wheelnav("iconWheel");
                 iconWheel.slicePath = slicePath().MenuSlice;
                 iconWheel.sliceSelectTransform = sliceSelectTransform().RotateScaleTransform;
@@ -61,6 +64,7 @@
                 iconWheel.minPercent = 0.3;
                 iconWheel.maxPercent = 1;
                 iconWheel.currentPercent = 1;
+                iconWheel.navAngle = 45;
                 iconWheel.createWheel([icon.star, icon.star, icon.star, icon.star, icon.star, icon.star, icon.star, icon.star]);
                
                 var optionWheel = new wheelnav("optionWheel");

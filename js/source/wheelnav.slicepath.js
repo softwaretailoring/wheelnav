@@ -34,6 +34,8 @@ var slicePath = function () {
 
     this.NullSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
 
+        setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+
         return {
             slicePathString: "",
             linePathString: "",

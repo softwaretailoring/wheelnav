@@ -6,12 +6,19 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
 
     this.wheelnav = wheelnav;
     this.itemIndex = itemIndex;
+
+    this.navItem = null;
+    this.navSlice = null;
+    this.navTitle = null;
+    this.navLine = null;
+
     this.title = title;
     this.titleFont = wheelnav.titleFont;
     this.titlePosX = wheelnav.centerX;
     this.titlePosY = wheelnav.centerY;
     this.currentRotate = 0;
-    this.currentPercent = wheelnav.currentPercent;
+    if (wheelnav.currentPercent == null) { this.currentPercent = wheelnav.maxPercent; }
+    else { this.currentPercent = wheelnav.currentPercent; }
 
     if (title != null) {
         this.getSlicePath = wheelnav.slicePath;
@@ -58,11 +65,11 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
 wheelnavItem.prototype.createNavItem = function () {
 
     //Initialize navItem
-    var slicePath = this.getSlicePath(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.navWheelSugar, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.itemIndex, this.currentPercent);
+    var slicePath = this.getSlicePath(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelSugar, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.itemIndex, this.currentPercent);
     this.titlePosX = slicePath.titlePosX;
     this.titlePosY = slicePath.titlePosY;
 
-    this.selectTransform = this.getSelectTransform(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.navWheelSugar, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.itemIndex);
+    this.selectTransform = this.getSelectTransform(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelSugar, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.wheelnav.titleRotateAngle, this.itemIndex);
 
     //Create slice
     this.navSlice = this.wheelnav.raphael.path(slicePath.slicePathString);
@@ -96,25 +103,26 @@ wheelnavItem.prototype.createNavItem = function () {
     this.navLine.id = this.wheelnav.getLineId(this.itemIndex);
 
     //Create item set
-    var currentItem = this.wheelnav.raphael.set();
-    currentItem.push(
+    this.navItem = this.wheelnav.raphael.set();
+    this.navItem.push(
         this.navSlice,
-        this.navTitle
+        this.navTitle,
+        this.navLine
     );
 
-    currentItem.id = this.wheelnav.getItemId(this.itemIndex);
+    this.navItem.id = this.wheelnav.getItemId(this.itemIndex);
 
     var thisWheelNav = this.wheelnav;
     var thisNavItem = this;
     var thisItemIndex = this.itemIndex;
 
-    currentItem.click(function () {
+    this.navItem.click(function () {
         thisWheelNav.navigateWheel(thisItemIndex);
     });
-    currentItem.mouseover(function () {
+    this.navItem.mouseover(function () {
         thisNavItem.hoverEffect(thisItemIndex, true);
     });
-    currentItem.mouseout(function () {
+    this.navItem.mouseout(function () {
         thisNavItem.hoverEffect(thisItemIndex, false);
     });
 };
@@ -187,12 +195,18 @@ wheelnavItem.prototype.getItemRotateString = function () {
 
 wheelnavItem.prototype.getTitleRotateString = function () {
 
-    if (this.wheelnav.titleRotate) {
-        var titleRotate = this.itemIndex * (360 / this.wheelnav.navItemCount) + this.wheelnav.titleRotateAngle;
-        return this.getItemRotateString() + ",r," + titleRotate;
+    var titleRotate = "";
+    if (this.wheelnav.titleRotateAngle != null) {
+        titleRotate += this.getItemRotateString();
+        titleRotate += ",r," + this.itemIndex * (360 / this.wheelnav.navItemCount);
+        titleRotate += ",r," + this.wheelnav.titleRotateAngle;
+        titleRotate += ",r," + this.wheelnav.navAngle;
+        return  titleRotate;
     }
     else {
-        return this.getItemRotateString() + ",r," + (-this.currentRotate).toString();
+        titleRotate += this.getItemRotateString();
+        titleRotate += ",r," + (-this.currentRotate).toString();
+        return titleRotate;
     }
 }
 
