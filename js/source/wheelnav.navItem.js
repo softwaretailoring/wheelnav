@@ -6,11 +6,16 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
 
     this.wheelnav = wheelnav;
     this.itemIndex = itemIndex;
+    this.selected = false;
 
     this.navItem = null;
     this.navSlice = null;
     this.navTitle = null;
     this.navLine = null;
+
+    this.navSliceCurrentTransformString = null;
+    this.navTitleCurrentTransformString = null;
+    this.navLineCurrentTransformString = null;
 
     this.title = title;
     this.titleFont = wheelnav.titleFont;
@@ -28,6 +33,7 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
         this.getSlicePath = slicePath().NullSlice;
     }
 
+    this.slicePathString = null;
     this.getSelectTransform = wheelnav.sliceSelectTransform;
     this.selectTransform = null;
 
@@ -59,6 +65,12 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     if (wheelnav.lineSelectedAttr == null) { this.lineSelectedAttr = { stroke: "#111", "stroke-width": 4 }; }
     else { this.lineSelectedAttr = wheelnav.lineSelectedAttr; }
 
+    this.navDivId = null;
+    if (wheelnav.navDivDefultCssClass == null) { this.navDivDefultCssClass = "tab-pane fade"; }
+    else { this.navDivDefultCssClass = wheelnav.navDivDefultCssClass; }
+    if (wheelnav.navDivSelectedCssClass == null) { this.navDivSelectedCssClass = "tab-pane fade in active"; }
+    else { this.navDivSelectedCssClass = wheelnav.navDivSelectedCssClass; }
+
     return this;
 }
 
@@ -66,13 +78,14 @@ wheelnavItem.prototype.createNavItem = function () {
 
     //Initialize navItem
     var slicePath = this.getSlicePath(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelSugar, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.itemIndex, this.currentPercent);
+    this.slicePathString = slicePath.slicePathString;
     this.titlePosX = slicePath.titlePosX;
     this.titlePosY = slicePath.titlePosY;
 
     this.selectTransform = this.getSelectTransform(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelSugar, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.wheelnav.titleRotateAngle, this.itemIndex);
 
     //Create slice
-    this.navSlice = this.wheelnav.raphael.path(slicePath.slicePathString);
+    this.navSlice = this.wheelnav.raphael.path(this.slicePathString);
     this.navSlice.attr(this.slicePathAttr);
     this.navSlice.attr(this.fillAttr);
     this.navSlice.id = this.wheelnav.getSliceId(this.itemIndex);
@@ -95,7 +108,7 @@ wheelnavItem.prototype.createNavItem = function () {
     this.navTitle.node.id = this.navTitle.id;
 
     var titleRotateString = this.getTitleRotateString();
-    this.navTitle.attr({ currentTransform: titleRotateString });
+    //this.navTitle.attr({ currentTransform: titleRotateString });
     this.navTitle.attr({ transform: titleRotateString });
 
     //Create linepath
@@ -149,6 +162,25 @@ wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
                 navItem.navSlice.attr(navItem.fillAttr);
                 navItem.navTitle.attr(navItem.titleAttr);
                 navItem.navLine.attr(navItem.linePathAttr);
+            }
+        }
+    }
+};
+
+wheelnavItem.prototype.setNavDivCssClass = function () {
+
+    if (this.navDivId != null) {
+        if (this.wheelnav.navDivTabId != null) {
+            if (this.selected) {
+                $('#' + this.wheelnav.navDivTabId + ' a[href="#' + this.navDivId + '"]').tab('show');
+            }
+        }
+        else {
+            if (this.selected) {
+                document.getElementById(this.navDivId).className = this.navDivSelectedCssClass;
+            }
+            else {
+                document.getElementById(this.navDivId).className = this.navDivDefultCssClass;
             }
         }
     }

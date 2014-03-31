@@ -21,7 +21,6 @@ wheelnav = function(divId) {
     holderDiv.innerHTML = "";
 
     this.raphael = new Raphael(divId);
-    setRaphaelCustomAttributes(this.raphael);
     
     this.currentRotate = 0;
     this.currentClick = 0;
@@ -36,6 +35,7 @@ wheelnav = function(divId) {
     this.titleRotateAngle = null;
     this.clickModeRotate = true;
     this.clickModeSpreadOff = false;
+    this.multiSelect = false;
     this.minPercent = 0;
     this.maxPercent = 1;
     this.currentPercent = null;
@@ -66,6 +66,10 @@ wheelnav = function(divId) {
     this.linePathAttr = null;
     this.lineHoverAttr = null;
     this.lineSelectedAttr = null;
+
+    this.navDivTabId = null; //Id of Bootstrap <ul class="nav nav-tabs">. It is necessary for proper fade effect.
+    this.navDivDefultCssClass = null;
+    this.navDivSelectedCssClass = null;
 
     return this;
 }
@@ -181,25 +185,48 @@ wheelnav.prototype.navigateWheel = function (clicked) {
     for (i = 0; i < this.navItemCount; i++) {
         var navItem = this.navItems[i];
 
+        if (i == clicked) {
+            if (this.multiSelect) {
+                navItem.selected = !navItem.selected;
+            } else {
+                navItem.selected = true;
+            }
+        }
+        else {
+            if (!this.multiSelect) {
+                navItem.selected = false;
+            }
+        }
+
         navItem.currentRotate -= (clicked - this.currentClick) * (360 / this.navItemCount);
 
         var sliceTransform = "";
         if (this.clickModeRotate) { sliceTransform = navItem.getItemRotateString(); }
-        if (i == clicked) { sliceTransform += navItem.selectTransform.sliceTransformString; }
-        navItem.navSlice.attr({ currentTransform: sliceTransform });
-        navItem.navSlice.animate({ transform: [sliceTransform] }, navItem.animatetime, navItem.animateeffect);
+        if (navItem.selected) { sliceTransform += navItem.selectTransform.sliceTransformString; }
+        navItem.navSliceCurrentTransformString = sliceTransform;
+        var currentPath = navItem.slicePathString;
+        if (navItem.selected) { currentPath = navItem.selectTransform.slicePathString; }
+
+        if (navItem.selectTransform.slicePathString == "") {
+            navItem.navSlice.animate({ transform: [sliceTransform] }, navItem.animatetime, navItem.animateeffect);
+        }
+        else {
+            navItem.navSlice.animate({ path: currentPath, transform: [sliceTransform] }, navItem.animatetime, navItem.animateeffect);
+        }
 
         var lineTransform = "";
         if (this.clickModeRotate) { lineTransform = navItem.getItemRotateString(); }
-        if (i == clicked) { lineTransform += navItem.selectTransform.lineTransformString; }
-        navItem.navLine.attr({ currentTransform: lineTransform });
+        if (navItem.selected) { lineTransform += navItem.selectTransform.lineTransformString; }
+        navItem.navLineCurrentTransformString = lineTransform;
         navItem.navLine.animate({ transform: [lineTransform] }, navItem.animatetime, navItem.animateeffect);
 
         var titleTransform = "";
         if (this.clickModeRotate) { titleTransform += navItem.getTitleRotateString(); }
-        if (i == clicked) { titleTransform += this.navItems[0].selectTransform.titleTransformString; }
-        navItem.navTitle.attr({ currentTransform: titleTransform });
+        if (navItem.selected) { titleTransform += navItem.selectTransform.titleTransformString; }
+        navItem.navTitleCurrentTransformString = titleTransform;
         navItem.navTitle.animate({ transform: [titleTransform] }, navItem.animatetime, navItem.animateeffect);
+
+        navItem.setNavDivCssClass();
     }
 
     this.currentClick = clicked;
@@ -233,43 +260,35 @@ wheelnav.prototype.spreadWheel = function () {
         var thisWheelNav = this;
         var navItem = this.navItems[i];
 
-        var thisNavSlice = navItem.navSlice;
-        navItem.navSlice.attr({ slicePathFunction: navItem.getSlicePath });
-        navItem.navSlice.attr({ slicePercentPath: [this.centerX, this.centerY, this.wheelSugar, this.baseAngle, this.sliceAngle, i, startPercent] }).animate({ slicePercentPath: [this.centerX, this.centerY, this.wheelSugar, this.baseAngle, this.sliceAngle, i, endPercent] }, navItem.animatetime, navItem.animateeffect, function () {
-            if (endPercent == 0) {
-                this.attr({ transform: "s0" });
-            }
-            if (endPercent > startPercent) {
-                var currentTransform = this.attr("currentTransform");
-                this.attr({ transform: currentTransform });
-            }
-        });
+        var slicePath = navItem.getSlicePath(this.centerX, this.centerY, this.wheelSugar, this.baseAngle, this.sliceAngle, i, this.currentPercent);
 
-        navItem.navLine.attr({ slicePathFunction: navItem.getSlicePath });
-        navItem.navLine.attr({ linePercentPath: [this.centerX, this.centerY, this.wheelSugar, this.baseAngle, this.sliceAngle, i, startPercent] }).animate({ linePercentPath: [this.centerX, this.centerY, this.wheelSugar, this.baseAngle, this.sliceAngle, i, endPercent] }, navItem.animatetime, navItem.animateeffect, function () {
-            if (endPercent == 0) {
-                this.attr({ transform: "s0" });
-            }
-            if (endPercent > startPercent) {
-                var currentTransform = this.attr("currentTransform");
-                this.attr({ transform: currentTransform });
-            }
-        });
+        var slicePathString = slicePath.slicePathString;
+        navItem.navSlice.animate({ transform: navItem.navSliceCurrentTransformString, path: slicePathString }, navItem.animatetime, navItem.animateeffect);
 
-        navItem.navTitle.attr({ slicePathFunction: navItem.getSlicePath });
-        navItem.navTitle.attr({ titlePercentFunction: navItem.getTitlePercentAttr });
-        navItem.navTitle.attr({ currentTitle: navItem.titlePath });
-        navItem.navTitle.attr({ titlePercentPos: [this.centerX, this.centerY, this.wheelSugar, this.baseAngle, this.sliceAngle, i, startPercent] });
-        navItem.navTitle.animate({ titlePercentPos: [this.centerX, this.centerY, this.wheelSugar, this.baseAngle, this.sliceAngle, i, endPercent] }, navItem.animatetime, navItem.animateeffect, function () {
-            var currentTransform = this.attr("currentTransform");
+        var linePathString = slicePath.linePathString;
+        navItem.navLine.animate({ transform: navItem.navLineCurrentTransformString, path: linePathString }, navItem.animatetime, navItem.animateeffect);
 
-            if (endPercent == 0) {
-                currentTransform = "s0";
+        var percentAttr = navItem.getTitlePercentAttr(slicePath.titlePosX, slicePath.titlePosY, navItem.titlePath);
+
+        //if (this.currentPercent < 0.3) titleCurrentTransform += ",s" + this.currentPercent * (1 / 0.3);
+
+        var transformAttr = {};
+
+        if (navItem.navTitle.type == "path") {
+            transformAttr = {
+                path: percentAttr.path,
+                transform: navItem.navTitleCurrentTransformString
             }
+        }
+        else {
+            transformAttr = {
+                x: percentAttr.x,
+                y: percentAttr.y,
+                transform: navItem.navTitleCurrentTransformString
+            }
+        }
 
-            this.attr({ transform: currentTransform });
-            
-        });
+        navItem.navTitle.animate(transformAttr , navItem.animatetime, navItem.animateeffect);
     }
 
     this.spreader.setVisibility();

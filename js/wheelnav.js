@@ -22,7 +22,6 @@ wheelnav = function(divId) {
     holderDiv.innerHTML = "";
 
     this.raphael = new Raphael(divId);
-    setRaphaelCustomAttributes(this.raphael);
     
     this.currentRotate = 0;
     this.currentClick = 0;
@@ -37,6 +36,7 @@ wheelnav = function(divId) {
     this.titleRotateAngle = null;
     this.clickModeRotate = true;
     this.clickModeSpreadOff = false;
+    this.multiSelect = false;
     this.minPercent = 0;
     this.maxPercent = 1;
     this.currentPercent = null;
@@ -67,6 +67,10 @@ wheelnav = function(divId) {
     this.linePathAttr = null;
     this.lineHoverAttr = null;
     this.lineSelectedAttr = null;
+
+    this.navDivTabId = null; //Id of Bootstrap <ul class="nav nav-tabs">. It is necessary for proper fade effect.
+    this.navDivDefultCssClass = null;
+    this.navDivSelectedCssClass = null;
 
     return this;
 }
@@ -182,25 +186,48 @@ wheelnav.prototype.navigateWheel = function (clicked) {
     for (i = 0; i < this.navItemCount; i++) {
         var navItem = this.navItems[i];
 
+        if (i == clicked) {
+            if (this.multiSelect) {
+                navItem.selected = !navItem.selected;
+            } else {
+                navItem.selected = true;
+            }
+        }
+        else {
+            if (!this.multiSelect) {
+                navItem.selected = false;
+            }
+        }
+
         navItem.currentRotate -= (clicked - this.currentClick) * (360 / this.navItemCount);
 
         var sliceTransform = "";
         if (this.clickModeRotate) { sliceTransform = navItem.getItemRotateString(); }
-        if (i == clicked) { sliceTransform += navItem.selectTransform.sliceTransformString; }
-        navItem.navSlice.attr({ currentTransform: sliceTransform });
-        navItem.navSlice.animate({ transform: [sliceTransform] }, navItem.animatetime, navItem.animateeffect);
+        if (navItem.selected) { sliceTransform += navItem.selectTransform.sliceTransformString; }
+        navItem.navSliceCurrentTransformString = sliceTransform;
+        var currentPath = navItem.slicePathString;
+        if (navItem.selected) { currentPath = navItem.selectTransform.slicePathString; }
+
+        if (navItem.selectTransform.slicePathString == "") {
+            navItem.navSlice.animate({ transform: [sliceTransform] }, navItem.animatetime, navItem.animateeffect);
+        }
+        else {
+            navItem.navSlice.animate({ path: currentPath, transform: [sliceTransform] }, navItem.animatetime, navItem.animateeffect);
+        }
 
         var lineTransform = "";
         if (this.clickModeRotate) { lineTransform = navItem.getItemRotateString(); }
-        if (i == clicked) { lineTransform += navItem.selectTransform.lineTransformString; }
-        navItem.navLine.attr({ currentTransform: lineTransform });
+        if (navItem.selected) { lineTransform += navItem.selectTransform.lineTransformString; }
+        navItem.navLineCurrentTransformString = lineTransform;
         navItem.navLine.animate({ transform: [lineTransform] }, navItem.animatetime, navItem.animateeffect);
 
         var titleTransform = "";
         if (this.clickModeRotate) { titleTransform += navItem.getTitleRotateString(); }
-        if (i == clicked) { titleTransform += this.navItems[0].selectTransform.titleTransformString; }
-        navItem.navTitle.attr({ currentTransform: titleTransform });
+        if (navItem.selected) { titleTransform += navItem.selectTransform.titleTransformString; }
+        navItem.navTitleCurrentTransformString = titleTransform;
         navItem.navTitle.animate({ transform: [titleTransform] }, navItem.animatetime, navItem.animateeffect);
+
+        navItem.setNavDivCssClass();
     }
 
     this.currentClick = clicked;
@@ -234,43 +261,35 @@ wheelnav.prototype.spreadWheel = function () {
         var thisWheelNav = this;
         var navItem = this.navItems[i];
 
-        var thisNavSlice = navItem.navSlice;
-        navItem.navSlice.attr({ slicePathFunction: navItem.getSlicePath });
-        navItem.navSlice.attr({ slicePercentPath: [this.centerX, this.centerY, this.wheelSugar, this.baseAngle, this.sliceAngle, i, startPercent] }).animate({ slicePercentPath: [this.centerX, this.centerY, this.wheelSugar, this.baseAngle, this.sliceAngle, i, endPercent] }, navItem.animatetime, navItem.animateeffect, function () {
-            if (endPercent == 0) {
-                this.attr({ transform: "s0" });
-            }
-            if (endPercent > startPercent) {
-                var currentTransform = this.attr("currentTransform");
-                this.attr({ transform: currentTransform });
-            }
-        });
+        var slicePath = navItem.getSlicePath(this.centerX, this.centerY, this.wheelSugar, this.baseAngle, this.sliceAngle, i, this.currentPercent);
 
-        navItem.navLine.attr({ slicePathFunction: navItem.getSlicePath });
-        navItem.navLine.attr({ linePercentPath: [this.centerX, this.centerY, this.wheelSugar, this.baseAngle, this.sliceAngle, i, startPercent] }).animate({ linePercentPath: [this.centerX, this.centerY, this.wheelSugar, this.baseAngle, this.sliceAngle, i, endPercent] }, navItem.animatetime, navItem.animateeffect, function () {
-            if (endPercent == 0) {
-                this.attr({ transform: "s0" });
-            }
-            if (endPercent > startPercent) {
-                var currentTransform = this.attr("currentTransform");
-                this.attr({ transform: currentTransform });
-            }
-        });
+        var slicePathString = slicePath.slicePathString;
+        navItem.navSlice.animate({ transform: navItem.navSliceCurrentTransformString, path: slicePathString }, navItem.animatetime, navItem.animateeffect);
 
-        navItem.navTitle.attr({ slicePathFunction: navItem.getSlicePath });
-        navItem.navTitle.attr({ titlePercentFunction: navItem.getTitlePercentAttr });
-        navItem.navTitle.attr({ currentTitle: navItem.titlePath });
-        navItem.navTitle.attr({ titlePercentPos: [this.centerX, this.centerY, this.wheelSugar, this.baseAngle, this.sliceAngle, i, startPercent] });
-        navItem.navTitle.animate({ titlePercentPos: [this.centerX, this.centerY, this.wheelSugar, this.baseAngle, this.sliceAngle, i, endPercent] }, navItem.animatetime, navItem.animateeffect, function () {
-            var currentTransform = this.attr("currentTransform");
+        var linePathString = slicePath.linePathString;
+        navItem.navLine.animate({ transform: navItem.navLineCurrentTransformString, path: linePathString }, navItem.animatetime, navItem.animateeffect);
 
-            if (endPercent == 0) {
-                currentTransform = "s0";
+        var percentAttr = navItem.getTitlePercentAttr(slicePath.titlePosX, slicePath.titlePosY, navItem.titlePath);
+
+        //if (this.currentPercent < 0.3) titleCurrentTransform += ",s" + this.currentPercent * (1 / 0.3);
+
+        var transformAttr = {};
+
+        if (navItem.navTitle.type == "path") {
+            transformAttr = {
+                path: percentAttr.path,
+                transform: navItem.navTitleCurrentTransformString
             }
+        }
+        else {
+            transformAttr = {
+                x: percentAttr.x,
+                y: percentAttr.y,
+                transform: navItem.navTitleCurrentTransformString
+            }
+        }
 
-            this.attr({ transform: currentTransform });
-            
-        });
+        navItem.navTitle.animate(transformAttr , navItem.animatetime, navItem.animateeffect);
     }
 
     this.spreader.setVisibility();
@@ -307,11 +326,16 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
 
     this.wheelnav = wheelnav;
     this.itemIndex = itemIndex;
+    this.selected = false;
 
     this.navItem = null;
     this.navSlice = null;
     this.navTitle = null;
     this.navLine = null;
+
+    this.navSliceCurrentTransformString = null;
+    this.navTitleCurrentTransformString = null;
+    this.navLineCurrentTransformString = null;
 
     this.title = title;
     this.titleFont = wheelnav.titleFont;
@@ -329,6 +353,7 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
         this.getSlicePath = slicePath().NullSlice;
     }
 
+    this.slicePathString = null;
     this.getSelectTransform = wheelnav.sliceSelectTransform;
     this.selectTransform = null;
 
@@ -360,6 +385,12 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     if (wheelnav.lineSelectedAttr == null) { this.lineSelectedAttr = { stroke: "#111", "stroke-width": 4 }; }
     else { this.lineSelectedAttr = wheelnav.lineSelectedAttr; }
 
+    this.navDivId = null;
+    if (wheelnav.navDivDefultCssClass == null) { this.navDivDefultCssClass = "tab-pane fade"; }
+    else { this.navDivDefultCssClass = wheelnav.navDivDefultCssClass; }
+    if (wheelnav.navDivSelectedCssClass == null) { this.navDivSelectedCssClass = "tab-pane fade in active"; }
+    else { this.navDivSelectedCssClass = wheelnav.navDivSelectedCssClass; }
+
     return this;
 }
 
@@ -367,13 +398,14 @@ wheelnavItem.prototype.createNavItem = function () {
 
     //Initialize navItem
     var slicePath = this.getSlicePath(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelSugar, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.itemIndex, this.currentPercent);
+    this.slicePathString = slicePath.slicePathString;
     this.titlePosX = slicePath.titlePosX;
     this.titlePosY = slicePath.titlePosY;
 
     this.selectTransform = this.getSelectTransform(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelSugar, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.wheelnav.titleRotateAngle, this.itemIndex);
 
     //Create slice
-    this.navSlice = this.wheelnav.raphael.path(slicePath.slicePathString);
+    this.navSlice = this.wheelnav.raphael.path(this.slicePathString);
     this.navSlice.attr(this.slicePathAttr);
     this.navSlice.attr(this.fillAttr);
     this.navSlice.id = this.wheelnav.getSliceId(this.itemIndex);
@@ -396,7 +428,7 @@ wheelnavItem.prototype.createNavItem = function () {
     this.navTitle.node.id = this.navTitle.id;
 
     var titleRotateString = this.getTitleRotateString();
-    this.navTitle.attr({ currentTransform: titleRotateString });
+    //this.navTitle.attr({ currentTransform: titleRotateString });
     this.navTitle.attr({ transform: titleRotateString });
 
     //Create linepath
@@ -450,6 +482,25 @@ wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
                 navItem.navSlice.attr(navItem.fillAttr);
                 navItem.navTitle.attr(navItem.titleAttr);
                 navItem.navLine.attr(navItem.linePathAttr);
+            }
+        }
+    }
+};
+
+wheelnavItem.prototype.setNavDivCssClass = function () {
+
+    if (this.navDivId != null) {
+        if (this.wheelnav.navDivTabId != null) {
+            if (this.selected) {
+                $('#' + this.wheelnav.navDivTabId + ' a[href="#' + this.navDivId + '"]').tab('show');
+            }
+        }
+        else {
+            if (this.selected) {
+                document.getElementById(this.navDivId).className = this.navDivSelectedCssClass;
+            }
+            else {
+                document.getElementById(this.navDivId).className = this.navDivDefultCssClass;
             }
         }
     }
@@ -619,9 +670,10 @@ var slicePath = function () {
         rbase = r * 0.37;
 
         slicePathString = [["M", rbase * Math.cos(startTheta) + x, rbase * Math.sin(startTheta) + y],
-                     ["A", rbase, rbase, 0, 0, 1, rbase * Math.cos(endTheta) + x, rbase * Math.sin(endTheta) + y],
-                     ["L", r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
-                     ["A", r, r, 0, 0, 0, r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
+                     ["L", r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
+                     ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
+                     ["L", rbase * Math.cos(endTheta) + x, rbase * Math.sin(endTheta) + y],
+                     ["A", rbase, rbase, 0, 0, 0, rbase * Math.cos(startTheta) + x, rbase * Math.sin(startTheta) + y],
                      ["z"]];
 
         titleSugar = r * 0.7;
@@ -635,8 +687,51 @@ var slicePath = function () {
         }
     }
 
-    this.StarSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+    this.UmbrellaSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
 
+        setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+
+        r = r * 0.95;
+        rbase = r * 0.37;
+
+        slicePathString = [["M", rbase * Math.cos(startTheta) + x, rbase * Math.sin(startTheta) + y],
+                     ["L", r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
+                     ["A", r, r, 0, 0, 0, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
+                     ["L", rbase * Math.cos(endTheta) + x, rbase * Math.sin(endTheta) + y],
+                     ["A", rbase, rbase, 0, 0, 1, rbase * Math.cos(startTheta) + x, rbase * Math.sin(startTheta) + y],
+                     ["z"]];
+
+        titleSugar = r * 0.7;
+        setTitlePos(x, y);
+
+        return {
+            slicePathString: slicePathString,
+            linePathString: "",
+            titlePosX: titlePosX,
+            titlePosY: titlePosY
+        }
+    }
+
+    this.StarBasePieSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+
+        setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+        r = r * 0.9;
+        slicePathString = [["M", x, y],
+                     ["L", r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
+                     ["A", r, r, 0, 0, 1, r * Math.cos(middleTheta) + x, r * Math.sin(middleTheta) + y],
+                     ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
+                     ["z"]];
+
+        return {
+            slicePathString: slicePathString,
+            linePathString: "",
+            titlePosX: titlePosX,
+            titlePosY: titlePosY
+        }
+    }
+
+    this.StarSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+        
         setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
         rbase = r * 0.5;
 
@@ -686,10 +781,61 @@ var slicePath = function () {
         }
     }
 
+    this.CogBasePieSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+
+        setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+        r = r * 0.9;
+
+        theta1 = getTheta(startAngle + sliceAngle * 0.0625);
+        theta12 = getTheta(startAngle + sliceAngle * 0.125);
+        theta2 = getTheta(startAngle + sliceAngle * 0.1875);
+        theta22 = getTheta(startAngle + sliceAngle * 0.25);
+        theta3 = getTheta(startAngle + sliceAngle * 0.3125);
+        theta32 = getTheta(startAngle + sliceAngle * 0.375);
+        theta4 = getTheta(startAngle + sliceAngle * 0.4375);
+        theta42 = getTheta(startAngle + sliceAngle * 0.5);
+        theta5 = getTheta(startAngle + sliceAngle * 0.5625);
+        theta52 = getTheta(startAngle + sliceAngle * 0.625);
+        theta6 = getTheta(startAngle + sliceAngle * 0.6875);
+        theta62 = getTheta(startAngle + sliceAngle * 0.75);
+        theta7 = getTheta(startAngle + sliceAngle * 0.8125);
+        theta72 = getTheta(startAngle + sliceAngle * 0.875);
+        theta8 = getTheta(startAngle + sliceAngle * 0.9375);
+        theta82 = getTheta(startAngle + sliceAngle * 0.96875);
+
+        slicePathString = [["M", x, y],
+             ["L", r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
+             ["A", r, r, 0, 0, 1, r * Math.cos(theta1) + x, r * Math.sin(theta1) + y],
+             ["A", r, r, 0, 0, 1, r * Math.cos(theta12) + x, r * Math.sin(theta12) + y],
+             ["A", r, r, 0, 0, 1, r * Math.cos(theta2) + x, r * Math.sin(theta2) + y],
+             ["A", r, r, 0, 0, 1, r * Math.cos(theta22) + x, r * Math.sin(theta22) + y],
+             ["A", r, r, 0, 0, 1, r * Math.cos(theta3) + x, r * Math.sin(theta3) + y],
+             ["A", r, r, 0, 0, 1, r * Math.cos(theta32) + x, r * Math.sin(theta32) + y],
+             ["A", r, r, 0, 0, 1, r * Math.cos(theta4) + x, r * Math.sin(theta4) + y],
+             ["A", r, r, 0, 0, 1, r * Math.cos(theta42) + x, r * Math.sin(theta42) + y],
+             ["A", r, r, 0, 0, 1, r * Math.cos(theta5) + x, r * Math.sin(theta5) + y],
+             ["A", r, r, 0, 0, 1, r * Math.cos(theta52) + x, r * Math.sin(theta52) + y],
+             ["A", r, r, 0, 0, 1, r * Math.cos(theta6) + x, r * Math.sin(theta6) + y],
+             ["A", r, r, 0, 0, 1, r * Math.cos(theta62) + x, r * Math.sin(theta62) + y],
+             ["A", r, r, 0, 0, 1, r * Math.cos(theta7) + x, r * Math.sin(theta7) + y],
+             ["A", r, r, 0, 0, 1, r * Math.cos(theta72) + x, r * Math.sin(theta72) + y],
+             ["A", r, r, 0, 0, 1, r * Math.cos(theta8) + x, r * Math.sin(theta8) + y],
+             ["A", r, r, 0, 0, 1, r * Math.cos(theta82) + x, r * Math.sin(theta82) + y],
+             ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
+             ["z"]];
+
+        return {
+            slicePathString: slicePathString,
+            linePathString: "",
+            titlePosX: titlePosX,
+            titlePosY: titlePosY
+        }
+    }
+
     this.CogSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
 
         setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
-        rbase = r * 0.95;
+        rbase = r * 0.9;
 
         theta1 = getTheta(startAngle + sliceAngle * 0.0625);
         theta2 = getTheta(startAngle + sliceAngle * 0.1875);
@@ -746,19 +892,26 @@ var slicePath = function () {
             menuSugar = 15;
         }
 
-        slicePathString = [["M", titlePosX, titlePosY],
-                    ["m", -menuSugar, 0],
-                    ["a", menuSugar, menuSugar, 0, 1, 0, 2 * menuSugar, 0],
-                    ["a", menuSugar, menuSugar, 0, 1, 0, -2 * menuSugar, 0],
+        if (percent == 0) {
+            menuSugar = 10;
+        }
+
+        slicePathString = [["M", titlePosX - (menuSugar * Math.cos(middleTheta)), titlePosY - (menuSugar * Math.sin(middleTheta))],
+                    ["A", menuSugar, menuSugar, 0, 0, 1, titlePosX + (menuSugar * Math.cos(middleTheta)), titlePosY + (menuSugar * Math.sin(middleTheta))],
+                    ["A", menuSugar, menuSugar, 0, 0, 1, titlePosX - (menuSugar * Math.cos(middleTheta)), titlePosY - (menuSugar * Math.sin(middleTheta))],
                     ["z"]];
 
-        lineEndX = (titleSugar - menuSugar) * Math.cos(middleTheta) + x;
-        lineEndY = (titleSugar - menuSugar) * Math.sin(middleTheta) + y;
+        if (percent == 0) {
+            linePathString = [["M", x, y],
+                    ["A", 1, 1, 0, 0, 1, x+1, y+1]];
+        }
+        else {
+            lineEndX = (titleSugar - menuSugar) * Math.cos(middleTheta) + x;
+            lineEndY = (titleSugar - menuSugar) * Math.sin(middleTheta) + y;
 
-        linePathString = [["M", x, y],
-                    ["A", r/2, r/2, 0, 0, 1, lineEndX, lineEndY]];//,
-                    //["L", lineEndX, lineEndY],
-                    //["z"]];
+            linePathString = [["M", x, y],
+                        ["A", r / 2, r / 2, 0, 0, 1, lineEndX, lineEndY]];
+        }
 
         return {
             slicePathString: slicePathString,
@@ -794,9 +947,9 @@ var slicePath = function () {
         titleSugar = r * 0.87;
         setTitlePos(x, y);
 
-        slicePathString = [["M", r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
-                    ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
+        slicePathString = [["M", r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
                     ["A", r, r, 0, 0, 1, r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
+                    ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
                     ["z"]];
 
         return {
@@ -820,6 +973,72 @@ var slicePath = function () {
                      ["M", r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
                      ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
                      ["A", r, r, 0, 0, 0, r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y]];
+
+        return {
+            slicePathString: slicePathString,
+            linePathString: "",
+            titlePosX: titlePosX,
+            titlePosY: titlePosY
+        }
+    }
+
+    this.LineSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+
+        setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+        r = r * 0.9;
+
+        if (sliceAngle > 60 &&
+            sliceAngle < 180) {
+            titleSugar = r * ((180 / sliceAngle) / 5);
+            setTitlePos(x, y);
+        }
+        else {
+            titleSugar = r * 0.5;
+            setTitlePos(x, y);
+        }
+
+        if (sliceAngle < 180) {
+            slicePathString = [["M", x, y],
+                         ["L", r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
+                         ["L", r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
+                         ["z"]];
+        }
+        else {
+            var test1 = r * Math.cos(startTheta);
+            var test2 = r * Math.sin(startTheta);
+            var test3 = r * Math.cos(endTheta);
+            var test4 = r * Math.sin(endTheta);
+
+            slicePathString = [["M", x, y],
+                         ["L", r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
+                         ["L", r * Math.cos(middleTheta) + x, r * Math.sin(startTheta) + y],
+                         ["L", r * Math.cos(middleTheta) + x, r * Math.sin(endTheta) + y],
+                         ["L", r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
+                         ["z"]];
+        }
+
+        return {
+            slicePathString: slicePathString,
+            linePathString: "",
+            titlePosX: titlePosX,
+            titlePosY: titlePosY
+        }
+    }
+
+    this.TabSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+
+        rOriginal = rOriginal * 0.9;
+        var navItemCount = 360 / sliceAngle;
+        var itemSize = 2 * rOriginal / navItemCount;
+
+        titlePosX = x + (itemSize / 2);
+        titlePosY = itemIndex * itemSize + y + (itemSize / 2) - rOriginal;
+
+        slicePathString = [["M", x, itemIndex * itemSize + y - rOriginal],
+                     ["L", itemSize + x, itemIndex * itemSize + y - rOriginal],
+                     ["L", itemSize + x, (itemIndex + 1) * itemSize + y - rOriginal],
+                     ["L", x, (itemIndex + 1) * itemSize + y - rOriginal],
+                     ["z"]];
 
         return {
             slicePathString: slicePathString,
@@ -860,6 +1079,7 @@ var sliceSelectTransform = function () {
     this.NullTransform = function (x, y, rOriginal, baseAngle, sliceAngle, titleRotateAngle, itemIndex) {
         return {
             sliceTransformString: "",
+            slicePathString: "",
             lineTransformString: "",
             titleTransformString: ""
         }
@@ -872,14 +1092,16 @@ var sliceSelectTransform = function () {
 
         if (titleRotateAngle != null) {
             baseTheta = getTheta(-titleRotateAngle);
-            titleTransformString = "t" + (rOriginal / 10 * Math.cos(baseTheta)).toString() + "," + (rOriginal / 10 * Math.sin(baseTheta)).toString();
         }
         else {
-            titleTransformString = sliceTransformString;
+            baseTheta = getTheta(baseAngle + sliceAngle / 2);
         }
+
+        titleTransformString = "t" + (rOriginal / 10 * Math.cos(baseTheta)).toString() + "," + (rOriginal / 10 * Math.sin(baseTheta)).toString();
 
         return {
             sliceTransformString: sliceTransformString,
+            slicePathString: "",
             lineTransformString: sliceTransformString,
             titleTransformString: titleTransformString
         }
@@ -891,6 +1113,7 @@ var sliceSelectTransform = function () {
 
         return {
             sliceTransformString: sliceTransformString,
+            slicePathString: "",
             lineTransformString: sliceTransformString,
             titleTransformString: sliceTransformString
         }
@@ -902,6 +1125,7 @@ var sliceSelectTransform = function () {
 
         return {
             sliceTransformString: sliceTransformString,
+            slicePathString: "",
             lineTransformString: sliceTransformString,
             titleTransformString: sliceTransformString
         }
@@ -909,10 +1133,11 @@ var sliceSelectTransform = function () {
 
     this.ScaleTransform = function (x, y, rOriginal, baseAngle, sliceAngle, titleRotateAngle, itemIndex) {
 
-        sliceTransformString = "s1.3";
+        sliceTransformString = "s1.2";
 
         return {
             sliceTransformString: sliceTransformString,
+            slicePathString: "",
             lineTransformString: "",
             titleTransformString: sliceTransformString
         }
@@ -922,6 +1147,7 @@ var sliceSelectTransform = function () {
 
         return {
             sliceTransformString: "",
+            slicePathString: "",
             lineTransformString: "",
             titleTransformString: "s1.3"
         }
@@ -933,8 +1159,99 @@ var sliceSelectTransform = function () {
 
         return {
             sliceTransformString: sliceTransformString,
+            slicePathString: "",
             lineTransformString: "",
             titleTransformString: sliceTransformString
+        }
+    }
+
+    this.PieSliceBigTransform = function (x, y, rOriginal, baseAngle, sliceAngle, titleRotateAngle, itemIndex) {
+
+        slicePathString = slicePath().PieSlice(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, 10).slicePathString;
+
+        return {
+            sliceTransformString: "",
+            slicePathString: slicePathString,
+            lineTransformString: "",
+            titleTransformString: ""
+        }
+    }
+
+    this.StarSliceTransform = function (x, y, rOriginal, baseAngle, sliceAngle, titleRotateAngle, itemIndex) {
+
+        slicePathString = slicePath().StarSlice(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, 1).slicePathString;
+
+        return {
+            sliceTransformString: "",
+            slicePathString: slicePathString,
+            lineTransformString: "",
+            titleTransformString: ""
+        }
+    }
+
+    this.DonutSliceTransform = function (x, y, rOriginal, baseAngle, sliceAngle, titleRotateAngle, itemIndex) {
+
+        var slice = slicePath().DonutSlice(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, 1);
+        slicePathString = slice.slicePathString;
+
+        if (titleRotateAngle != null) {
+            baseTheta = getTheta(-titleRotateAngle);
+        }
+        else {
+            baseTheta = getTheta(baseAngle + sliceAngle / 2);
+        }
+        titleTransformString = "t" + (rOriginal / 10 * Math.cos(baseTheta)).toString() + "," + (rOriginal / 10 * Math.sin(baseTheta)).toString();
+
+        return {
+            sliceTransformString: "",
+            slicePathString: slicePathString,
+            lineTransformString: "",
+            titleTransformString: titleTransformString
+        }
+    }
+
+    this.MenuSliceTransform = function (x, y, rOriginal, baseAngle, sliceAngle, titleRotateAngle, itemIndex) {
+
+        var slice = slicePath().MenuSlice(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, 1);
+        slicePathString = slice.slicePathString;
+
+        if (titleRotateAngle != null) {
+            baseTheta = getTheta(-titleRotateAngle);
+        }
+        else {
+            baseTheta = getTheta(baseAngle + sliceAngle / 2);
+        }
+        titleTransformString = "t" + (5 * Math.cos(baseTheta)).toString() + "," + (5 * Math.sin(baseTheta)).toString();
+
+        return {
+            sliceTransformString: "",
+            slicePathString: slicePathString,
+            lineTransformString: "",
+            titleTransformString: titleTransformString
+        }
+    }
+
+    this.WheelSliceTransform = function (x, y, rOriginal, baseAngle, sliceAngle, titleRotateAngle, itemIndex) {
+
+        slicePathString = slicePath().WheelSlice(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, 1).slicePathString;
+
+        return {
+            sliceTransformString: "",
+            slicePathString: slicePathString,
+            lineTransformString: "",
+            titleTransformString: ""
+        }
+    }
+
+    this.CogSliceTransform = function (x, y, rOriginal, baseAngle, sliceAngle, titleRotateAngle, itemIndex) {
+
+        slicePathString = slicePath().CogSlice(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, 1).slicePathString;
+
+        return {
+            sliceTransformString: "",
+            slicePathString: slicePathString,
+            lineTransformString: "",
+            titleTransformString: ""
         }
     }
 
@@ -1001,95 +1318,3 @@ var colorpalette = {
     gamebookers: new Array("#FF9900", "#E9E9E9", "#BCBCBC", "#3299BB", "#424242"),
     parrot: new Array("#D80351", "#F5D908", "#00A3EE", "#929292", "#3F3F3F")
 }
-///#source 1 1 /js/source/wheelnav.customAttributes.js
-//---------------------------------
-// Raphael.js custom attributes
-//---------------------------------
-
-function setRaphaelCustomAttributes(raphael) {
-
-    raphael.customAttributes.slicePathFunction = function (pathFunction) {
-        return {
-            slicePathFunction: pathFunction
-        };
-    };
-
-    raphael.customAttributes.titlePercentFunction = function (titleFunction) {
-        return {
-            titlePercentFunction: titleFunction
-        };
-    };
-
-    raphael.customAttributes.currentTransform = function (tranformString) {
-        return {
-            currentTransform: tranformString
-        };
-    };
-
-    raphael.customAttributes.currentTitle = function (titleString) {
-        return {
-            currentTitle: titleString
-        };
-    };
-
-    raphael.customAttributes.slicePercentPath = function (centerX, centerY, sliceR, baseAngle, sliceAngle, itemIndex, percent) {
-
-        var slicePathFunction = this.attr("slicePathFunction");
-        var currentTransform = this.attr("currentTransform");
-
-        var pathString = slicePathFunction(centerX, centerY, sliceR, baseAngle, sliceAngle, itemIndex, percent).slicePathString;
-        var pathAttr = {
-            path: pathString,
-            transform: currentTransform
-        };
-
-        return pathAttr;
-    }
-
-    raphael.customAttributes.linePercentPath = function (centerX, centerY, sliceR, baseAngle, sliceAngle, itemIndex, percent) {
-
-        var slicePathFunction = this.attr("slicePathFunction");
-        var currentTransform = this.attr("currentTransform");
-
-        var pathString = slicePathFunction(centerX, centerY, sliceR, baseAngle, sliceAngle, itemIndex, percent).linePathString;
-        var pathAttr = {
-            path: pathString,
-            transform: currentTransform
-        };
-
-        return pathAttr;
-    }
-
-    raphael.customAttributes.titlePercentPos = function (centerX, centerY, sliceR, baseAngle, sliceAngle, itemIndex, percent) {
-
-        var slicePathFunction = this.attr("slicePathFunction");
-        var titlePercentFunction = this.attr("titlePercentFunction");
-        var currentTransform = this.attr("currentTransform");
-        var currentTitle = this.attr("currentTitle");
-
-        var navItem = slicePathFunction(centerX, centerY, sliceR, baseAngle, sliceAngle, itemIndex, percent);
-
-        percentAttr = titlePercentFunction(navItem.titlePosX, navItem.titlePosY, currentTitle);
-
-        if (percent < 0.3) currentTransform += ",s" + percent * (1 / 0.3);
-
-        var transformAttr = {};
-
-        if (this.type == "path") {
-            transformAttr = {
-                path: percentAttr.path,
-                transform: currentTransform
-            }
-        }
-        else {
-            transformAttr = {
-                x: percentAttr.x,
-                y: percentAttr.y,
-                transform: currentTransform
-            }
-        }
-
-        return transformAttr;
-    };
-}
-

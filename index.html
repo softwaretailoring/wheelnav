@@ -24,27 +24,21 @@
 
             window.onload = function () {
 
-                var textWheel = new wheelnav("textWheel");
-                textWheel.slicePath = slicePath().WheelSlice;
-                textWheel.sliceSelectTransform = sliceSelectTransform().ScaleTitleTransform;
-                textWheel.navItemCount = 17;
-                textWheel.spreaderEnable = true;
-                textWheel.createWheel();
+                var cogWheel = new wheelnav("cogWheel");
+                cogWheel.slicePath = slicePath().CogSlice;
+                cogWheel.wheelSugar = 0.85 * cogWheel.wheelSugar;
+                cogWheel.navAngle = 60;
+                cogWheel.titleRotateAngle = -60;
+                cogWheel.sliceSelectTransform = sliceSelectTransform().MoveMiddleTransform;
+                cogWheel.createWheel(["title-0", "title-1", "title-2", "title-3"]);
 
                 var textWheelRotatedTitle = new wheelnav("textWheelRotatedTitle");
                 textWheelRotatedTitle.slicePath = slicePath().EyeSlice;
                 textWheelRotatedTitle.sliceSelectTransform = sliceSelectTransform().RotateHalfTransform;
+                textWheelRotatedTitle.sliceSelectTransform = sliceSelectTransform().MenuSliceTransform;
+                textWheelRotatedTitle.minPercent = 0.3;
                 textWheelRotatedTitle.titleRotateAngle = 270;
-                textWheelRotatedTitle.createWheel(["title-0", "title-1", "title-2", "title-3", "title-4", "title-5"]);
-
-                var cogWheel = new wheelnav("cogWheel");
-                cogWheel.slicePath = slicePath().CogSlice;
-                cogWheel.currentPercent = 0.85;
-                cogWheel.navAngle = 60;
-                cogWheel.titleRotateAngle = -60;
-                cogWheel.sliceSelectTransform = sliceSelectTransform().MoveMiddleTransform;
-                //cogWheel.createWheel([icon.gear, icon.scissors, icon.acw, icon.sun, icon.smile, icon.refresh, icon.anonymous, icon.quote]);
-                cogWheel.createWheel(["title-0", "title-1", "title-2", "title-3"]);
+                textWheelRotatedTitle.createWheel([icon.check, icon.check, icon.check, icon.check, icon.check, icon.check]);
 
                 var pieWheel = new wheelnav("pieWheel");
                 pieWheel.slicePath = slicePath().MenuSlice;
@@ -55,20 +49,32 @@
                 pieWheel.centerY = pieWheel.centerY * 0.4;
                 pieWheel.clickModeRotate = false;
                 pieWheel.createWheel([icon.check, icon.check, icon.raphael, null, null, null, null, null]);
-                //pieWheel.createWheel([icon.check, icon.check, icon.check, null, null, null, null, null]);
                 
                 var iconWheel = new wheelnav("iconWheel");
-                iconWheel.slicePath = slicePath().MenuSlice;
-                iconWheel.sliceSelectTransform = sliceSelectTransform().RotateScaleTransform;
+                iconWheel.slicePath = slicePath().LineSlice;
+                iconWheel.sliceSelectTransform = sliceSelectTransform().MoveMiddleTransform;
                 iconWheel.spreaderEnable = true;
                 iconWheel.minPercent = 0.3;
                 iconWheel.maxPercent = 1;
                 iconWheel.currentPercent = 1;
-                iconWheel.navAngle = 45;
-                iconWheel.createWheel([icon.star, icon.star, icon.star, icon.star, icon.star, icon.star, icon.star, icon.star]);
+                iconWheel.navAngle = 60;
+                iconWheel.createWheel([icon.star, icon.star, icon.star, icon.star, icon.star, icon.star]);
                
                 var optionWheel = new wheelnav("optionWheel");
+                optionWheel.wheelSugar = optionWheel.wheelSugar * 0.8;
+                optionWheel.slicePath = slicePath().LineSlice;
+                optionWheel.sliceSelectTransform = sliceSelectTransform().ScaleTransform;
+                optionWheel.clickModeRotate = false;
                 optionWheel.createWheel(["yes", "no"]);
+
+                var textWheel = new wheelnav("textWheel");
+                textWheel.slicePath = slicePath().TabSlice;
+                textWheel.sliceSelectTransform = sliceSelectTransform().ScaleTransform;
+                textWheel.clickModeRotate = false;
+                textWheel.navAngle = 90;
+                textWheel.animatetime = 2000;
+                textWheel.animateeffect = "elastic";
+                textWheel.createWheel([icon.gear, icon.scissors, icon.acw, icon.sun, icon.smile, icon.refresh, icon.anonymous]);
             };
 
         </script>
@@ -77,12 +83,14 @@
         <header>
             <p>This is a test page for wheelnav.js library. For more information please visit the <a href="http://wheelnavjs.softwaretailoring.net" target="_blank">project page</a></p>
         </header>
-        <div id="textWheel" class="wheelNav"></div>
         <div id="cogWheel" class="wheelNav"></div>
         <div id="textWheelRotatedTitle" class="wheelNav"></div>
         <div id="pieWheel" class="wheelNav"></div>
         <div id="iconWheel" class="wheelNav"></div>
+        <div style="height:50px;" ></div>
         <div id="optionWheel" class="wheelNavSmall"></div>
+        <div style="height:50px;" ></div>
+        <div id="textWheel" class="wheelNav"></div>
         <footer>
             <p>&copy; 2014 <a href="http://softwaretailoring.net" target="_blank">softwaretailoring.net</a></p>
         </footer>

@@ -23,6 +23,7 @@ var sliceSelectTransform = function () {
     this.NullTransform = function (x, y, rOriginal, baseAngle, sliceAngle, titleRotateAngle, itemIndex) {
         return {
             sliceTransformString: "",
+            slicePathString: "",
             lineTransformString: "",
             titleTransformString: ""
         }
@@ -35,14 +36,16 @@ var sliceSelectTransform = function () {
 
         if (titleRotateAngle != null) {
             baseTheta = getTheta(-titleRotateAngle);
-            titleTransformString = "t" + (rOriginal / 10 * Math.cos(baseTheta)).toString() + "," + (rOriginal / 10 * Math.sin(baseTheta)).toString();
         }
         else {
-            titleTransformString = sliceTransformString;
+            baseTheta = getTheta(baseAngle + sliceAngle / 2);
         }
+
+        titleTransformString = "t" + (rOriginal / 10 * Math.cos(baseTheta)).toString() + "," + (rOriginal / 10 * Math.sin(baseTheta)).toString();
 
         return {
             sliceTransformString: sliceTransformString,
+            slicePathString: "",
             lineTransformString: sliceTransformString,
             titleTransformString: titleTransformString
         }
@@ -54,6 +57,7 @@ var sliceSelectTransform = function () {
 
         return {
             sliceTransformString: sliceTransformString,
+            slicePathString: "",
             lineTransformString: sliceTransformString,
             titleTransformString: sliceTransformString
         }
@@ -65,6 +69,7 @@ var sliceSelectTransform = function () {
 
         return {
             sliceTransformString: sliceTransformString,
+            slicePathString: "",
             lineTransformString: sliceTransformString,
             titleTransformString: sliceTransformString
         }
@@ -72,10 +77,11 @@ var sliceSelectTransform = function () {
 
     this.ScaleTransform = function (x, y, rOriginal, baseAngle, sliceAngle, titleRotateAngle, itemIndex) {
 
-        sliceTransformString = "s1.3";
+        sliceTransformString = "s1.2";
 
         return {
             sliceTransformString: sliceTransformString,
+            slicePathString: "",
             lineTransformString: "",
             titleTransformString: sliceTransformString
         }
@@ -85,6 +91,7 @@ var sliceSelectTransform = function () {
 
         return {
             sliceTransformString: "",
+            slicePathString: "",
             lineTransformString: "",
             titleTransformString: "s1.3"
         }
@@ -96,8 +103,99 @@ var sliceSelectTransform = function () {
 
         return {
             sliceTransformString: sliceTransformString,
+            slicePathString: "",
             lineTransformString: "",
             titleTransformString: sliceTransformString
+        }
+    }
+
+    this.PieSliceBigTransform = function (x, y, rOriginal, baseAngle, sliceAngle, titleRotateAngle, itemIndex) {
+
+        slicePathString = slicePath().PieSlice(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, 10).slicePathString;
+
+        return {
+            sliceTransformString: "",
+            slicePathString: slicePathString,
+            lineTransformString: "",
+            titleTransformString: ""
+        }
+    }
+
+    this.StarSliceTransform = function (x, y, rOriginal, baseAngle, sliceAngle, titleRotateAngle, itemIndex) {
+
+        slicePathString = slicePath().StarSlice(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, 1).slicePathString;
+
+        return {
+            sliceTransformString: "",
+            slicePathString: slicePathString,
+            lineTransformString: "",
+            titleTransformString: ""
+        }
+    }
+
+    this.DonutSliceTransform = function (x, y, rOriginal, baseAngle, sliceAngle, titleRotateAngle, itemIndex) {
+
+        var slice = slicePath().DonutSlice(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, 1);
+        slicePathString = slice.slicePathString;
+
+        if (titleRotateAngle != null) {
+            baseTheta = getTheta(-titleRotateAngle);
+        }
+        else {
+            baseTheta = getTheta(baseAngle + sliceAngle / 2);
+        }
+        titleTransformString = "t" + (rOriginal / 10 * Math.cos(baseTheta)).toString() + "," + (rOriginal / 10 * Math.sin(baseTheta)).toString();
+
+        return {
+            sliceTransformString: "",
+            slicePathString: slicePathString,
+            lineTransformString: "",
+            titleTransformString: titleTransformString
+        }
+    }
+
+    this.MenuSliceTransform = function (x, y, rOriginal, baseAngle, sliceAngle, titleRotateAngle, itemIndex) {
+
+        var slice = slicePath().MenuSlice(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, 1);
+        slicePathString = slice.slicePathString;
+
+        if (titleRotateAngle != null) {
+            baseTheta = getTheta(-titleRotateAngle);
+        }
+        else {
+            baseTheta = getTheta(baseAngle + sliceAngle / 2);
+        }
+        titleTransformString = "t" + (5 * Math.cos(baseTheta)).toString() + "," + (5 * Math.sin(baseTheta)).toString();
+
+        return {
+            sliceTransformString: "",
+            slicePathString: slicePathString,
+            lineTransformString: "",
+            titleTransformString: titleTransformString
+        }
+    }
+
+    this.WheelSliceTransform = function (x, y, rOriginal, baseAngle, sliceAngle, titleRotateAngle, itemIndex) {
+
+        slicePathString = slicePath().WheelSlice(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, 1).slicePathString;
+
+        return {
+            sliceTransformString: "",
+            slicePathString: slicePathString,
+            lineTransformString: "",
+            titleTransformString: ""
+        }
+    }
+
+    this.CogSliceTransform = function (x, y, rOriginal, baseAngle, sliceAngle, titleRotateAngle, itemIndex) {
+
+        slicePathString = slicePath().CogSlice(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, 1).slicePathString;
+
+        return {
+            sliceTransformString: "",
+            slicePathString: slicePathString,
+            lineTransformString: "",
+            titleTransformString: ""
         }
     }
 
