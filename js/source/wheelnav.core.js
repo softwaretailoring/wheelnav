@@ -43,8 +43,9 @@ wheelnav = function(divId) {
     this.navItemCount = 0;
     this.navItems = new Array();
     this.colors = colorpalette.defaultpalette;
-    this.slicePath = slicePath().PieSlice;
-    this.sliceSelectTransform = sliceSelectTransform().NullTransform;
+    this.slicePathFunction = slicePath().PieSlice;
+    this.selectedSlicePathFunction = null;
+    this.selectedSliceTransformFunction = sliceSelectTransform().NullTransform;
     this.titleFont = '100 24px Impact, Charcoal, sans-serif';
 
     //Spreader settings
@@ -126,10 +127,16 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
 
     this.spreader = new spreader(this);
 
+    if (withSpread) {
+        this.currentPercent = this.minPercent;
+    }
+    else {
+        this.currentPercent = this.maxPercent;
+    }
+
     this.navigateWheel(0);
 
     if (withSpread) {
-        this.currentPercent = this.minPercent;
         this.spreadWheel();
     }
 
@@ -157,7 +164,7 @@ wheelnav.prototype.refreshWheel = function () {
         if (this.lineHoverAttr != null) { navItem.lineHoverAttr = this.lineHoverAttr; }
         if (this.lineSelectedAttr != null) { navItem.lineSelectedAttr = this.lineSelectedAttr; }
 
-        if (this.currentClick == i) {
+        if (navItem.selected) {
             navItem.navSlice.attr(navItem.fillAttr);
             navItem.navSlice.attr(navItem.sliceSelectedAttr);
             navItem.navTitle.attr(navItem.titleSelectedAttr);
@@ -200,31 +207,11 @@ wheelnav.prototype.navigateWheel = function (clicked) {
 
         navItem.currentRotate -= (clicked - this.currentClick) * (360 / this.navItemCount);
 
-        var sliceTransform = "";
-        if (this.clickModeRotate) { sliceTransform = navItem.getItemRotateString(); }
-        if (navItem.selected) { sliceTransform += navItem.selectTransform.sliceTransformString; }
-        navItem.navSliceCurrentTransformString = sliceTransform;
-        var currentPath = navItem.slicePathString;
-        if (navItem.selected) { currentPath = navItem.selectTransform.slicePathString; }
+        var currentTransformAttrs = navItem.getCurrentTransformAttrs();
 
-        if (navItem.selectTransform.slicePathString == "") {
-            navItem.navSlice.animate({ transform: [sliceTransform] }, navItem.animatetime, navItem.animateeffect);
-        }
-        else {
-            navItem.navSlice.animate({ path: currentPath, transform: [sliceTransform] }, navItem.animatetime, navItem.animateeffect);
-        }
-
-        var lineTransform = "";
-        if (this.clickModeRotate) { lineTransform = navItem.getItemRotateString(); }
-        if (navItem.selected) { lineTransform += navItem.selectTransform.lineTransformString; }
-        navItem.navLineCurrentTransformString = lineTransform;
-        navItem.navLine.animate({ transform: [lineTransform] }, navItem.animatetime, navItem.animateeffect);
-
-        var titleTransform = "";
-        if (this.clickModeRotate) { titleTransform += navItem.getTitleRotateString(); }
-        if (navItem.selected) { titleTransform += navItem.selectTransform.titleTransformString; }
-        navItem.navTitleCurrentTransformString = titleTransform;
-        navItem.navTitle.animate({ transform: [titleTransform] }, navItem.animatetime, navItem.animateeffect);
+        navItem.navSlice.animate(currentTransformAttrs.sliceTransformAttr, navItem.animatetime, navItem.animateeffect);
+        navItem.navLine.animate(currentTransformAttrs.lineTransformAttr, navItem.animatetime, navItem.animateeffect);
+        navItem.navTitle.animate(currentTransformAttrs.titleTransformAttr, navItem.animatetime, navItem.animateeffect);
 
         navItem.setNavDivCssClass();
     }
@@ -240,55 +227,22 @@ wheelnav.prototype.navigateWheel = function (clicked) {
 
 wheelnav.prototype.spreadWheel = function () {
 
-    var startPercent,
-        endPercent;
-
     if (this.currentPercent == this.maxPercent ||
         this.currentPercent == null) {
-        startPercent = this.maxPercent;
-        endPercent = this.minPercent;
         this.currentPercent = this.minPercent;
     }
     else {
-        startPercent = this.minPercent;
-        endPercent = this.maxPercent;
         this.currentPercent = this.maxPercent;
     }
 
     for (i = 0; i < this.navItemCount; i++) {
 
-        var thisWheelNav = this;
         var navItem = this.navItems[i];
+        var currentTransformAttrs = navItem.getCurrentTransformAttrs();
 
-        var slicePath = navItem.getSlicePath(this.centerX, this.centerY, this.wheelSugar, this.baseAngle, this.sliceAngle, i, this.currentPercent);
-
-        var slicePathString = slicePath.slicePathString;
-        navItem.navSlice.animate({ transform: navItem.navSliceCurrentTransformString, path: slicePathString }, navItem.animatetime, navItem.animateeffect);
-
-        var linePathString = slicePath.linePathString;
-        navItem.navLine.animate({ transform: navItem.navLineCurrentTransformString, path: linePathString }, navItem.animatetime, navItem.animateeffect);
-
-        var percentAttr = navItem.getTitlePercentAttr(slicePath.titlePosX, slicePath.titlePosY, navItem.titlePath);
-
-        //if (this.currentPercent < 0.3) titleCurrentTransform += ",s" + this.currentPercent * (1 / 0.3);
-
-        var transformAttr = {};
-
-        if (navItem.navTitle.type == "path") {
-            transformAttr = {
-                path: percentAttr.path,
-                transform: navItem.navTitleCurrentTransformString
-            }
-        }
-        else {
-            transformAttr = {
-                x: percentAttr.x,
-                y: percentAttr.y,
-                transform: navItem.navTitleCurrentTransformString
-            }
-        }
-
-        navItem.navTitle.animate(transformAttr , navItem.animatetime, navItem.animateeffect);
+        navItem.navSlice.animate( currentTransformAttrs.sliceTransformAttr, navItem.animatetime, navItem.animateeffect);
+        navItem.navLine.animate( currentTransformAttrs.lineTransformAttr, navItem.animatetime, navItem.animateeffect);
+        navItem.navTitle.animate( currentTransformAttrs.titleTransformAttr, navItem.animatetime, navItem.animateeffect);
     }
 
     this.spreader.setVisibility();

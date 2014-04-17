@@ -343,6 +343,54 @@ var slicePath = function () {
         }
     }
 
+    this.MenuSliceSelectedLine = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+
+        var slicePath = MenuSlice(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+
+        titleSugar = r * 0.63;
+
+        var menuSugar = percent * 25;
+
+        if (menuSugar < 15) {
+            menuSugar = 15;
+        }
+
+        if (percent == 0) {
+            menuSugar = 10;
+        }
+
+        if (percent == 0) {
+            linePathString = [["M", x, y],
+                    ["A", 1, 1, 0, 0, 1, x + 1, y + 1]];
+        }
+        else {
+            lineEndX = (titleSugar - menuSugar) * Math.cos(middleTheta) + x;
+            lineEndY = (titleSugar - menuSugar) * Math.sin(middleTheta) + y;
+
+            linePathString = [["M", x, y],
+                        ["A", r / 3, r / 3, 0, 0, 1, lineEndX, lineEndY]];
+        }
+
+        return {
+            slicePathString: slicePath.slicePathString,
+            linePathString: linePathString,
+            titlePosX: slicePath.titlePosX,
+            titlePosY: slicePath.titlePosY
+        }
+    }
+
+    this.MenuSliceWithoutLine = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+
+        var slicePath = MenuSlice(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+
+        return {
+            slicePathString: slicePath.slicePathString,
+            linePathString: "",
+            titlePosX: slicePath.titlePosX,
+            titlePosY: slicePath.titlePosY
+        }
+    }
+
     this.FlowerSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
 
         setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
@@ -368,6 +416,10 @@ var slicePath = function () {
         r = r * 0.7;
         titleSugar = r * 0.87;
         setTitlePos(x, y);
+
+        if (percent == 0) {
+            r = 0.01;
+        }
 
         slicePathString = [["M", r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
                     ["A", r, r, 0, 0, 1, r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
@@ -415,7 +467,7 @@ var slicePath = function () {
             setTitlePos(x, y);
         }
         else {
-            titleSugar = r * 0.5;
+            titleSugar = r * 0.55;
             setTitlePos(x, y);
         }
 
@@ -453,14 +505,35 @@ var slicePath = function () {
         var navItemCount = 360 / sliceAngle;
         var itemSize = 2 * rOriginal / navItemCount;
 
-        titlePosX = x + (itemSize / 2);
+        titlePosX = x;
         titlePosY = itemIndex * itemSize + y + (itemSize / 2) - rOriginal;
 
-        slicePathString = [["M", x, itemIndex * itemSize + y - rOriginal],
-                     ["L", itemSize + x, itemIndex * itemSize + y - rOriginal],
-                     ["L", itemSize + x, (itemIndex + 1) * itemSize + y - rOriginal],
-                     ["L", x, (itemIndex + 1) * itemSize + y - rOriginal],
+        slicePathString = [["M", x - (itemSize / 2), itemIndex * itemSize + y - rOriginal],
+                     ["L", (itemSize / 2) + x, itemIndex * itemSize + y - rOriginal],
+                     ["L", (itemSize / 2) + x, (itemIndex + 1) * itemSize + y - rOriginal],
+                     ["L", x - (itemSize / 2), (itemIndex + 1) * itemSize + y - rOriginal],
                      ["z"]];
+
+        return {
+            slicePathString: slicePathString,
+            linePathString: "",
+            titlePosX: titlePosX,
+            titlePosY: titlePosY
+        }
+    }
+
+    this.YinYangSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+
+        setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+        r = r * 0.9;
+        slicePathString = [["M", x, y],
+                     ["A", r / 2, r / 2, 0, 0, 1, r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
+                     ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
+                     ["A", r / 2, r / 2, 0, 0, 0, x, y],
+                     ["z"]];
+
+        titlePosX = r / 2 * Math.cos(startTheta) + x;
+        titlePosY = r / 2 * Math.sin(startTheta) + y;
 
         return {
             slicePathString: slicePathString,

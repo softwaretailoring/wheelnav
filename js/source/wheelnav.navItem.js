@@ -24,17 +24,22 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     this.currentRotate = 0;
     if (wheelnav.currentPercent == null) { this.currentPercent = wheelnav.maxPercent; }
     else { this.currentPercent = wheelnav.currentPercent; }
+    this.minPercent = wheelnav.minPercent;
+    this.maxPercent = wheelnav.maxPercent;
 
     if (title != null) {
-        this.getSlicePath = wheelnav.slicePath;
+        this.slicePathFunction = wheelnav.slicePathFunction;
+        if (wheelnav.selectedSlicePathFunction == null) { this.selectedSlicePathFunction = wheelnav.slicePathFunction; }
+        else { this.selectedSlicePathFunction = wheelnav.selectedSlicePathFunction; }
     }
     else {
         this.title = "";
-        this.getSlicePath = slicePath().NullSlice;
+        this.slicePathFunction = slicePath().NullSlice;
+        this.selectedSlicePathFunction = slicePath().NullSlice;
     }
 
     this.slicePathString = null;
-    this.getSelectTransform = wheelnav.sliceSelectTransform;
+    this.selectedSliceTransformFunction = wheelnav.selectedSliceTransformFunction;
     this.selectTransform = null;
 
     this.fillAttr = { fill: "#CCC" };
@@ -77,12 +82,12 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
 wheelnavItem.prototype.createNavItem = function () {
 
     //Initialize navItem
-    var slicePath = this.getSlicePath(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelSugar, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.itemIndex, this.currentPercent);
+    var slicePath = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelSugar, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.itemIndex, this.currentPercent);
     this.slicePathString = slicePath.slicePathString;
     this.titlePosX = slicePath.titlePosX;
     this.titlePosY = slicePath.titlePosY;
 
-    this.selectTransform = this.getSelectTransform(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelSugar, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.wheelnav.titleRotateAngle, this.itemIndex);
+    this.selectTransform = this.selectedSliceTransformFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelSugar, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.wheelnav.titleRotateAngle, this.itemIndex);
 
     //Create slice
     this.navSlice = this.wheelnav.raphael.path(this.slicePathString);
@@ -108,7 +113,6 @@ wheelnavItem.prototype.createNavItem = function () {
     this.navTitle.node.id = this.navTitle.id;
 
     var titleRotateString = this.getTitleRotateString();
-    //this.navTitle.attr({ currentTransform: titleRotateString });
     this.navTitle.attr({ transform: titleRotateString });
 
     //Create linepath
@@ -185,6 +189,91 @@ wheelnavItem.prototype.setNavDivCssClass = function () {
         }
     }
 };
+
+wheelnavItem.prototype.getCurrentTransformAttrs = function () {
+
+    var slicePath;
+
+    if (this.slicePathMin == null) {
+        this.slicePathMin = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelSugar, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.itemIndex, this.minPercent);
+    }
+    if (this.slicePathMax == null) {
+        this.slicePathMax = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelSugar, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.itemIndex, this.maxPercent);
+    }
+    if (this.selectedSlicePathMin == null) {
+        this.selectedSlicePathMin = this.selectedSlicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelSugar, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.itemIndex, this.minPercent);
+    }
+    if (this.selectedSlicePathMax == null) {
+        this.selectedSlicePathMax = this.selectedSlicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelSugar, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.itemIndex, this.maxPercent);
+    }
+
+    if (this.wheelnav.currentPercent == this.wheelnav.maxPercent) {
+        if (this.selected) {
+            slicePath = this.selectedSlicePathMax;
+        }
+        else {
+            slicePath = this.slicePathMax;
+        }
+    }
+    else {
+        if (this.selected) {
+            slicePath = this.selectedSlicePathMin;
+        }
+        else {
+            slicePath = this.slicePathMin;
+        }
+    }
+
+    this.navSliceCurrentTransformString = "";
+    if (this.wheelnav.clickModeRotate) { this.navSliceCurrentTransformString = this.getItemRotateString(); }
+    if (this.selected) { this.navSliceCurrentTransformString += this.selectTransform.sliceTransformString; }
+
+    this.navLineCurrentTransformString = "";
+    if (this.wheelnav.clickModeRotate) { this.navLineCurrentTransformString = this.getItemRotateString(); }
+    if (this.selected) { this.navLineCurrentTransformString += this.selectTransform.lineTransformString; }
+
+    this.navTitleCurrentTransformString = "";
+    if (this.wheelnav.clickModeRotate) { this.navTitleCurrentTransformString = this.getTitleRotateString(); }
+    if (this.selected) { this.navTitleCurrentTransformString += this.selectTransform.titleTransformString; }
+
+    var percentAttr = this.getTitlePercentAttr(slicePath.titlePosX, slicePath.titlePosY, this.titlePath);
+
+    var sliceTransformAttr = {};
+
+    sliceTransformAttr = {
+        path: slicePath.slicePathString,
+        transform: this.navSliceCurrentTransformString
+    }
+
+    var lineTransformAttr = {};
+
+    lineTransformAttr = {
+        path: slicePath.linePathString,
+        transform: this.navLineCurrentTransformString
+    }
+
+    var titleTransformAttr = {};
+
+    if (this.navTitle.type == "path") {
+        titleTransformAttr = {
+            path: percentAttr.path,
+            transform: this.navTitleCurrentTransformString
+        }
+    }
+    else {
+        titleTransformAttr = {
+            x: percentAttr.x,
+            y: percentAttr.y,
+            transform: this.navTitleCurrentTransformString
+        }
+    }
+
+    return {
+        sliceTransformAttr: sliceTransformAttr,
+        lineTransformAttr: lineTransformAttr,
+        titleTransformAttr: titleTransformAttr
+    }
+}
 
 wheelnavItem.prototype.getTitlePercentAttr = function (currentX, currentY, thisPath) {
 
