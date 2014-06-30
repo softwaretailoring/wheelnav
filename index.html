@@ -26,36 +26,45 @@
 
                 var cogWheel = new wheelnav("cogWheel");
                 cogWheel.slicePathFunction = slicePath().CogBasePieSlice;
-                cogWheel.selectedSlicePathFunction = slicePath().CogSlice;
+                cogWheel.sliceSelectedPathFunction = slicePath().CogSlice;
+                cogWheel.sliceHoverPathFunction = slicePath().CogSlice;
                 cogWheel.wheelSugar = 0.85 * cogWheel.wheelSugar;
                 cogWheel.navAngle = 60;
                 cogWheel.titleRotateAngle = -60;
-                cogWheel.selectedSliceTransformFunction = sliceSelectTransform().MoveMiddleTransform;
-                cogWheel.createWheel(["title-0", "title-1", "title-2", "title-3"]);
+                cogWheel.spreaderEnable = true;
+                cogWheel.sliceTransformFunction = sliceTransform().ScaleTitleTransform;
+                cogWheel.sliceSelectedTransformFunction = sliceTransform().ScaleTitleTransform;
+                cogWheel.createWheel();
 
                 var textWheelRotatedTitle = new wheelnav("textWheelRotatedTitle");
                 textWheelRotatedTitle.slicePathFunction = slicePath().EyeSlice;
-                textWheelRotatedTitle.selectedSliceTransformFunction = sliceSelectTransform().RotateHalfTransform;
-                textWheelRotatedTitle.selectedSlicePathFunction = slicePath().MenuSliceWithoutLine;
+                textWheelRotatedTitle.sliceSelectedTransformFunction = sliceTransform().RotateHalfTransform;
+                textWheelRotatedTitle.sliceSelectedPathFunction = slicePath().MenuSliceWithoutLine;
                 textWheelRotatedTitle.minPercent = 0.5;
                 textWheelRotatedTitle.titleRotateAngle = 270;
                 textWheelRotatedTitle.spreaderEnable = true;
+                textWheelRotatedTitle.titleSpreadScale = true;
                 textWheelRotatedTitle.multiSelect = true;
                 textWheelRotatedTitle.createWheel([icon.check, icon.check, icon.check, icon.check, icon.check, icon.check]);
 
                 var pieWheel = new wheelnav("pieWheel");
                 pieWheel.slicePathFunction = slicePath().MenuSlice;
-                pieWheel.selectedSlicePathFunction = slicePath().MenuSliceSelectedLine;
-                pieWheel.selectedSliceTransformFunction = sliceSelectTransform().ScaleTransform;
+                pieWheel.sliceSelectedPathFunction = slicePath().MenuSliceSelectedLine;
+                pieWheel.sliceSelectedTransformFunction = sliceTransform().ScaleTransform;
                 pieWheel.spreaderEnable = true;
+                pieWheel.hoverPercent = 1.05;
+                pieWheel.selectedPercent = 1.1
                 pieWheel.wheelSugar = 1.4 * pieWheel.wheelSugar;
                 pieWheel.centerX = pieWheel.centerX * 0.4;
                 pieWheel.centerY = pieWheel.centerY * 0.4;
                 pieWheel.clickModeRotate = false;
-                pieWheel.createWheel([icon.check, icon.check, icon.raphael, null, null, null, null, null]);
+                pieWheel.titleRotateAngle = 0;
+                pieWheel.createWheel([icon.check, icon.cloud, icon.raphael, null, null, null, null, null]);
                 
                 var iconWheel = new wheelnav("iconWheel");
                 iconWheel.slicePathFunction = slicePath().LineSlice;
+                iconWheel.sliceSelectedPathFunction = slicePath().FlowerSlice;
+                iconWheel.sliceHoverTransformFunction = sliceTransform().RotateTitleTransform;
                 iconWheel.spreaderEnable = true;
                 iconWheel.minPercent = 0.3;
                 iconWheel.maxPercent = 1;
@@ -78,6 +87,7 @@
                 var optionWheel = new wheelnav("optionWheel");
                 optionWheel.wheelSugar = optionWheel.wheelSugar * 0.5;
                 optionWheel.slicePathFunction = slicePath().YinYangSlice;
+                optionWheel.sliceHoverTransformFunction = sliceTransform().RotateTitleTransform;
                 optionWheel.colors = new Array("#000", "#FFF");
                 optionWheel.animatetime = 600;
                 optionWheel.animateeffect = "linear";
@@ -85,17 +95,22 @@
                 optionWheel.navItems[0].titleAttr = { font: optionWheel.titleFont, fill: "#FFF", stroke: "none", cursor: 'pointer' };
                 optionWheel.navItems[0].titleSelectedAttr = { font: optionWheel.titleFont, fill: "#FFF" };
                 optionWheel.navItems[0].titleHoverAttr = { font: this.titleFont, fill: "#EEE", cursor: 'pointer', stroke: "none" };
-                optionWheel.navItems[0].sliceHoverAttr = { fill: "#111", "stroke-width": 4 };
+                optionWheel.navItems[0].slicePathAttr = { stroke: "#000", "stroke-width": 2, cursor: 'pointer' };
+                optionWheel.navItems[0].sliceHoverAttr = { stroke: "#000", "stroke-width": 2 };
+                optionWheel.navItems[0].sliceSelectedAttr = { stroke: "#000", "stroke-width": 2 };
                 optionWheel.navItems[1].titleAttr = { font: optionWheel.titleFont, fill: "#000", stroke: "none", cursor: 'pointer' };
                 optionWheel.navItems[1].titleSelectedAttr = { font: optionWheel.titleFont, fill: "#000" };
                 optionWheel.navItems[1].titleHoverAttr = { font: this.titleFont, fill: "#111", cursor: 'pointer', stroke: "none" };
+                optionWheel.navItems[1].slicePathAttr = { stroke: "#000", "stroke-width": 2, cursor: 'pointer' };
+                optionWheel.navItems[1].sliceHoverAttr = { stroke: "#000", "stroke-width": 2 };
+                optionWheel.navItems[1].sliceSelectedAttr = { stroke: "#000", "stroke-width": 2 };
                 optionWheel.createWheel();
 
                 var textWheel = new wheelnav("textWheel");
                 textWheel.slicePathFunction = slicePath().TabSlice;
-                textWheel.selectedSliceTransformFunction = sliceSelectTransform().ScaleTransform;
+                textWheel.sliceSelectedTransformFunction = sliceTransform().ScaleTransform;
                 textWheel.clickModeRotate = false;
-                textWheel.navAngle = 90;
+                textWheel.navAngle = 45;
                 textWheel.animatetime = 2000;
                 textWheel.animateeffect = "elastic";
                 textWheel.createWheel([icon.gear, icon.scissors, icon.acw, icon.sun, icon.smile, icon.refresh, icon.anonymous]);

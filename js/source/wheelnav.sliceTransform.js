@@ -1,8 +1,8 @@
 ﻿//------------------------------------------
-// Slice transform definitions for selection
+// Slice transform definitions
 //------------------------------------------
 
-var sliceSelectTransform = function () {
+var sliceTransform = function () {
 
     this.startAngle = 0;
     this.startTheta = 0;
@@ -23,7 +23,6 @@ var sliceSelectTransform = function () {
     this.NullTransform = function (x, y, rOriginal, baseAngle, sliceAngle, titleRotateAngle, itemIndex) {
         return {
             sliceTransformString: "",
-            slicePathString: "",
             lineTransformString: "",
             titleTransformString: ""
         }
@@ -41,11 +40,10 @@ var sliceSelectTransform = function () {
             baseTheta = getTheta(baseAngle + sliceAngle / 2);
         }
 
-        titleTransformString = "t" + (rOriginal / 10 * Math.cos(baseTheta)).toString() + "," + (rOriginal / 10 * Math.sin(baseTheta)).toString();
+        titleTransformString = "s1,r0,t" + (rOriginal / 10 * Math.cos(baseTheta)).toString() + "," + (rOriginal / 10 * Math.sin(baseTheta)).toString();
 
         return {
             sliceTransformString: sliceTransformString,
-            slicePathString: "",
             lineTransformString: sliceTransformString,
             titleTransformString: titleTransformString
         }
@@ -53,11 +51,10 @@ var sliceSelectTransform = function () {
 
     this.RotateTransform = function (x, y, rOriginal, baseAngle, sliceAngle, titleRotateAngle, itemIndex) {
 
-        sliceTransformString = "r360";
+        sliceTransformString = "s1,r360";
 
         return {
             sliceTransformString: sliceTransformString,
-            slicePathString: "",
             lineTransformString: sliceTransformString,
             titleTransformString: sliceTransformString
         }
@@ -65,13 +62,23 @@ var sliceSelectTransform = function () {
 
     this.RotateHalfTransform = function (x, y, rOriginal, baseAngle, sliceAngle, titleRotateAngle, itemIndex) {
 
-        sliceTransformString = "r90";
+        sliceTransformString = "s1,r90";
 
         return {
             sliceTransformString: sliceTransformString,
-            slicePathString: "",
             lineTransformString: sliceTransformString,
             titleTransformString: sliceTransformString
+        }
+    }
+
+    this.RotateTitleTransform = function (x, y, rOriginal, baseAngle, sliceAngle, titleRotateAngle, itemIndex) {
+
+        titleTransformString = "s1,r360";
+
+        return {
+            sliceTransformString: "",
+            lineTransformString: "",
+            titleTransformString: titleTransformString
         }
     }
 
@@ -81,7 +88,6 @@ var sliceSelectTransform = function () {
 
         return {
             sliceTransformString: sliceTransformString,
-            slicePathString: "",
             lineTransformString: "",
             titleTransformString: sliceTransformString
         }
@@ -91,7 +97,6 @@ var sliceSelectTransform = function () {
 
         return {
             sliceTransformString: "",
-            slicePathString: "",
             lineTransformString: "",
             titleTransformString: "s1.3"
         }
@@ -103,7 +108,6 @@ var sliceSelectTransform = function () {
 
         return {
             sliceTransformString: sliceTransformString,
-            slicePathString: "",
             lineTransformString: "",
             titleTransformString: sliceTransformString
         }

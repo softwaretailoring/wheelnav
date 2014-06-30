@@ -36,17 +36,23 @@ wheelnav = function(divId) {
     this.clickModeRotate = true;
     this.clickModeSpreadOff = false;
     this.multiSelect = false;
-    this.minPercent = 0;
+    this.minPercent = 0.01;
     this.maxPercent = 1;
+    this.hoverPercent = 1;
+    this.selectedPercent = 1;
     this.currentPercent = null;
     
     this.navItemCount = 0;
     this.navItems = new Array();
     this.colors = colorpalette.defaultpalette;
     this.slicePathFunction = slicePath().PieSlice;
-    this.selectedSlicePathFunction = null;
-    this.selectedSliceTransformFunction = sliceSelectTransform().NullTransform;
+    this.sliceTransformFunction = null;
+    this.sliceSelectedPathFunction = null;
+    this.sliceSelectedTransformFunction = null;
+    this.sliceHoverPathFunction = null;
+    this.sliceHoverTransformFunction = null;
     this.titleFont = '100 24px Impact, Charcoal, sans-serif';
+    this.titleSpreadScale = null;
 
     //Spreader settings
     this.spreaderEnable = false;
@@ -121,10 +127,6 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
         this.navAngle = this.baseAngle + ((360 / this.navItemCount) / 2);
     }
 
-    for (i = 0; i < this.navItemCount; i++) {
-        this.navItems[i].createNavItem();
-    }
-
     this.spreader = new spreader(this);
 
     if (withSpread) {
@@ -132,6 +134,10 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
     }
     else {
         this.currentPercent = this.maxPercent;
+    }
+
+    for (i = 0; i < this.navItemCount; i++) {
+        this.navItems[i].createNavItem();
     }
 
     this.navigateWheel(0);
@@ -206,13 +212,11 @@ wheelnav.prototype.navigateWheel = function (clicked) {
         }
 
         navItem.currentRotate -= (clicked - this.currentClick) * (360 / this.navItemCount);
+    }
 
-        var currentTransformAttrs = navItem.getCurrentTransformAttrs();
-
-        navItem.navSlice.animate(currentTransformAttrs.sliceTransformAttr, navItem.animatetime, navItem.animateeffect);
-        navItem.navLine.animate(currentTransformAttrs.lineTransformAttr, navItem.animatetime, navItem.animateeffect);
-        navItem.navTitle.animate(currentTransformAttrs.titleTransformAttr, navItem.animatetime, navItem.animateeffect);
-
+    for (i = 0; i < this.navItemCount; i++) {
+        var navItem = this.navItems[i];
+        navItem.setCurrentTransform();
         navItem.setNavDivCssClass();
     }
 
@@ -236,13 +240,7 @@ wheelnav.prototype.spreadWheel = function () {
     }
 
     for (i = 0; i < this.navItemCount; i++) {
-
-        var navItem = this.navItems[i];
-        var currentTransformAttrs = navItem.getCurrentTransformAttrs();
-
-        navItem.navSlice.animate( currentTransformAttrs.sliceTransformAttr, navItem.animatetime, navItem.animateeffect);
-        navItem.navLine.animate( currentTransformAttrs.lineTransformAttr, navItem.animatetime, navItem.animateeffect);
-        navItem.navTitle.animate( currentTransformAttrs.titleTransformAttr, navItem.animatetime, navItem.animateeffect);
+        this.navItems[i].setCurrentTransform();
     }
 
     this.spreader.setVisibility();

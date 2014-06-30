@@ -48,6 +48,8 @@ var slicePath = function () {
        
         setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
         r = r * 0.9;
+        titleSugar = r * 0.6;
+        setTitlePos(x, y);
         slicePathString = [["M", x, y],
                      ["L", r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
                      ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
@@ -314,7 +316,7 @@ var slicePath = function () {
             menuSugar = 15;
         }
 
-        if (percent == 0) {
+        if (percent <= 0.05) {
             menuSugar = 10;
         }
 
@@ -323,7 +325,7 @@ var slicePath = function () {
                     ["A", menuSugar, menuSugar, 0, 0, 1, titlePosX - (menuSugar * Math.cos(middleTheta)), titlePosY - (menuSugar * Math.sin(middleTheta))],
                     ["z"]];
 
-        if (percent == 0) {
+        if (percent <= 0.05) {
             linePathString = [["M", x, y],
                     ["A", 1, 1, 0, 0, 1, x+1, y+1]];
         }
@@ -391,6 +393,49 @@ var slicePath = function () {
         }
     }
 
+    this.MenuSquareSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+
+        setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+
+        titleSugar = r * 0.63;
+        setTitlePos(x, y);
+
+        var menuSugar = percent * 30;
+
+        if (menuSugar < 15) {
+            menuSugar = 15;
+        }
+
+        if (percent <= 0.05) {
+            menuSugar = 10;
+        }
+
+        slicePathString = [["M", titlePosX + menuSugar, titlePosY + menuSugar],
+                    ["L", titlePosX - menuSugar, titlePosY + menuSugar],
+                    ["L", titlePosX - menuSugar, titlePosY - menuSugar],
+                    ["L", titlePosX + menuSugar, titlePosY - menuSugar],
+                    ["z"]];
+
+        if (percent <= 0.05) {
+            linePathString = [["M", x, y],
+                    ["A", 1, 1, 0, 0, 1, x + 1, y + 1]];
+        }
+        else {
+            lineEndX = titleSugar - menuSugar;
+            lineEndY = titleSugar - menuSugar;
+
+            linePathString = [["M", x, y],
+                        ["L", titlePosX, titlePosY]];
+        }
+
+        return {
+            slicePathString: slicePathString,
+            linePathString: linePathString,
+            titlePosX: titlePosX,
+            titlePosY: titlePosY
+        }
+    }
+
     this.FlowerSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
 
         setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
@@ -438,15 +483,40 @@ var slicePath = function () {
 
         setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
 
-        r = r * 0.95;
+        r = r * 0.85;
 
-        slicePathString = [["M", (r * 0.08) * Math.cos(middleTheta) + x, (r * 0.08) * Math.sin(middleTheta) + y],
-                     ["L", (r * 0.08) * Math.cos(middleTheta) + (r * 0.82) * Math.cos(startTheta) + x, (r * 0.08) * Math.sin(middleTheta) + (r * 0.82) * Math.sin(startTheta) + y],
-                     ["A", (r * 0.82), (r * 0.82), 0, 0, 1, (r * 0.08) * Math.cos(middleTheta) + (r * 0.82) * Math.cos(endTheta) + x, (r * 0.08) * Math.sin(middleTheta) + (r * 0.82) * Math.sin(endTheta) + y],
-                     ["z"],
-                     ["M", r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
-                     ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
-                     ["A", r, r, 0, 0, 0, r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y]];
+        if (sliceAngle < 120) {
+            titleSugar = r * 0.62;
+            slicePathString = [["M", (r * 0.1) * Math.cos(middleTheta) + x, (r * 0.1) * Math.sin(middleTheta) + y],
+                         ["L", (r * 0.1) * Math.cos(middleTheta) + (r * 0.9) * Math.cos(startTheta) + x, (r * 0.1) * Math.sin(middleTheta) + (r * 0.9) * Math.sin(startTheta) + y],
+                         ["A", (r * 0.97), (r * 0.97), 0, 0, 1, (r * 0.1) * Math.cos(middleTheta) + (r * 0.9) * Math.cos(endTheta) + x, (r * 0.1) * Math.sin(middleTheta) + (r * 0.9) * Math.sin(endTheta) + y],
+                         ["z"],
+                         ["M", (r * 1.1) * Math.cos(startTheta) + x, (r * 1.1) * Math.sin(startTheta) + y],
+                         ["A", (r * 1.1), (r * 1.1), 0, 0, 1, (r * 1.1) * Math.cos(endTheta) + x, (r * 1.1) * Math.sin(endTheta) + y],
+                         ["A", (r * 1.1), (r * 1.1), 0, 0, 0, (r * 1.1) * Math.cos(startTheta) + x, (r * 1.1) * Math.sin(startTheta) + y]];
+        }
+        else if (sliceAngle < 180) {
+            titleSugar = r * 0.56;
+            slicePathString = [["M", (r * 0.1) * Math.cos(middleTheta) + x, (r * 0.1) * Math.sin(middleTheta) + y],
+                         ["L", (r * 0.1) * Math.cos(middleTheta) + (r * 0.9) * Math.cos(startTheta) + x, (r * 0.1) * Math.sin(middleTheta) + (r * 0.9) * Math.sin(startTheta) + y],
+                         ["A", (r * 0.95), (r * 0.95), 0, 0, 1, (r * 0.1) * Math.cos(middleTheta) + (r * 0.9) * Math.cos(endTheta) + x, (r * 0.1) * Math.sin(middleTheta) + (r * 0.9) * Math.sin(endTheta) + y],
+                         ["z"],
+                         ["M", (r * 1.1) * Math.cos(startTheta) + x, (r * 1.1) * Math.sin(startTheta) + y],
+                         ["A", (r * 1.1), (r * 1.1), 0, 0, 1, (r * 1.1) * Math.cos(endTheta) + x, (r * 1.1) * Math.sin(endTheta) + y],
+                         ["A", (r * 1.1), (r * 1.1), 0, 0, 0, (r * 1.1) * Math.cos(startTheta) + x, (r * 1.1) * Math.sin(startTheta) + y]];
+        }
+        else {
+            titleSugar = r * 0.5;
+            slicePathString = [["M", (r * 0.1) * Math.cos(middleTheta) + x, (r * 0.1) * Math.sin(middleTheta) + y],
+                         ["L", (r * 0.1) * Math.cos(middleTheta) + (r * 0.9) * Math.cos(startTheta) + x, (r * 0.1) * Math.sin(middleTheta) + (r * 0.9) * Math.sin(startTheta) + y],
+                         ["A", (r * 0.905), (r * 0.905), 0, 0, 1, (r * 0.1) * Math.cos(middleTheta) + (r * 0.9) * Math.cos(endTheta) + x, (r * 0.1) * Math.sin(middleTheta) + (r * 0.9) * Math.sin(endTheta) + y],
+                         ["z"],
+                         ["M", (r * 1.1) * Math.cos(startTheta) + x, (r * 1.1) * Math.sin(startTheta) + y],
+                         ["A", (r * 1.1), (r * 1.1), 0, 0, 1, (r * 1.1) * Math.cos(endTheta) + x, (r * 1.1) * Math.sin(endTheta) + y],
+                         ["A", (r * 1.1), (r * 1.1), 0, 0, 0, (r * 1.1) * Math.cos(startTheta) + x, (r * 1.1) * Math.sin(startTheta) + y]];
+        }
+
+        setTitlePos(x, y);
 
         return {
             slicePathString: slicePathString,

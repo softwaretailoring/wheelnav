@@ -30,7 +30,7 @@ spreader.prototype.setVisibility = function () {
     if (this.wheelnav.spreaderEnable) {
         this.spreaderCircle.toFront();
 
-        if (this.wheelnav.maxPercent > this.wheelnav.maxPercent) {
+        if (this.wheelnav.currentPercent > this.wheelnav.minPercent) {
             this.spreadOffTitle.toFront();
             this.spreadOnTitle.toBack();
         }
