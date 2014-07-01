@@ -5,13 +5,16 @@
 /* This is a small javascript library for animated SVG based wheel navigation.             */
 /* Requires Raphaël JavaScript Vector Library (http://raphaeljs.com)                       */
 /* ======================================================================================= */
-/* Check http://wheelnavjs.softwaretailoring.net for samples and documentation.            */
+/* Check http://wheelnavjs.softwaretailoring.net for samples.                              */
 /* Fork https://github.com/softwaretailoring/wheelnav for contribution.                    */
 /* ======================================================================================= */
 /* Copyright © 2014 Gábor Berkesi (http://softwaretailoring.net)                           */
 /* Licensed under MIT (https://github.com/softwaretailoring/wheelnav/blob/master/LICENSE)  */
 /* ======================================================================================= */
 
+/* ======================================================================================= */
+/* Documentation: http://wheelnavjs.softwaretailoring.net/documentation/core.html          */
+/* ======================================================================================= */
 
 wheelnav = function(divId) {
 
@@ -37,8 +40,6 @@ wheelnav = function(divId) {
     this.clickModeRotate = true;
     this.clickModeSpreadOff = false;
     this.multiSelect = false;
-    this.minPercent = 0.01;
-    this.maxPercent = 1;
     this.hoverPercent = 1;
     this.selectedPercent = 1;
     this.currentPercent = null;
@@ -61,6 +62,8 @@ wheelnav = function(divId) {
     this.spreaderCircleAttr = { fill: "#777", "stroke-width": 3 };
     this.spreaderOnAttr = { font: '100 32px Impact, Charcoal, sans-serif', fill: "#FFF", cursor: 'pointer' };
     this.spreaderOffAttr = { font: '100 32px Impact, Charcoal, sans-serif', fill: "#FFF", cursor: 'pointer' };
+    this.minPercent = 0.01;
+    this.maxPercent = 1;
 
     //NavItem settings. If it remains null, use default settings.
     this.animateeffect = null;
@@ -270,9 +273,12 @@ wheelnav.prototype.getSpreadOffId = function () {
 
 
 ///#source 1 1 /js/source/wheelnav.navItem.js
-//---------------------------------
-// Navigation item
-//---------------------------------
+/* ======================================================================================= */
+/* Navigation item                                                                         */
+/* ======================================================================================= */
+/* ======================================================================================= */
+/* Documentation: http://wheelnavjs.softwaretailoring.net/documentation/navItem.html       */
+/* ======================================================================================= */
 
 wheelnavItem = function (wheelnav, title, itemIndex) {
 
@@ -776,9 +782,12 @@ wheelnavTitle = function (title, raphael) {
 }
 
 ///#source 1 1 /js/source/wheelnav.slicePath.js
-//---------------------------------
-// Slice path definitions
-//---------------------------------
+/* ======================================================================================= */
+/* Slice path definitions                                                                  */
+/* ======================================================================================= */
+/* ======================================================================================= */
+/* Documentation: http://wheelnavjs.softwaretailoring.net/documentation/slicePath.html     */
+/* ======================================================================================= */
 
 var slicePath = function () {
 
@@ -1391,15 +1400,69 @@ var slicePath = function () {
         }
     }
 
+    this.PieArrowBasePieSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+
+        setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+        r = r * 0.9;
+        theta1 = getTheta(startAngle + sliceAngle * 0.45);
+        theta2 = getTheta(startAngle + sliceAngle * 0.55);
+
+        slicePathString = [["M", x, y],
+                     ["L", r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
+                     ["A", r, r, 0, 0, 1, r * Math.cos(theta1) + x, r * Math.sin(theta1) + y],
+                     ["A", r, r, 0, 0, 1, r * Math.cos(middleTheta) + x, r * Math.sin(middleTheta) + y],
+                     ["A", r, r, 0, 0, 1, r * Math.cos(theta2) + x, r * Math.sin(theta2) + y],
+                     ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
+                     ["z"]];
+
+        return {
+            slicePathString: slicePathString,
+            linePathString: "",
+            titlePosX: titlePosX,
+            titlePosY: titlePosY
+        }
+    }
+
+    this.PieArrowSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+
+        setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+        r = r * 0.9;
+        theta1 = getTheta(startAngle + sliceAngle * 0.45);
+        theta2 = getTheta(startAngle + sliceAngle * 0.55);
+
+        slicePathString = [["M", x, y],
+                     ["L", r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
+                     ["A", r, r, 0, 0, 1, r * Math.cos(theta1) + x, r * Math.sin(theta1) + y],
+                     ["L", r * 1.1 * Math.cos(middleTheta) + x, r * 1.1 * Math.sin(middleTheta) + y],
+                     ["L", r * Math.cos(theta2) + x, r * Math.sin(theta2) + y],
+                     ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
+                     ["z"]];
+
+        //titleSugar = r * 0.44;
+        //setTitlePos(x, y);
+
+        return {
+            slicePathString: slicePathString,
+            linePathString: "",
+            titlePosX: titlePosX,
+            titlePosY: titlePosY
+        }
+    }
+
+
     return this;
 }
 
 
 
 ///#source 1 1 /js/source/wheelnav.sliceTransform.js
-//------------------------------------------
-// Slice transform definitions
-//------------------------------------------
+/* ======================================================================================== */
+/* Slice transform definitions                                                              */
+/* ======================================================================================== */
+/* ======================================================================================== */
+/* Documentation: http://wheelnavjs.softwaretailoring.net/documentation/sliceTransform.html */
+/* ======================================================================================== */
+
 
 var sliceTransform = function () {
 
@@ -1501,6 +1564,15 @@ var sliceTransform = function () {
         }
     }
 
+    this.ScaleTitleTransformMini = function (x, y, rOriginal, baseAngle, sliceAngle, titleRotateAngle, itemIndex) {
+
+        return {
+            sliceTransformString: "",
+            lineTransformString: "",
+            titleTransformString: "s1.1"
+        }
+    }
+
     this.RotateScaleTransform = function (x, y, rOriginal, baseAngle, sliceAngle, titleRotateAngle, itemIndex) {
 
         sliceTransformString = "r360,s1.3";
@@ -1518,9 +1590,12 @@ var sliceTransform = function () {
 
 
 ///#source 1 1 /js/source/wheelnav.spreader.js
-//---------------------------------
-// Spreader of wheel
-//---------------------------------
+/* ======================================================================================= */
+/* Spreader of wheel                                                                       */
+/* ======================================================================================= */
+/* ======================================================================================= */
+/* Documentation: http://wheelnavjs.softwaretailoring.net/documentation/spreader.html      */
+/* ======================================================================================= */
 
 spreader = function (wheelnav) {
 
@@ -1561,10 +1636,12 @@ spreader.prototype.setVisibility = function () {
     }
 }
 ///#source 1 1 /js/source/wheelnav.colorPalettes.js
-//---------------------------------
-// Color palettes for slices
-// from http://www.colourlovers.com
-//---------------------------------
+/* ======================================================================================== */
+/* Color palettes for slices from http://www.colourlovers.com                               */
+/* ======================================================================================== */
+/* ======================================================================================== */
+/* Documentation: http://wheelnavjs.softwaretailoring.net/documentation/colorPalettes.html  */
+/* ======================================================================================== */
 
 var colorpalette = {
     defaultpalette: new Array("#2ECC40", "#FFDC00", "#FF851B", "#FF4136", "#0074D9", "#777"),

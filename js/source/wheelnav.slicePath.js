@@ -1,6 +1,9 @@
-﻿//---------------------------------
-// Slice path definitions
-//---------------------------------
+﻿/* ======================================================================================= */
+/* Slice path definitions                                                                  */
+/* ======================================================================================= */
+/* ======================================================================================= */
+/* Documentation: http://wheelnavjs.softwaretailoring.net/documentation/slicePath.html     */
+/* ======================================================================================= */
 
 var slicePath = function () {
 
@@ -612,6 +615,56 @@ var slicePath = function () {
             titlePosY: titlePosY
         }
     }
+
+    this.PieArrowBasePieSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+
+        setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+        r = r * 0.9;
+        theta1 = getTheta(startAngle + sliceAngle * 0.45);
+        theta2 = getTheta(startAngle + sliceAngle * 0.55);
+
+        slicePathString = [["M", x, y],
+                     ["L", r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
+                     ["A", r, r, 0, 0, 1, r * Math.cos(theta1) + x, r * Math.sin(theta1) + y],
+                     ["A", r, r, 0, 0, 1, r * Math.cos(middleTheta) + x, r * Math.sin(middleTheta) + y],
+                     ["A", r, r, 0, 0, 1, r * Math.cos(theta2) + x, r * Math.sin(theta2) + y],
+                     ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
+                     ["z"]];
+
+        return {
+            slicePathString: slicePathString,
+            linePathString: "",
+            titlePosX: titlePosX,
+            titlePosY: titlePosY
+        }
+    }
+
+    this.PieArrowSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+
+        setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+        r = r * 0.9;
+        theta1 = getTheta(startAngle + sliceAngle * 0.45);
+        theta2 = getTheta(startAngle + sliceAngle * 0.55);
+
+        slicePathString = [["M", x, y],
+                     ["L", r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
+                     ["A", r, r, 0, 0, 1, r * Math.cos(theta1) + x, r * Math.sin(theta1) + y],
+                     ["L", r * 1.1 * Math.cos(middleTheta) + x, r * 1.1 * Math.sin(middleTheta) + y],
+                     ["L", r * Math.cos(theta2) + x, r * Math.sin(theta2) + y],
+                     ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
+                     ["z"]];
+
+        //titleSugar = r * 0.44;
+        //setTitlePos(x, y);
+
+        return {
+            slicePathString: slicePathString,
+            linePathString: "",
+            titlePosX: titlePosX,
+            titlePosY: titlePosY
+        }
+    }
+
 
     return this;
 }

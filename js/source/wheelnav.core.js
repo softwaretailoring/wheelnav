@@ -4,13 +4,16 @@
 /* This is a small javascript library for animated SVG based wheel navigation.             */
 /* Requires Raphaël JavaScript Vector Library (http://raphaeljs.com)                       */
 /* ======================================================================================= */
-/* Check http://wheelnavjs.softwaretailoring.net for samples and documentation.            */
+/* Check http://wheelnavjs.softwaretailoring.net for samples.                              */
 /* Fork https://github.com/softwaretailoring/wheelnav for contribution.                    */
 /* ======================================================================================= */
 /* Copyright © 2014 Gábor Berkesi (http://softwaretailoring.net)                           */
 /* Licensed under MIT (https://github.com/softwaretailoring/wheelnav/blob/master/LICENSE)  */
 /* ======================================================================================= */
 
+/* ======================================================================================= */
+/* Documentation: http://wheelnavjs.softwaretailoring.net/documentation/core.html          */
+/* ======================================================================================= */
 
 wheelnav = function(divId) {
 
@@ -36,8 +39,6 @@ wheelnav = function(divId) {
     this.clickModeRotate = true;
     this.clickModeSpreadOff = false;
     this.multiSelect = false;
-    this.minPercent = 0.01;
-    this.maxPercent = 1;
     this.hoverPercent = 1;
     this.selectedPercent = 1;
     this.currentPercent = null;
@@ -60,6 +61,8 @@ wheelnav = function(divId) {
     this.spreaderCircleAttr = { fill: "#777", "stroke-width": 3 };
     this.spreaderOnAttr = { font: '100 32px Impact, Charcoal, sans-serif', fill: "#FFF", cursor: 'pointer' };
     this.spreaderOffAttr = { font: '100 32px Impact, Charcoal, sans-serif', fill: "#FFF", cursor: 'pointer' };
+    this.minPercent = 0.01;
+    this.maxPercent = 1;
 
     //NavItem settings. If it remains null, use default settings.
     this.animateeffect = null;

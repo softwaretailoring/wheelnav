@@ -1,6 +1,10 @@
-﻿//------------------------------------------
-// Slice transform definitions
-//------------------------------------------
+﻿/* ======================================================================================== */
+/* Slice transform definitions                                                              */
+/* ======================================================================================== */
+/* ======================================================================================== */
+/* Documentation: http://wheelnavjs.softwaretailoring.net/documentation/sliceTransform.html */
+/* ======================================================================================== */
+
 
 var sliceTransform = function () {
 
@@ -99,6 +103,15 @@ var sliceTransform = function () {
             sliceTransformString: "",
             lineTransformString: "",
             titleTransformString: "s1.3"
+        }
+    }
+
+    this.ScaleTitleTransformMini = function (x, y, rOriginal, baseAngle, sliceAngle, titleRotateAngle, itemIndex) {
+
+        return {
+            sliceTransformString: "",
+            lineTransformString: "",
+            titleTransformString: "s1.1"
         }
     }
 
