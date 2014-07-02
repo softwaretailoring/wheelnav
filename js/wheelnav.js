@@ -47,13 +47,6 @@ wheelnav = function(divId) {
     this.navItemCount = 0;
     this.navItems = new Array();
     this.colors = colorpalette.defaultpalette;
-    this.slicePathFunction = slicePath().PieSlice;
-    this.sliceTransformFunction = null;
-    this.sliceSelectedPathFunction = null;
-    this.sliceSelectedTransformFunction = null;
-    this.sliceHoverPathFunction = null;
-    this.sliceHoverTransformFunction = null;
-    this.titleFont = '100 24px Impact, Charcoal, sans-serif';
     this.titleSpreadScale = null;
 
     //Spreader settings
@@ -66,8 +59,6 @@ wheelnav = function(divId) {
     this.maxPercent = 1;
 
     //NavItem settings. If it remains null, use default settings.
-    this.animateeffect = null;
-    this.animatetime = null;
     this.slicePathAttr = null;
     this.sliceHoverAttr = null;
     this.sliceSelectedAttr = null;
@@ -77,6 +68,16 @@ wheelnav = function(divId) {
     this.linePathAttr = null;
     this.lineHoverAttr = null;
     this.lineSelectedAttr = null;
+
+    this.animateeffect = null;
+    this.animatetime = null;
+    this.slicePathFunction = slicePath().PieSlice;
+    this.sliceTransformFunction = null;
+    this.sliceSelectedPathFunction = null;
+    this.sliceSelectedTransformFunction = null;
+    this.sliceHoverPathFunction = null;
+    this.sliceHoverTransformFunction = null;
+    this.titleFont = '100 24px Impact, Charcoal, sans-serif';
 
     this.navDivTabId = null; //Id of Bootstrap <ul class="nav nav-tabs">. It is necessary for proper fade effect.
     this.navDivDefultCssClass = null;
@@ -113,6 +114,8 @@ wheelnav.prototype.initWheel = function (titles) {
         colorIndex++;
         if (colorIndex == this.colors.length) { colorIndex = 0;}
     }
+
+    this.spreader = new spreader(this);
 };
 
 wheelnav.prototype.createWheel = function (titles, withSpread) {
@@ -130,8 +133,6 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
     else {
         this.navAngle = this.baseAngle + ((360 / this.navItemCount) / 2);
     }
-
-    this.spreader = new spreader(this);
 
     if (withSpread) {
         this.currentPercent = this.minPercent;
