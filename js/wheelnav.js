@@ -298,6 +298,8 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     this.navLineCurrentTransformString = null;
 
     this.title = title;
+    this.selectedTitle = title;
+    this.tooltip = null;
     this.titleFont = wheelnav.titleFont;
     if (wheelnav.titleSpreadScale == null) { this.titleSpreadScale = false; }
     else { this.titleSpreadScale = wheelnav.titleSpreadScale; }
@@ -387,12 +389,15 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
 wheelnavItem.prototype.createNavItem = function () {
 
     //Set min/max sliecePaths
+    //Default - min
     if (this.slicePathMin == null) {
         this.slicePathMin = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelSugar, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.itemIndex, this.minPercent);
     }
+    //Default - max
     if (this.slicePathMax == null) {
         this.slicePathMax = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelSugar, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.itemIndex, this.maxPercent);
     }
+    //Selected - min
     if (this.selectedSlicePathMin == null) {
         if (this.sliceSelectedPathFunction != null) {
             this.selectedSlicePathMin = this.sliceSelectedPathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelSugar, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.itemIndex, this.selectedPercent * this.minPercent);
@@ -404,6 +409,7 @@ wheelnavItem.prototype.createNavItem = function () {
             this.selectedSlicePathMin = this.slicePathMin;
         }
     }
+    //Selected - max
     if (this.selectedSlicePathMax == null) {
         if (this.sliceSelectedPathFunction != null) {
             this.selectedSlicePathMax = this.sliceSelectedPathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelSugar, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.itemIndex, this.selectedPercent * this.maxPercent);
@@ -415,6 +421,7 @@ wheelnavItem.prototype.createNavItem = function () {
             this.selectedSlicePathMax = this.slicePathMax;
         }
     }
+    //Hovered - min
     if (this.hoverSlicePathMin == null) {
         if (this.sliceHoverPathFunction != null) {
             this.hoverSlicePathMin = this.sliceHoverPathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelSugar, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.itemIndex, this.hoverPercent * this.minPercent);
@@ -426,6 +433,7 @@ wheelnavItem.prototype.createNavItem = function () {
             this.hoverSlicePathMin = this.slicePathMin;
         }
     }
+    //Hovered - max
     if (this.hoverSlicePathMax == null) {
         if (this.sliceHoverPathFunction != null) {
             this.hoverSlicePathMax = this.sliceHoverPathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelSugar, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.itemIndex, this.hoverPercent * this.maxPercent);
@@ -439,6 +447,7 @@ wheelnavItem.prototype.createNavItem = function () {
     }
 
     //Set sliceTransforms
+    //Default
     if (this.sliceTransform == null) {
         if (this.sliceTransformFunction != null) {
             this.sliceTransform = this.sliceTransformFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelSugar, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.wheelnav.titleRotateAngle, this.itemIndex);
@@ -447,6 +456,7 @@ wheelnavItem.prototype.createNavItem = function () {
             this.sliceTransform = sliceTransform().NullTransform;
         }
     }
+    //Selected
     if (this.selectTransform == null) {
         if (this.sliceSelectedTransformFunction != null) {
             this.selectTransform = this.sliceSelectedTransformFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelSugar, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.wheelnav.titleRotateAngle, this.itemIndex);
@@ -455,6 +465,7 @@ wheelnavItem.prototype.createNavItem = function () {
             this.selectTransform = sliceTransform().NullTransform;
         }
     }
+    //Hovered
     if (this.hoverTransform == null) {
         if (this.sliceHoverTransformFunction != null) {
             this.hoverTransform = this.sliceHoverTransformFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelSugar, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.wheelnav.titleRotateAngle, this.itemIndex);
@@ -504,6 +515,9 @@ wheelnavItem.prototype.createNavItem = function () {
         this.navLine
     );
 
+    if (this.tooltip != null) {
+        this.navItem.attr({ title: this.tooltip });
+    }
     this.navItem.id = this.wheelnav.getItemId(this.itemIndex);
 
     var thisWheelNav = this.wheelnav;
@@ -641,7 +655,6 @@ wheelnavItem.prototype.setCurrentTransform = function () {
 
     //Set path
     var slicePath = this.getCurrentPath();
-    var percentAttr = this.getTitlePercentAttr(slicePath.titlePosX, slicePath.titlePosY, this.titlePath);
 
     var sliceTransformAttr = {};
 
@@ -657,6 +670,19 @@ wheelnavItem.prototype.setCurrentTransform = function () {
         transform: this.navLineCurrentTransformString
     }
 
+    //Set title
+    var currentTitle = this.title;
+    if (this.selected) { currentTitle = this.selectedTitle; }
+    
+    if (this.navTitle.type == "path") {
+        titleCurrentPath = new wheelnavTitle(currentTitle, this.wheelnav.raphael.raphael);
+    }
+    else {
+        titleCurrentPath = new wheelnavTitle(currentTitle);
+    }
+
+    var percentAttr = this.getTitlePercentAttr(slicePath.titlePosX, slicePath.titlePosY, titleCurrentPath);
+
     var titleTransformAttr = {};
 
     if (this.navTitle.type == "path") {
@@ -671,6 +697,8 @@ wheelnavItem.prototype.setCurrentTransform = function () {
             y: percentAttr.y,
             transform: this.navTitleCurrentTransformString
         }
+
+        this.navTitle.attr({ text: currentTitle });
     }
 
     //Animate navitem

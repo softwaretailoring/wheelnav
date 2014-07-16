@@ -45,7 +45,16 @@
                 textWheelRotatedTitle.spreaderEnable = true;
                 textWheelRotatedTitle.titleSpreadScale = true;
                 textWheelRotatedTitle.multiSelect = true;
-                textWheelRotatedTitle.createWheel([icon.check, icon.check, icon.check, icon.check, icon.check, icon.check]);
+                textWheelRotatedTitle.initWheel([icon.cross, icon.cross, icon.cross, icon.cross, icon.cross, icon.cross]);
+
+                textWheelRotatedTitle.navItems[0].selectedTitle = icon.check;
+                textWheelRotatedTitle.navItems[1].selectedTitle = icon.check;
+                textWheelRotatedTitle.navItems[2].selectedTitle = icon.check;
+                textWheelRotatedTitle.navItems[3].selectedTitle = icon.check;
+                textWheelRotatedTitle.navItems[4].selectedTitle = icon.check;
+                textWheelRotatedTitle.navItems[5].selectedTitle = icon.check;
+
+                textWheelRotatedTitle.createWheel();
 
                 var pieWheel = new wheelnav("pieWheel");
                 pieWheel.slicePathFunction = slicePath().MenuSlice;
@@ -59,7 +68,11 @@
                 pieWheel.centerY = pieWheel.centerY * 0.4;
                 pieWheel.clickModeRotate = false;
                 pieWheel.titleRotateAngle = 0;
-                pieWheel.createWheel([icon.check, icon.cloud, icon.raphael, null, null, null, null, null]);
+                pieWheel.initWheel([icon.check, icon.cloud, icon.raphael, null, null, null, null, null]);
+                pieWheel.navItems[0].tooltip = "icon.check";
+                pieWheel.navItems[1].tooltip = "icon.cloud";
+                pieWheel.navItems[2].tooltip = "icon.raphael";
+                pieWheel.createWheel();
                 
                 var iconWheel = new wheelnav("iconWheel");
                 iconWheel.slicePathFunction = slicePath().LineSlice;
