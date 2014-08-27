@@ -8,7 +8,14 @@
 wheelnavItem = function (wheelnav, title, itemIndex) {
 
     this.wheelnav = wheelnav;
-    this.itemIndex = itemIndex;
+    this.wheelItemIndex = itemIndex;
+    if (this.wheelnav.clockwise) {
+        this.itemIndex = itemIndex;
+    }
+    else {
+        this.itemIndex = -itemIndex;
+    }
+
     this.selected = false;
     this.hovered = false;
 
@@ -205,7 +212,7 @@ wheelnavItem.prototype.createNavItem = function () {
     this.navSlice = this.wheelnav.raphael.path(slicePath.slicePathString);
     this.navSlice.attr(this.slicePathAttr);
     this.navSlice.attr(this.fillAttr);
-    this.navSlice.id = this.wheelnav.getSliceId(this.itemIndex);
+    this.navSlice.id = this.wheelnav.getSliceId(this.wheelItemIndex);
     this.navSlice.node.id = this.navSlice.id;
 
     //Create title
@@ -221,7 +228,7 @@ wheelnavItem.prototype.createNavItem = function () {
         this.navTitle = this.wheelnav.raphael.text(slicePath.titlePosX, slicePath.titlePosY, this.title).attr(this.titleAttr);
     }
 
-    this.navTitle.id = this.wheelnav.getTitleId(this.itemIndex);
+    this.navTitle.id = this.wheelnav.getTitleId(this.wheelItemIndex);
     this.navTitle.node.id = this.navTitle.id;
 
     var titleRotateString = this.getTitleRotateString();
@@ -229,7 +236,7 @@ wheelnavItem.prototype.createNavItem = function () {
 
     //Create linepath
     this.navLine = this.wheelnav.raphael.path(slicePath.linePathString).attr(this.linePathAttr).toBack();
-    this.navLine.id = this.wheelnav.getLineId(this.itemIndex);
+    this.navLine.id = this.wheelnav.getLineId(this.wheelItemIndex);
 
     //Create item set
     this.navItem = this.wheelnav.raphael.set();
@@ -242,11 +249,11 @@ wheelnavItem.prototype.createNavItem = function () {
     if (this.tooltip != null) {
         this.navItem.attr({ title: this.tooltip });
     }
-    this.navItem.id = this.wheelnav.getItemId(this.itemIndex);
+    this.navItem.id = this.wheelnav.getItemId(this.wheelItemIndex);
 
     var thisWheelNav = this.wheelnav;
     var thisNavItem = this;
-    var thisItemIndex = this.itemIndex;
+    var thisItemIndex = this.wheelItemIndex;
 
     this.navItem.click(function () {
         thisWheelNav.navigateWheel(thisItemIndex);

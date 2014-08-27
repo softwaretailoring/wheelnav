@@ -102,8 +102,9 @@
                 optionWheel.sliceSelectedTransformFunction = sliceTransform().MoveMiddleTransform;
                 optionWheel.animatetime = 600;
                 optionWheel.animateeffect = "linear";
-                optionWheel.initWheel([icon.aumade, icon.bug, icon.coffee, icon.detour, icon.exchange, icon.future, icon.green, icon.hammer]);
-                optionWheel.createWheel();
+                optionWheel.clockwise = false;
+                //optionWheel.initWheel([icon.aumade, icon.bug, icon.coffee, icon.detour, icon.exchange, icon.future, icon.green, icon.hammer]);
+                optionWheel.createWheel(["1", "2", "3", "4", "5", "6"]);
 
                 var textWheel = new wheelnav("textWheel");
                 textWheel.slicePathFunction = slicePath().TabSlice;
