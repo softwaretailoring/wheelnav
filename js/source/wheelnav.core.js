@@ -153,7 +153,7 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
     return this;
 };
 
-wheelnav.prototype.refreshWheel = function () {
+wheelnav.prototype.refreshWheel = function (selectedToFront) {
 
     for (i = 0; i < this.navItemCount; i++) {
 
@@ -180,8 +180,17 @@ wheelnav.prototype.refreshWheel = function () {
             navItem.navTitle.attr(navItem.titleSelectedAttr);
             navItem.navLine.attr(navItem.lineSelectedAttr);
 
-            navItem.navSlice.toFront();
-            navItem.navTitle.toFront();
+            if (selectedToFront != null) {
+                if (selectedToFront) {
+                    navItem.navSlice.toFront();
+                    navItem.navTitle.toFront();
+                }
+                else {
+                    navItem.navTitle.toBack();
+                    navItem.navSlice.toBack();
+                }
+            }
+            
         }
         else {
             navItem.navSlice.attr(navItem.slicePathAttr);
@@ -197,7 +206,7 @@ wheelnav.prototype.refreshWheel = function () {
     this.spreader.setVisibility();
 }
 
-wheelnav.prototype.navigateWheel = function (clicked) {
+wheelnav.prototype.navigateWheel = function (clicked, selectedToFront) {
 
     for (i = 0; i < this.navItemCount; i++) {
         var navItem = this.navItems[i];
@@ -230,7 +239,7 @@ wheelnav.prototype.navigateWheel = function (clicked) {
         this.spreadWheel();
     }
 
-    this.refreshWheel();
+    this.refreshWheel(selectedToFront);
 }
 
 wheelnav.prototype.spreadWheel = function () {

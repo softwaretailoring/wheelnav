@@ -154,7 +154,7 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
     return this;
 };
 
-wheelnav.prototype.refreshWheel = function () {
+wheelnav.prototype.refreshWheel = function (selectedToFront) {
 
     for (i = 0; i < this.navItemCount; i++) {
 
@@ -181,8 +181,17 @@ wheelnav.prototype.refreshWheel = function () {
             navItem.navTitle.attr(navItem.titleSelectedAttr);
             navItem.navLine.attr(navItem.lineSelectedAttr);
 
-            navItem.navSlice.toFront();
-            navItem.navTitle.toFront();
+            if (selectedToFront != null) {
+                if (selectedToFront) {
+                    navItem.navSlice.toFront();
+                    navItem.navTitle.toFront();
+                }
+                else {
+                    navItem.navTitle.toBack();
+                    navItem.navSlice.toBack();
+                }
+            }
+            
         }
         else {
             navItem.navSlice.attr(navItem.slicePathAttr);
@@ -198,7 +207,7 @@ wheelnav.prototype.refreshWheel = function () {
     this.spreader.setVisibility();
 }
 
-wheelnav.prototype.navigateWheel = function (clicked) {
+wheelnav.prototype.navigateWheel = function (clicked, selectedToFront) {
 
     for (i = 0; i < this.navItemCount; i++) {
         var navItem = this.navItems[i];
@@ -231,7 +240,7 @@ wheelnav.prototype.navigateWheel = function (clicked) {
         this.spreadWheel();
     }
 
-    this.refreshWheel();
+    this.refreshWheel(selectedToFront);
 }
 
 wheelnav.prototype.spreadWheel = function () {
@@ -1698,5 +1707,11 @@ var colorpalette = {
     oceanfive: new Array("#00A0B0", "#6A4A3C", "#CC333F", "#EB6841", "#EDC951"),
     garden: new Array("#648A4F", "#2B2B29", "#DF6126", "#FFA337", "#F57C85"),
     gamebookers: new Array("#FF9900", "#E9E9E9", "#BCBCBC", "#3299BB", "#424242"),
-    parrot: new Array("#D80351", "#F5D908", "#00A3EE", "#929292", "#3F3F3F")
+    parrot: new Array("#D80351", "#F5D908", "#00A3EE", "#929292", "#3F3F3F"),
+    pisycholand: new Array("#FF1919", "#FF5E19", "#FF9F19", "#E4FF19", "#29FF19"),
+    makeLOVEnotWAR: new Array("#2C0EF0", "#B300FF", "#6751F0", "#FF006F", "#8119FF"),
+    theworldismine: new Array("#F21D1D", "#FF2167", "#B521FF", "#7E2AA8", "#000000"),
+    fractalloveone: new Array("#002EFF", "#00FFF7", "#00FF62", "#FFAA00", "#FFF700"),
+    fractallovetwo: new Array("#FF9500", "#FF0000", "#FF00F3", "#AA00FF", "#002EFF"),
+    fractallove: new Array("#002EFF", "#00FFF7", "#00FF62", "#FFAA00", "#FFF700", "#FF0000", "#FF00F3", "#AA00FF")
 }
