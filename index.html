@@ -7,7 +7,7 @@
         <meta name="description" content="wheelnav.js">
         <meta name="author" content="gabor.berkesi@softwaretailoring.net">
 
-        <title>wheelnav.js - spinning ever</title>
+        <title>wheelnav.js - test page</title>
 
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
@@ -24,10 +24,14 @@
 
             window.onload = function () {
 
+                var myWheelnav = new wheelnav("divWheelnav");
+                myWheelnav.slicePathFunction = slicePath().DonutSlice;
+                myWheelnav.colors = new Array("mediumorchid", "royalblue", "darkorange");
+                myWheelnav.createWheel([icon.github, icon.people, icon.smile]);
+
                 var cogWheel = new wheelnav("cogWheel");
                 cogWheel.slicePathFunction = slicePath().CogBasePieSlice;
                 cogWheel.sliceSelectedPathFunction = slicePath().CogSlice;
-                cogWheel.sliceHoverPathFunction = slicePath().CogSlice;
                 cogWheel.wheelSugar = 0.85 * cogWheel.wheelSugar;
                 cogWheel.navAngle = 60;
                 cogWheel.titleRotateAngle = -60;
@@ -98,13 +102,13 @@
                 iconWheel.createWheel();
                
                 var optionWheel = new wheelnav("optionWheel");
+                optionWheel.colors = colorpalette.fractallove;
                 optionWheel.slicePathFunction = slicePath().FlowerSlice;
                 optionWheel.sliceSelectedTransformFunction = sliceTransform().MoveMiddleTransform;
                 optionWheel.animatetime = 600;
                 optionWheel.animateeffect = "linear";
                 optionWheel.clockwise = false;
-                //optionWheel.initWheel([icon.aumade, icon.bug, icon.coffee, icon.detour, icon.exchange, icon.future, icon.green, icon.hammer]);
-                optionWheel.createWheel(["1", "2", "3", "4", "5", "6"]);
+                optionWheel.createWheel(["-1-", "-2-", "-3-", "-4-", "-5-", "-6-"]);
 
                 var textWheel = new wheelnav("textWheel");
                 textWheel.slicePathFunction = slicePath().TabSlice;
@@ -125,11 +129,12 @@
                 For more information please visit the <a href="http://wheelnavjs.softwaretailoring.net" target="_blank">project page</a>
             </p>
         </header>
+        
+        <div id="divWheelnav" class="wheelNavGitHub"></div>
         <div id="cogWheel" class="wheelNav"></div>
         <div id="textWheelRotatedTitle" class="wheelNav"></div>
         <div id="pieWheel" class="wheelNav"></div>
         <div id="iconWheel" class="wheelNav"></div>
-        <div style="height:50px;" ></div>
         <div id="optionWheel" class="wheelNav"></div>
         <div style="height:50px;" ></div>
         <div id="textWheel" class="wheelNav"></div>

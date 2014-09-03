@@ -11,6 +11,12 @@ footer {
     text-align: center;
 }
 
+.wheelNavGitHub {
+    height: 200px;
+    width: 200px;
+    margin: auto;
+}
+
 .wheelNav {
     height: 350px;
     width: 350px;
