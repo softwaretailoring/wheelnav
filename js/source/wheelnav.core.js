@@ -1,5 +1,5 @@
 ﻿/* ======================================================================================= */
-/*                                   wheelnav.js - v1.0.1                                  */
+/*                                   wheelnav.js - v1.0.2                                  */
 /* ======================================================================================= */
 /* This is a small javascript library for animated SVG based wheel navigation.             */
 /* Requires Raphaël JavaScript Vector Library (http://raphaeljs.com)                       */
@@ -31,7 +31,7 @@ wheelnav = function(divId) {
     var canvasWidth = this.raphael.canvas.getAttribute('width');
     this.centerX = canvasWidth / 2;
     this.centerY = canvasWidth / 2;
-    this.wheelSugar = canvasWidth / 2;
+    this.wheelRadius = canvasWidth / 2;
     this.navAngle = 0;
     this.baseAngle = null;
     this.sliceAngle = 0;
