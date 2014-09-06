@@ -848,7 +848,7 @@ var slicePath = function () {
     this.endTheta = 0;
     this.titlePosX = 0;
     this.titlePosY = 0;
-    this.titleSugar = 0;
+    this.titleRadius = 0;
     this.r = 0;
 
     var setBaseValue = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
@@ -857,13 +857,13 @@ var slicePath = function () {
         this.startTheta = getTheta(startAngle);
         this.middleTheta = getTheta(startAngle + sliceAngle / 2);
         this.endTheta = getTheta(startAngle + sliceAngle);
-        this.titleSugar = r * 0.5;
+        this.titleRadius = r * 0.5;
         setTitlePos(x, y);
     }
 
     var setTitlePos = function (x, y) {
-        this.titlePosX = titleSugar * Math.cos(middleTheta) + x;
-        this.titlePosY = titleSugar * Math.sin(middleTheta) + y;
+        this.titlePosX = titleRadius * Math.cos(middleTheta) + x;
+        this.titlePosY = titleRadius * Math.sin(middleTheta) + y;
     }
 
     var getTheta = function (angle) {
@@ -886,7 +886,7 @@ var slicePath = function () {
        
         setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
         r = r * 0.9;
-        titleSugar = r * 0.6;
+        titleRadius = r * 0.6;
         setTitlePos(x, y);
         slicePathString = [["M", x, y],
                      ["L", r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
@@ -938,7 +938,7 @@ var slicePath = function () {
                      ["A", rbase, rbase, 0, 0, 0, rbase * Math.cos(startTheta) + x, rbase * Math.sin(startTheta) + y],
                      ["z"]];
 
-        titleSugar = r * 0.7;
+        titleRadius = r * 0.7;
         setTitlePos(x, y);
 
         return {
@@ -963,7 +963,7 @@ var slicePath = function () {
                      ["A", rbase, rbase, 0, 0, 1, rbase * Math.cos(startTheta) + x, rbase * Math.sin(startTheta) + y],
                      ["z"]];
 
-        titleSugar = r * 0.7;
+        titleRadius = r * 0.7;
         setTitlePos(x, y);
 
         return {
@@ -1003,7 +1003,7 @@ var slicePath = function () {
                      ["L", (rbase * Math.cos(endTheta)) + x, (rbase * Math.sin(endTheta)) + y],
                      ["z"]];
 
-        titleSugar = r * 0.44;
+        titleRadius = r * 0.44;
         setTitlePos(x, y);
 
         return {
@@ -1032,7 +1032,7 @@ var slicePath = function () {
                          ["L", (rbase * Math.cos(endTheta)) + x, (rbase * Math.sin(endTheta)) + y],
                          ["z"]];
 
-        titleSugar = r * 0.44;
+        titleRadius = r * 0.44;
         setTitlePos(x, y);
 
         return {
@@ -1129,7 +1129,7 @@ var slicePath = function () {
                      ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
                      ["z"]];
 
-        titleSugar = r * 0.55;
+        titleRadius = r * 0.55;
         setTitlePos(x, y);
 
         return {
@@ -1144,7 +1144,7 @@ var slicePath = function () {
 
         setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
 
-        titleSugar = r * 0.63;
+        titleRadius = r * 0.63;
         setTitlePos(x, y);
 
         var menuSugar = percent * 25;
@@ -1168,8 +1168,8 @@ var slicePath = function () {
                     ["A", 1, 1, 0, 0, 1, x+1, y+1]];
         }
         else {
-            lineEndX = (titleSugar - menuSugar) * Math.cos(middleTheta) + x;
-            lineEndY = (titleSugar - menuSugar) * Math.sin(middleTheta) + y;
+            lineEndX = (titleRadius - menuSugar) * Math.cos(middleTheta) + x;
+            lineEndY = (titleRadius - menuSugar) * Math.sin(middleTheta) + y;
 
             linePathString = [["M", x, y],
                         ["A", r / 2, r / 2, 0, 0, 1, lineEndX, lineEndY]];
@@ -1187,7 +1187,7 @@ var slicePath = function () {
 
         var slicePath = MenuSlice(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
 
-        titleSugar = r * 0.63;
+        titleRadius = r * 0.63;
 
         var menuSugar = percent * 25;
 
@@ -1204,8 +1204,8 @@ var slicePath = function () {
                     ["A", 1, 1, 0, 0, 1, x + 1, y + 1]];
         }
         else {
-            lineEndX = (titleSugar - menuSugar) * Math.cos(middleTheta) + x;
-            lineEndY = (titleSugar - menuSugar) * Math.sin(middleTheta) + y;
+            lineEndX = (titleRadius - menuSugar) * Math.cos(middleTheta) + x;
+            lineEndY = (titleRadius - menuSugar) * Math.sin(middleTheta) + y;
 
             linePathString = [["M", x, y],
                         ["A", r / 3, r / 3, 0, 0, 1, lineEndX, lineEndY]];
@@ -1235,7 +1235,7 @@ var slicePath = function () {
 
         setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
 
-        titleSugar = r * 0.63;
+        titleRadius = r * 0.63;
         setTitlePos(x, y);
 
         var menuSugar = percent * 30;
@@ -1259,8 +1259,8 @@ var slicePath = function () {
                     ["A", 1, 1, 0, 0, 1, x + 1, y + 1]];
         }
         else {
-            lineEndX = titleSugar - menuSugar;
-            lineEndY = titleSugar - menuSugar;
+            lineEndX = titleRadius - menuSugar;
+            lineEndY = titleRadius - menuSugar;
 
             linePathString = [["M", x, y],
                         ["L", titlePosX, titlePosY]];
@@ -1297,7 +1297,7 @@ var slicePath = function () {
 
         setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
         r = r * 0.7;
-        titleSugar = r * 0.87;
+        titleRadius = r * 0.87;
         setTitlePos(x, y);
 
         if (percent == 0) {
@@ -1324,7 +1324,7 @@ var slicePath = function () {
         r = r * 0.85;
 
         if (sliceAngle < 120) {
-            titleSugar = r * 0.62;
+            titleRadius = r * 0.62;
             slicePathString = [["M", (r * 0.1) * Math.cos(middleTheta) + x, (r * 0.1) * Math.sin(middleTheta) + y],
                          ["L", (r * 0.1) * Math.cos(middleTheta) + (r * 0.9) * Math.cos(startTheta) + x, (r * 0.1) * Math.sin(middleTheta) + (r * 0.9) * Math.sin(startTheta) + y],
                          ["A", (r * 0.97), (r * 0.97), 0, 0, 1, (r * 0.1) * Math.cos(middleTheta) + (r * 0.9) * Math.cos(endTheta) + x, (r * 0.1) * Math.sin(middleTheta) + (r * 0.9) * Math.sin(endTheta) + y],
@@ -1334,7 +1334,7 @@ var slicePath = function () {
                          ["A", (r * 1.1), (r * 1.1), 0, 0, 0, (r * 1.1) * Math.cos(startTheta) + x, (r * 1.1) * Math.sin(startTheta) + y]];
         }
         else if (sliceAngle < 180) {
-            titleSugar = r * 0.56;
+            titleRadius = r * 0.56;
             slicePathString = [["M", (r * 0.1) * Math.cos(middleTheta) + x, (r * 0.1) * Math.sin(middleTheta) + y],
                          ["L", (r * 0.1) * Math.cos(middleTheta) + (r * 0.9) * Math.cos(startTheta) + x, (r * 0.1) * Math.sin(middleTheta) + (r * 0.9) * Math.sin(startTheta) + y],
                          ["A", (r * 0.95), (r * 0.95), 0, 0, 1, (r * 0.1) * Math.cos(middleTheta) + (r * 0.9) * Math.cos(endTheta) + x, (r * 0.1) * Math.sin(middleTheta) + (r * 0.9) * Math.sin(endTheta) + y],
@@ -1344,7 +1344,7 @@ var slicePath = function () {
                          ["A", (r * 1.1), (r * 1.1), 0, 0, 0, (r * 1.1) * Math.cos(startTheta) + x, (r * 1.1) * Math.sin(startTheta) + y]];
         }
         else {
-            titleSugar = r * 0.5;
+            titleRadius = r * 0.5;
             slicePathString = [["M", (r * 0.1) * Math.cos(middleTheta) + x, (r * 0.1) * Math.sin(middleTheta) + y],
                          ["L", (r * 0.1) * Math.cos(middleTheta) + (r * 0.9) * Math.cos(startTheta) + x, (r * 0.1) * Math.sin(middleTheta) + (r * 0.9) * Math.sin(startTheta) + y],
                          ["A", (r * 0.905), (r * 0.905), 0, 0, 1, (r * 0.1) * Math.cos(middleTheta) + (r * 0.9) * Math.cos(endTheta) + x, (r * 0.1) * Math.sin(middleTheta) + (r * 0.9) * Math.sin(endTheta) + y],
@@ -1371,11 +1371,11 @@ var slicePath = function () {
 
         if (sliceAngle > 60 &&
             sliceAngle < 180) {
-            titleSugar = r * ((180 / sliceAngle) / 5);
+            titleRadius = r * ((180 / sliceAngle) / 5);
             setTitlePos(x, y);
         }
         else {
-            titleSugar = r * 0.55;
+            titleRadius = r * 0.55;
             setTitlePos(x, y);
         }
 
