@@ -51,7 +51,7 @@ wheelnav = function(divId) {
 
     //Spreader settings
     this.spreaderEnable = false;
-    this.spreaderSugar = 15;
+    this.spreaderRadius = 15;
     this.spreaderCircleAttr = { fill: "#777", "stroke-width": 3 };
     this.spreaderOnAttr = { font: '100 32px Impact, Charcoal, sans-serif', fill: "#FFF", cursor: 'pointer' };
     this.spreaderOffAttr = { font: '100 32px Impact, Charcoal, sans-serif', fill: "#FFF", cursor: 'pointer' };

@@ -52,7 +52,7 @@ wheelnav = function(divId) {
 
     //Spreader settings
     this.spreaderEnable = false;
-    this.spreaderSugar = 15;
+    this.spreaderRadius = 15;
     this.spreaderCircleAttr = { fill: "#777", "stroke-width": 3 };
     this.spreaderOnAttr = { font: '100 32px Impact, Charcoal, sans-serif', fill: "#FFF", cursor: 'pointer' };
     this.spreaderOffAttr = { font: '100 32px Impact, Charcoal, sans-serif', fill: "#FFF", cursor: 'pointer' };
@@ -1673,7 +1673,7 @@ spreader = function (wheelnav) {
     if (this.wheelnav.spreaderEnable) {
         var thisWheelNav = this.wheelnav;
 
-        this.spreaderCircle = thisWheelNav.raphael.circle(thisWheelNav.centerX, thisWheelNav.centerY, thisWheelNav.spreaderSugar).attr(thisWheelNav.spreaderCircleAttr);
+        this.spreaderCircle = thisWheelNav.raphael.circle(thisWheelNav.centerX, thisWheelNav.centerY, thisWheelNav.spreaderRadius).attr(thisWheelNav.spreaderCircleAttr);
         this.spreadOnTitle = thisWheelNav.raphael.text(thisWheelNav.centerX, thisWheelNav.centerY, "+").attr(thisWheelNav.spreaderOnAttr);
         this.spreadOnTitle.id = thisWheelNav.getSpreadOnId();
         this.spreadOnTitle.click(function () {

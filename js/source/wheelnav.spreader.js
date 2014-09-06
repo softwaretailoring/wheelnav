@@ -11,7 +11,7 @@ spreader = function (wheelnav) {
     if (this.wheelnav.spreaderEnable) {
         var thisWheelNav = this.wheelnav;
 
-        this.spreaderCircle = thisWheelNav.raphael.circle(thisWheelNav.centerX, thisWheelNav.centerY, thisWheelNav.spreaderSugar).attr(thisWheelNav.spreaderCircleAttr);
+        this.spreaderCircle = thisWheelNav.raphael.circle(thisWheelNav.centerX, thisWheelNav.centerY, thisWheelNav.spreaderRadius).attr(thisWheelNav.spreaderCircleAttr);
         this.spreadOnTitle = thisWheelNav.raphael.text(thisWheelNav.centerX, thisWheelNav.centerY, "+").attr(thisWheelNav.spreaderOnAttr);
         this.spreadOnTitle.id = thisWheelNav.getSpreadOnId();
         this.spreadOnTitle.click(function () {
