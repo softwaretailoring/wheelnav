@@ -312,20 +312,20 @@ var slicePath = function () {
         titleRadius = r * 0.63;
         setTitlePos(x, y);
 
-        var menuSugar = percent * 25;
+        var menuRadius = percent * 25;
 
-        if (menuSugar < 15)
+        if (menuRadius < 15)
         {
-            menuSugar = 15;
+            menuRadius = 15;
         }
 
         if (percent <= 0.05) {
-            menuSugar = 10;
+            menuRadius = 10;
         }
 
-        slicePathString = [["M", titlePosX - (menuSugar * Math.cos(middleTheta)), titlePosY - (menuSugar * Math.sin(middleTheta))],
-                    ["A", menuSugar, menuSugar, 0, 0, 1, titlePosX + (menuSugar * Math.cos(middleTheta)), titlePosY + (menuSugar * Math.sin(middleTheta))],
-                    ["A", menuSugar, menuSugar, 0, 0, 1, titlePosX - (menuSugar * Math.cos(middleTheta)), titlePosY - (menuSugar * Math.sin(middleTheta))],
+        slicePathString = [["M", titlePosX - (menuRadius * Math.cos(middleTheta)), titlePosY - (menuRadius * Math.sin(middleTheta))],
+                    ["A", menuRadius, menuRadius, 0, 0, 1, titlePosX + (menuRadius * Math.cos(middleTheta)), titlePosY + (menuRadius * Math.sin(middleTheta))],
+                    ["A", menuRadius, menuRadius, 0, 0, 1, titlePosX - (menuRadius * Math.cos(middleTheta)), titlePosY - (menuRadius * Math.sin(middleTheta))],
                     ["z"]];
 
         if (percent <= 0.05) {
@@ -333,8 +333,8 @@ var slicePath = function () {
                     ["A", 1, 1, 0, 0, 1, x+1, y+1]];
         }
         else {
-            lineEndX = (titleRadius - menuSugar) * Math.cos(middleTheta) + x;
-            lineEndY = (titleRadius - menuSugar) * Math.sin(middleTheta) + y;
+            lineEndX = (titleRadius - menuRadius) * Math.cos(middleTheta) + x;
+            lineEndY = (titleRadius - menuRadius) * Math.sin(middleTheta) + y;
 
             linePathString = [["M", x, y],
                         ["A", r / 2, r / 2, 0, 0, 1, lineEndX, lineEndY]];
@@ -354,14 +354,14 @@ var slicePath = function () {
 
         titleRadius = r * 0.63;
 
-        var menuSugar = percent * 25;
+        var menuRadius = percent * 25;
 
-        if (menuSugar < 15) {
-            menuSugar = 15;
+        if (menuRadius < 15) {
+            menuRadius = 15;
         }
 
         if (percent == 0) {
-            menuSugar = 10;
+            menuRadius = 10;
         }
 
         if (percent == 0) {
@@ -369,8 +369,8 @@ var slicePath = function () {
                     ["A", 1, 1, 0, 0, 1, x + 1, y + 1]];
         }
         else {
-            lineEndX = (titleRadius - menuSugar) * Math.cos(middleTheta) + x;
-            lineEndY = (titleRadius - menuSugar) * Math.sin(middleTheta) + y;
+            lineEndX = (titleRadius - menuRadius) * Math.cos(middleTheta) + x;
+            lineEndY = (titleRadius - menuRadius) * Math.sin(middleTheta) + y;
 
             linePathString = [["M", x, y],
                         ["A", r / 3, r / 3, 0, 0, 1, lineEndX, lineEndY]];
@@ -403,20 +403,20 @@ var slicePath = function () {
         titleRadius = r * 0.63;
         setTitlePos(x, y);
 
-        var menuSugar = percent * 30;
+        var menuRadius = percent * 30;
 
-        if (menuSugar < 15) {
-            menuSugar = 15;
+        if (menuRadius < 15) {
+            menuRadius = 15;
         }
 
         if (percent <= 0.05) {
-            menuSugar = 10;
+            menuRadius = 10;
         }
 
-        slicePathString = [["M", titlePosX + menuSugar, titlePosY + menuSugar],
-                    ["L", titlePosX - menuSugar, titlePosY + menuSugar],
-                    ["L", titlePosX - menuSugar, titlePosY - menuSugar],
-                    ["L", titlePosX + menuSugar, titlePosY - menuSugar],
+        slicePathString = [["M", titlePosX + menuRadius, titlePosY + menuRadius],
+                    ["L", titlePosX - menuRadius, titlePosY + menuRadius],
+                    ["L", titlePosX - menuRadius, titlePosY - menuRadius],
+                    ["L", titlePosX + menuRadius, titlePosY - menuRadius],
                     ["z"]];
 
         if (percent <= 0.05) {
@@ -424,8 +424,8 @@ var slicePath = function () {
                     ["A", 1, 1, 0, 0, 1, x + 1, y + 1]];
         }
         else {
-            lineEndX = titleRadius - menuSugar;
-            lineEndY = titleRadius - menuSugar;
+            lineEndX = titleRadius - menuRadius;
+            lineEndY = titleRadius - menuRadius;
 
             linePathString = [["M", x, y],
                         ["L", titlePosX, titlePosY]];
