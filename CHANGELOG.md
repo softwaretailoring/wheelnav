@@ -1,4 +1,9 @@
-## 1.0.2
+## 1.0.3
+
+* New class: slicePathHelper
+* Refactor functions of slicePath
+
+### 1.0.2
 
 * Rename wheelnav property: wheelSugar to wheelRadius
 * Rename spreader property: spreaderSugar to spreaderRadius

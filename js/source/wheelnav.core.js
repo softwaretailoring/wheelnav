@@ -1,5 +1,5 @@
 ﻿/* ======================================================================================= */
-/*                                   wheelnav.js - v1.0.2                                  */
+/*                                   wheelnav.js - v1.0.3                                  */
 /* ======================================================================================= */
 /* This is a small javascript library for animated SVG based wheel navigation.             */
 /* Requires Raphaël JavaScript Vector Library (http://raphaeljs.com)                       */
