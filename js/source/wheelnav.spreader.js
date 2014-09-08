@@ -27,7 +27,7 @@ spreader = function (wheelnav) {
     }
 
     return this;
-}
+};
 
 spreader.prototype.setVisibility = function () {
     if (this.wheelnav.spreaderEnable) {
@@ -42,4 +42,4 @@ spreader.prototype.setVisibility = function () {
             this.spreadOnTitle.toFront();
         }
     }
-}
+};
