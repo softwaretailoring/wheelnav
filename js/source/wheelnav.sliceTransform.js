@@ -14,7 +14,7 @@ var sliceTransform = function () {
     this.endTheta = 0;
 
     var setBaseValue = function (x, y, rOriginal, baseAngle, sliceAngle, titleRotateAngle, itemIndex, custom) {
-        this.startAngle = (itemIndex * sliceAngle) + baseAngle;
+        this.startAngle = baseAngle;
         this.startTheta = getTheta(startAngle);
         this.middleTheta = getTheta(startAngle + sliceAngle / 2);
         this.endTheta = getTheta(startAngle + sliceAngle);
@@ -42,7 +42,8 @@ var sliceTransform = function () {
             baseTheta = getTheta(-titleRotateAngle);
         }
         else {
-            baseTheta = getTheta(baseAngle + sliceAngle / 2);
+            var wheelBaseAngle = baseAngle - (itemIndex * sliceAngle);
+            baseTheta = getTheta(wheelBaseAngle + sliceAngle / 2);
         }
 
         var titleTransformString = "s1,r0,t" + (rOriginal / 10 * Math.cos(baseTheta)).toString() + "," + (rOriginal / 10 * Math.sin(baseTheta)).toString();

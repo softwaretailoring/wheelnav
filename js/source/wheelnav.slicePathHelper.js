@@ -28,7 +28,7 @@ var slicePathHelper = function () {
         }
 
         this.sliceRadius = rOriginal * percent;
-        this.startAngle = (itemIndex * sliceAngle) + baseAngle;
+        this.startAngle = baseAngle;
         this.startTheta = this.getTheta(this.startAngle);
         this.middleTheta = this.getTheta(this.startAngle + sliceAngle / 2);
         this.endTheta = this.getTheta(this.startAngle + sliceAngle);

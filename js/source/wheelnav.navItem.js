@@ -9,7 +9,7 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
 
     this.wheelnav = wheelnav;
     this.wheelItemIndex = itemIndex;
-    if (this.wheelnav.clockwise) {
+    if (wheelnav.clockwise) {
         this.itemIndex = itemIndex;
     }
     else {
@@ -47,6 +47,10 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     this.sliceTransformCustom = wheelnav.sliceTransformCustom; 
     this.sliceSelectedTransformCustom = wheelnav.sliceSelectedTransformCustom;
     this.sliceHoverTransformCustom = wheelnav.sliceHoverTransformCustom;
+
+    if (wheelnav.sliceAngle === null) { this.sliceAngle = 360 / wheelnav.navItemCount; }
+    else { this.sliceAngle = wheelnav.sliceAngle;}
+    this.baseAngle = (this.itemIndex * this.sliceAngle) + ((-this.sliceAngle / 2) + wheelnav.navAngle);
 
     if (title !== null) {
         this.slicePathFunction = wheelnav.slicePathFunction;
@@ -130,46 +134,46 @@ wheelnavItem.prototype.createNavItem = function () {
     //Set min/max sliecePaths
     //Default - min
     if (this.slicePathMin === undefined) {
-        this.slicePathMin = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.itemIndex, this.minPercent, this.slicePathCustom);
+        this.slicePathMin = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.minPercent, this.slicePathCustom);
     }
     //Default - max
     if (this.slicePathMax === undefined) {
-        this.slicePathMax = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.itemIndex, this.maxPercent, this.slicePathCustom);
+        this.slicePathMax = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.maxPercent, this.slicePathCustom);
     }
     //Selected - min
     if (this.selectedSlicePathMin === undefined) {
         if (this.sliceSelectedPathFunction !== null) {
-            this.selectedSlicePathMin = this.sliceSelectedPathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.itemIndex, this.selectedPercent * this.minPercent, this.sliceSelectedPathCustom);
+            this.selectedSlicePathMin = this.sliceSelectedPathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.selectedPercent * this.minPercent, this.sliceSelectedPathCustom);
         }
         else {
-            this.selectedSlicePathMin = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.itemIndex, this.selectedPercent * this.minPercent, this.sliceSelectedPathCustom);
+            this.selectedSlicePathMin = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.selectedPercent * this.minPercent, this.sliceSelectedPathCustom);
         }
     }
     //Selected - max
     if (this.selectedSlicePathMax === undefined) {
         if (this.sliceSelectedPathFunction !== null) {
-            this.selectedSlicePathMax = this.sliceSelectedPathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.itemIndex, this.selectedPercent * this.maxPercent, this.sliceSelectedPathCustom);
+            this.selectedSlicePathMax = this.sliceSelectedPathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.selectedPercent * this.maxPercent, this.sliceSelectedPathCustom);
         }
         else {
-            this.selectedSlicePathMax = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.itemIndex, this.selectedPercent * this.maxPercent, this.sliceSelectedPathCustom);
+            this.selectedSlicePathMax = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.selectedPercent * this.maxPercent, this.sliceSelectedPathCustom);
         }
     }
     //Hovered - min
     if (this.hoverSlicePathMin === undefined) {
         if (this.sliceHoverPathFunction !== null) {
-            this.hoverSlicePathMin = this.sliceHoverPathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.itemIndex, this.hoverPercent * this.minPercent, this.sliceHoverPathCustom);
+            this.hoverSlicePathMin = this.sliceHoverPathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.hoverPercent * this.minPercent, this.sliceHoverPathCustom);
         }
         else {
-            this.hoverSlicePathMin = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.itemIndex, this.hoverPercent * this.minPercent, this.sliceHoverPathCustom);
+            this.hoverSlicePathMin = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.hoverPercent * this.minPercent, this.sliceHoverPathCustom);
         }
     }
     //Hovered - max
     if (this.hoverSlicePathMax === undefined) {
         if (this.sliceHoverPathFunction !== null) {
-            this.hoverSlicePathMax = this.sliceHoverPathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.itemIndex, this.hoverPercent * this.maxPercent, this.sliceHoverPathCustom);
+            this.hoverSlicePathMax = this.sliceHoverPathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.hoverPercent * this.maxPercent, this.sliceHoverPathCustom);
         }
         else {
-            this.hoverSlicePathMax = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.itemIndex, this.hoverPercent * this.maxPercent, this.sliceHoverPathCustom);
+            this.hoverSlicePathMax = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.hoverPercent * this.maxPercent, this.sliceHoverPathCustom);
         }
     }
 
@@ -177,7 +181,7 @@ wheelnavItem.prototype.createNavItem = function () {
     //Default
     if (this.sliceTransform === undefined) {
         if (this.sliceTransformFunction !== null) {
-            this.sliceTransform = this.sliceTransformFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.wheelnav.titleRotateAngle, this.itemIndex, this.sliceTransformCustom);
+            this.sliceTransform = this.sliceTransformFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.wheelnav.titleRotateAngle, this.itemIndex, this.sliceTransformCustom);
         }
         else {
             this.sliceTransform = sliceTransform().NullTransform;
@@ -186,7 +190,7 @@ wheelnavItem.prototype.createNavItem = function () {
     //Selected
     if (this.selectTransform === undefined) {
         if (this.sliceSelectedTransformFunction !== null) {
-            this.selectTransform = this.sliceSelectedTransformFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.wheelnav.titleRotateAngle, this.itemIndex, this.sliceSelectedTransformCustom);
+            this.selectTransform = this.sliceSelectedTransformFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.wheelnav.titleRotateAngle, this.itemIndex, this.sliceSelectedTransformCustom);
         }
         else {
             this.selectTransform = sliceTransform().NullTransform;
@@ -195,7 +199,7 @@ wheelnavItem.prototype.createNavItem = function () {
     //Hovered
     if (this.hoverTransform === undefined) {
         if (this.sliceHoverTransformFunction !== null) {
-            this.hoverTransform = this.sliceHoverTransformFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.wheelnav.baseAngle, this.wheelnav.sliceAngle, this.wheelnav.titleRotateAngle, this.itemIndex, this.sliceHoverTransformCustom);
+            this.hoverTransform = this.sliceHoverTransformFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.wheelnav.titleRotateAngle, this.itemIndex, this.sliceHoverTransformCustom);
         }
         else {
             this.hoverTransform = sliceTransform().NullTransform;
@@ -506,7 +510,7 @@ wheelnavItem.prototype.isPathTitle = function () {
 };
 
 wheelnavItem.prototype.getItemRotateString = function () {
-    return "r," + this.currentRotate + "," + this.wheelnav.centerX + "," + this.wheelnav.centerY;
+    return "r," + (this.currentRotate).toString() + "," + this.wheelnav.centerX + "," + this.wheelnav.centerY;
 };
 
 wheelnavItem.prototype.getTitleRotateString = function () {

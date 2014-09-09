@@ -38,8 +38,7 @@ wheelnav = function (divId, raphael) {
     this.centerY = canvasWidth / 2;
     this.wheelRadius = canvasWidth / 2;
     this.navAngle = 0;
-    this.baseAngle = null;
-    this.sliceAngle = 0;
+    this.sliceAngle = null;
     this.titleRotateAngle = null;
     this.clickModeRotate = true;
     this.clickModeSpreadOff = false;
@@ -112,23 +111,38 @@ wheelnav.prototype.initWheel = function (titles) {
         if (titles === undefined ||
             titles === null ||
             !Array.isArray(titles)) {
-            titles = new Array("title-0", "title-1", "title-2", "title-3");
+            titles = ["title-0", "title-1", "title-2", "title-3"];
         }
 
-        for (i = 0; i < titles.length; i++) {
-            navItem = new wheelnavItem(this, titles[i], i);
-            this.navItems.push(navItem);
-        }
+        this.navItemCount = titles.length;
     }
     else {
-        for (i = 0; i < this.navItemCount; i++) {
-            var countTitle = "";
-            if (this.navItemCountLabeled) {
-                countTitle = (i + this.navItemCountLabelOffset).toString();
-            }
-            navItem = new wheelnavItem(this, countTitle, i);
-            this.navItems.push(navItem);
+        titles = null;
+    }
+
+    for (i = 0; i < this.navItemCount; i++) {
+
+        var itemTitle = "";
+
+        if (this.navItemCountLabeled) {
+            itemTitle = (i + this.navItemCountLabelOffset).toString();
         }
+        else {
+            if (titles !== null) {
+                itemTitle = titles[i];
+            }
+            else {
+                itemTitle = "";
+            }
+        }
+
+        navItem = new wheelnavItem(this, itemTitle, i);
+        this.navItems.push(navItem);
+    }
+
+    // Init angles
+    if (this.sliceAngle === null) {
+        this.sliceAngle = 360 / this.navItemCount;
     }
 
     //Init colors
@@ -146,16 +160,6 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
 
     if (this.navItems.length === 0) {
         this.initWheel(titles);
-    }
-
-    this.navItemCount = this.navItems.length;
-    this.sliceAngle = 360 / this.navItemCount;
-
-    if (this.baseAngle === null) {
-        this.baseAngle = -(360 / this.navItemCount) / 2 + this.navAngle;
-    }
-    else {
-        this.navAngle = this.baseAngle + ((360 / this.navItemCount) / 2);
     }
 
     if (withSpread) {
@@ -253,10 +257,10 @@ wheelnav.prototype.navigateWheel = function (clicked, selectedToFront) {
         }
 
         if (this.clockwise) {
-            navItem.currentRotate -= (clicked - this.currentClick) * (360 / this.navItemCount);
+            navItem.currentRotate -= (clicked - this.currentClick) * this.sliceAngle;
         }
         else {
-            navItem.currentRotate += (clicked - this.currentClick) * (360 / this.navItemCount);
+            navItem.currentRotate += (clicked - this.currentClick) * this.sliceAngle;
         }
     }
 
