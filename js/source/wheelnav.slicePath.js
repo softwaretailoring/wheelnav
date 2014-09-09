@@ -9,25 +9,37 @@ var slicePath = function () {
 
     this.helper = new slicePathHelper();
 
-    this.NullSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+    this.NullSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom) {
 
-        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom);
 
         return {
             slicePathString: "",
             linePathString: "",
             titlePosX: helper.titlePosX,
             titlePosY: helper.titlePosY
-        }
-    }
+        };
+    };
 
-    this.PieSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
-       
-        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+    this.PieSliceCustomization = function () {
+
+        var custom = new slicePathCustomization();
+        custom.titleRadiusPercent = 0.6;
+        return custom;
+    };
+
+    this.PieSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom) {
+
+        if (custom === null) {
+            custom = PieSliceCustomization();
+        }
+
+        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom);
 
         r = helper.sliceRadius;
         r = r * 0.9;
-        helper.titleRadius = r * 0.6;
+        helper.titleRadius = r * custom.titleRadiusPercent;
+
         helper.setTitlePos(x, y);
 
         startTheta = helper.startTheta;
@@ -43,12 +55,12 @@ var slicePath = function () {
             linePathString: "",
             titlePosX: helper.titlePosX,
             titlePosY: helper.titlePosY
-        }
-    }
+        };
+    };
 
-    this.PieSliceSpread = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+    this.PieSliceSpread = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom) {
 
-        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom);
 
         startTheta = helper.startTheta;
         endTheta = helper.endTheta;
@@ -69,16 +81,34 @@ var slicePath = function () {
             linePathString: "",
             titlePosX: helper.titlePosX,
             titlePosY: helper.titlePosY
+        };
+    };
+
+    /* Custom properties
+        - minRadiusPercent
+        - maxRadiusPercent
+    */
+    this.DonutSliceCustomization = function () {
+
+        var custom = new slicePathCustomization();
+        custom.minRadiusPercent = 0.37;
+        custom.maxRadiusPercent = 0.95;
+
+        return custom;
+    };
+
+    this.DonutSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom) {
+
+        if (custom === null) {
+            custom = DonutSliceCustomization();
         }
-    }
 
-    this.DonutSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
-
-        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom);
 
         r = helper.sliceRadius;
-        r = r * 0.95;
-        rbase = r * 0.37;
+
+        r = helper.sliceRadius * custom.maxRadiusPercent;
+        rbase = helper.sliceRadius * custom.minRadiusPercent;
 
         startTheta = helper.startTheta;
         endTheta = helper.endTheta;
@@ -90,7 +120,7 @@ var slicePath = function () {
                      ["A", rbase, rbase, 0, 0, 0, rbase * Math.cos(startTheta) + x, rbase * Math.sin(startTheta) + y],
                      ["z"]];
 
-        helper.titleRadius = r * 0.7;
+        helper.titleRadius = (r + rbase) / 2;
         helper.setTitlePos(x, y);
 
         return {
@@ -98,12 +128,12 @@ var slicePath = function () {
             linePathString: "",
             titlePosX: helper.titlePosX,
             titlePosY: helper.titlePosY
-        }
-    }
+        };
+    };
 
-    this.UmbrellaSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+    this.UmbrellaSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom) {
 
-        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom);
 
         r = helper.sliceRadius;
         r = r * 0.95;
@@ -127,12 +157,12 @@ var slicePath = function () {
             linePathString: "",
             titlePosX: helper.titlePosX,
             titlePosY: helper.titlePosY
-        }
-    }
+        };
+    };
 
-    this.StarBasePieSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+    this.StarBasePieSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom) {
 
-        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom);
 
         r = helper.sliceRadius;
         r = r * 0.9;
@@ -152,12 +182,12 @@ var slicePath = function () {
             linePathString: "",
             titlePosX: helper.titlePosX,
             titlePosY: helper.titlePosY
-        }
-    }
+        };
+    };
 
-    this.StarSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
-        
-        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+    this.StarSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom) {
+
+        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom);
 
         r = helper.sliceRadius;
         rbase = r * 0.5;
@@ -180,12 +210,12 @@ var slicePath = function () {
             linePathString: "",
             titlePosX: helper.titlePosX,
             titlePosY: helper.titlePosY
-        }
-    }
+        };
+    };
 
-    this.CogBasePieSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+    this.CogBasePieSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom) {
 
-        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom);
 
         r = helper.sliceRadius;
         r = r * 0.9;
@@ -236,12 +266,12 @@ var slicePath = function () {
             linePathString: "",
             titlePosX: helper.titlePosX,
             titlePosY: helper.titlePosY
-        }
-    }
+        };
+    };
 
-    this.CogSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+    this.CogSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom) {
 
-        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom);
 
         r = helper.sliceRadius;
         rbase = r * 0.9;
@@ -287,21 +317,36 @@ var slicePath = function () {
             linePathString: "",
             titlePosX: helper.titlePosX,
             titlePosY: helper.titlePosY
+        };
+    };
+
+    /* Custom properties
+        - menuRadius
+    */
+    this.MenuSliceCustomization = function () {
+
+        var custom = new slicePathCustomization();
+        custom.menuRadius = 25;
+        custom.titleRadiusPercent = 0.63;
+
+        return custom;
+    };
+
+    this.MenuSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom) {
+
+        if (custom === null) {
+            custom = MenuSliceCustomization();
         }
-    }
 
-    this.MenuSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom);
 
-        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
-
-        r = helper.sliceRadius;
-        helper.titleRadius = r * 0.63;
+        var r = helper.sliceRadius;
+        helper.titleRadius = r * custom.titleRadiusPercent;
         helper.setTitlePos(x, y);
 
-        var menuRadius = percent * 25;
+        var menuRadius = percent * custom.menuRadius;
 
-        if (menuRadius < 15)
-        {
+        if (menuRadius < 15) {
             menuRadius = 15;
         }
 
@@ -318,7 +363,7 @@ var slicePath = function () {
 
         if (percent <= 0.05) {
             linePathString = [["M", x, y],
-                    ["A", 1, 1, 0, 0, 1, x+1, y+1]];
+                    ["A", 1, 1, 0, 0, 1, x + 1, y + 1]];
         }
         else {
             lineEndX = (helper.titleRadius - menuRadius) * Math.cos(middleTheta) + x;
@@ -333,29 +378,33 @@ var slicePath = function () {
             linePathString: linePathString,
             titlePosX: helper.titlePosX,
             titlePosY: helper.titlePosY
+        };
+    };
+
+    this.MenuSliceSelectedLine = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom) {
+
+        if (custom === null) {
+            custom = MenuSliceCustomization();
         }
-    }
 
-    this.MenuSliceSelectedLine = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
-
-        var slicePath = MenuSlice(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+        var slicePath = MenuSlice(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom);
 
         r = helper.sliceRadius;
-        helper.titleRadius = r * 0.63;
+        helper.titleRadius = r * custom.titleRadiusPercent;
 
-        var menuRadius = percent * 25;
+        var menuRadius = percent * custom.menuRadius;
 
         if (menuRadius < 15) {
             menuRadius = 15;
         }
 
-        if (percent == 0) {
+        if (percent === 0) {
             menuRadius = 10;
         }
 
         middleTheta = helper.middleTheta;
 
-        if (percent == 0) {
+        if (percent === 0) {
             linePathString = [["M", x, y],
                     ["A", 1, 1, 0, 0, 1, x + 1, y + 1]];
         }
@@ -372,38 +421,50 @@ var slicePath = function () {
             linePathString: linePathString,
             titlePosX: slicePath.titlePosX,
             titlePosY: slicePath.titlePosY
-        }
-    }
+        };
+    };
 
-    this.MenuSliceWithoutLine = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+    this.MenuSliceWithoutLine = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom) {
 
-        var slicePath = MenuSlice(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+        var slicePath = MenuSlice(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom);
 
         return {
             slicePathString: slicePath.slicePathString,
             linePathString: "",
             titlePosX: slicePath.titlePosX,
             titlePosY: slicePath.titlePosY
+        };
+    };
+
+    /* Custom properties
+        - menuRadius
+    */
+    this.MenuSquareSliceCustomization = function () {
+
+        var custom = new slicePathCustomization();
+        custom.menuRadius = 30;
+        custom.titleRadiusPercent = 0.63;
+
+        return custom;
+    };
+
+    this.MenuSquareSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom) {
+
+        if (custom === null) {
+            custom = MenuSquareSliceCustomization();
         }
-    }
 
-    this.MenuSquareSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
-
-        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom);
 
         r = helper.sliceRadius;
-        helper.titleRadius = r * 0.63;
+        helper.titleRadius = r * custom.titleRadiusPercent;
         helper.setTitlePos(x, y);
 
-        var menuRadius = percent * 30;
+        var menuRadius = percent * custom.menuRadius;
 
-        if (menuRadius < 15) {
-            menuRadius = 15;
-        }
+        if (menuRadius < 15) { menuRadius = 15; }
 
-        if (percent <= 0.05) {
-            menuRadius = 10;
-        }
+        if (percent <= 0.05) { menuRadius = 10; }
 
         slicePathString = [["M", helper.titlePosX + menuRadius, helper.titlePosY + menuRadius],
                     ["L", helper.titlePosX - menuRadius, helper.titlePosY + menuRadius],
@@ -428,12 +489,12 @@ var slicePath = function () {
             linePathString: linePathString,
             titlePosX: helper.titlePosX,
             titlePosY: helper.titlePosY
-        }
-    }
+        };
+    };
 
-    this.FlowerSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+    this.FlowerSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom) {
 
-        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom);
 
         r = helper.sliceRadius;
         rbase = r * 0.65;
@@ -443,7 +504,7 @@ var slicePath = function () {
 
         slicePathString = [["M", x, y],
                      ["L", rbase * Math.cos(startTheta) + x, rbase * Math.sin(startTheta) + y],
-                     ["A", r/7, r/7, 0, 0, 1, rbase * Math.cos(endTheta) + x, rbase * Math.sin(endTheta) + y],
+                     ["A", r / 7, r / 7, 0, 0, 1, rbase * Math.cos(endTheta) + x, rbase * Math.sin(endTheta) + y],
                      ["z"]];
 
         return {
@@ -451,12 +512,12 @@ var slicePath = function () {
             linePathString: "",
             titlePosX: helper.titlePosX,
             titlePosY: helper.titlePosY
-        }
-    }
+        };
+    };
 
-    this.EyeSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+    this.EyeSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom) {
 
-        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom);
 
         r = helper.sliceRadius;
         r = r * 0.7;
@@ -464,7 +525,7 @@ var slicePath = function () {
         helper.titleRadius = r * 0.87;
         helper.setTitlePos(x, y);
 
-        if (percent == 0) {
+        if (percent === 0) {
             r = 0.01;
         }
 
@@ -481,12 +542,12 @@ var slicePath = function () {
             linePathString: "",
             titlePosX: helper.titlePosX,
             titlePosY: helper.titlePosY
-        }
-    }
+        };
+    };
 
-    this.WheelSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+    this.WheelSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom) {
 
-        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom);
 
         r = helper.sliceRadius;
         r = r * 0.85;
@@ -533,12 +594,12 @@ var slicePath = function () {
             linePathString: "",
             titlePosX: helper.titlePosX,
             titlePosY: helper.titlePosY
-        }
-    }
+        };
+    };
 
-    this.LineSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+    this.LineSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom) {
 
-        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom);
 
         r = helper.sliceRadius;
         r = r * 0.9;
@@ -581,10 +642,10 @@ var slicePath = function () {
             linePathString: "",
             titlePosX: helper.titlePosX,
             titlePosY: helper.titlePosY
-        }
-    }
+        };
+    };
 
-    this.TabSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+    this.TabSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom) {
 
         rOriginal = rOriginal * 0.9;
         var navItemCount = 360 / sliceAngle;
@@ -604,12 +665,12 @@ var slicePath = function () {
             linePathString: "",
             titlePosX: titlePosX,
             titlePosY: titlePosY
-        }
-    }
+        };
+    };
 
-    this.YinYangSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
+    this.YinYangSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom) {
 
-        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom);
 
         r = helper.sliceRadius;
         r = r * 0.9;
@@ -631,12 +692,27 @@ var slicePath = function () {
             linePathString: "",
             titlePosX: titlePosX,
             titlePosY: titlePosY
+        };
+    };
+
+    /* Custom properties
+        - arrowRadiusPercent
+    */
+    this.PieArrowSliceCustomization = function () {
+
+        var custom = new slicePathCustomization();
+        custom.arrowRadiusPercent = 1.1;
+
+        return custom;
+    };
+
+    this.PieArrowSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom) {
+
+        if (custom === null) {
+            custom = PieArrowSliceCustomization();
         }
-    }
 
-    this.PieArrowBasePieSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
-
-        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
+        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom);
 
         r = helper.sliceRadius;
         r = r * 0.9;
@@ -648,40 +724,12 @@ var slicePath = function () {
         theta1 = helper.getTheta(helper.startAngle + sliceAngle * 0.45);
         theta2 = helper.getTheta(helper.startAngle + sliceAngle * 0.55);
 
-        slicePathString = [["M", x, y],
-                     ["L", r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
-                     ["A", r, r, 0, 0, 1, r * Math.cos(theta1) + x, r * Math.sin(theta1) + y],
-                     ["A", r, r, 0, 0, 1, r * Math.cos(middleTheta) + x, r * Math.sin(middleTheta) + y],
-                     ["A", r, r, 0, 0, 1, r * Math.cos(theta2) + x, r * Math.sin(theta2) + y],
-                     ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
-                     ["z"]];
-
-        return {
-            slicePathString: slicePathString,
-            linePathString: "",
-            titlePosX: helper.titlePosX,
-            titlePosY: helper.titlePosY
-        }
-    }
-
-    this.PieArrowSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
-
-        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
-
-        r = helper.sliceRadius;
-        r = r * 0.9;
-
-        startTheta = helper.startTheta;
-        middleTheta = helper.middleTheta;
-        endTheta = helper.endTheta;
-
-        theta1 = helper.getTheta(helper.startAngle + sliceAngle * 0.45);
-        theta2 = helper.getTheta(helper.startAngle + sliceAngle * 0.55);
+        var arrowRadius = r * custom.arrowRadiusPercent;
 
         slicePathString = [["M", x, y],
                      ["L", r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
                      ["A", r, r, 0, 0, 1, r * Math.cos(theta1) + x, r * Math.sin(theta1) + y],
-                     ["L", r * 1.1 * Math.cos(middleTheta) + x, r * 1.1 * Math.sin(middleTheta) + y],
+                     ["L", arrowRadius * Math.cos(middleTheta) + x, arrowRadius * Math.sin(middleTheta) + y],
                      ["L", r * Math.cos(theta2) + x, r * Math.sin(theta2) + y],
                      ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
                      ["z"]];
@@ -691,40 +739,27 @@ var slicePath = function () {
             linePathString: "",
             titlePosX: helper.titlePosX,
             titlePosY: helper.titlePosY
+        };
+    };
+
+    this.PieArrowBasePieSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom) {
+
+        if (custom === null) {
+            custom = PieArrowSliceCustomization();
         }
-    }
 
-    this.PieHalfArrowSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent) {
-
-        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent);
-
-        r = helper.sliceRadius;
-        r = r * 0.9;
-
-        startTheta = helper.startTheta;
-        middleTheta = helper.middleTheta;
-        endTheta = helper.endTheta;
-
-        theta1 = helper.getTheta(helper.startAngle + sliceAngle * 0.45);
-        theta2 = helper.getTheta(helper.startAngle + sliceAngle * 0.55);
-
-        slicePathString = [["M", x, y],
-                     ["L", r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
-                     ["A", r, r, 0, 0, 1, r * Math.cos(theta1) + x, r * Math.sin(theta1) + y],
-                     ["L", r * 1.05 * Math.cos(middleTheta) + x, r * 1.05 * Math.sin(middleTheta) + y],
-                     ["L", r * Math.cos(theta2) + x, r * Math.sin(theta2) + y],
-                     ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
-                     ["z"]];
+        custom.arrowRadiusPercent = 1;
+        var slicePath = PieArrowSlice(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom);
 
         return {
-            slicePathString: slicePathString,
+            slicePathString: slicePath.slicePathString,
             linePathString: "",
-            titlePosX: helper.titlePosX,
-            titlePosY: helper.titlePosY
-        }
-    }
+            titlePosX: slicePath.titlePosX,
+            titlePosY: slicePath.titlePosY
+        };
+    };
 
     return this;
-}
+};
 
 

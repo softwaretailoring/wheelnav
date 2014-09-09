@@ -1,5 +1,5 @@
 ﻿/* ======================================================================================= */
-/*                                   wheelnav.js - v1.0.3                                  */
+/*                                   wheelnav.js - v1.1.0                                  */
 /* ======================================================================================= */
 /* This is a small javascript library for animated SVG based wheel navigation.             */
 /* Requires Raphaël JavaScript Vector Library (http://raphaeljs.com)                       */
@@ -15,16 +15,21 @@
 /* Documentation: http://wheelnavjs.softwaretailoring.net/documentation/core.html          */
 /* ======================================================================================= */
 
-wheelnav = function(divId) {
+wheelnav = function (divId, raphael) {
 
     this.holderId = divId;
 
     var holderDiv = document.getElementById(divId);
-    holderDiv.innerText = "";
-    holderDiv.innerHTML = "";
 
-    this.raphael = new Raphael(divId);
-    
+    if (raphael === undefined) {
+        holderDiv.innerText = "";
+        holderDiv.innerHTML = "";
+        this.raphael = new Raphael(divId);
+    }
+    else {
+        this.raphael = raphael;
+    }
+
     this.currentRotate = 0;
     this.currentClick = 0;
 
@@ -43,9 +48,10 @@ wheelnav = function(divId) {
     this.hoverPercent = 1;
     this.selectedPercent = 1;
     this.currentPercent = null;
-    
+
     this.navItemCount = 0;
-    this.navItems = new Array();
+    this.navItems = [];
+
     this.colors = colorpalette.defaultpalette;
     this.titleSpreadScale = null;
 
@@ -69,6 +75,14 @@ wheelnav = function(divId) {
     this.lineHoverAttr = null;
     this.lineSelectedAttr = null;
 
+    this.slicePathCustom = null;
+    this.sliceSelectedPathCustom = null;
+    this.sliceHoverPathCustom = null;
+
+    this.sliceTransformCustom = null;
+    this.sliceSelectedTransformCustom = null;
+    this.sliceHoverTransformCustom = null;
+
     this.animateeffect = null;
     this.animatetime = null;
     this.slicePathFunction = slicePath().PieSlice;
@@ -84,25 +98,28 @@ wheelnav = function(divId) {
     this.navDivSelectedCssClass = null;
 
     return this;
-}
+};
 
 wheelnav.prototype.initWheel = function (titles) {
 
     //Init slices and titles
-    if (this.navItemCount == 0) {
+    var navItem;
+    if (this.navItemCount === 0) {
 
-        if (titles == null && !Array.isArray(titles)) {
+        if (titles === undefined ||
+            titles === null ||
+            !Array.isArray(titles)) {
             titles = new Array("title-0", "title-1", "title-2", "title-3");
         }
 
         for (i = 0; i < titles.length; i++) {
-            var navItem = new wheelnavItem(this, titles[i], i);
+            navItem = new wheelnavItem(this, titles[i], i);
             this.navItems.push(navItem);
         }
     }
     else {
         for (i = 0; i < this.navItemCount; i++) {
-            var navItem = new wheelnavItem(this, "", i);
+            navItem = new wheelnavItem(this, "", i);
             this.navItems.push(navItem);
         }
     }
@@ -112,7 +129,7 @@ wheelnav.prototype.initWheel = function (titles) {
     for (i = 0; i < this.navItems.length; i++) {
         this.navItems[i].fillAttr = { fill: this.colors[colorIndex] };
         colorIndex++;
-        if (colorIndex == this.colors.length) { colorIndex = 0;}
+        if (colorIndex === this.colors.length) { colorIndex = 0;}
     }
 
     this.spreader = new spreader(this);
@@ -120,14 +137,14 @@ wheelnav.prototype.initWheel = function (titles) {
 
 wheelnav.prototype.createWheel = function (titles, withSpread) {
 
-    if (this.navItems.length == 0) {
+    if (this.navItems.length === 0) {
         this.initWheel(titles);
     }
 
     this.navItemCount = this.navItems.length;
     this.sliceAngle = 360 / this.navItemCount;
 
-    if (this.baseAngle == null) {
+    if (this.baseAngle === null) {
         this.baseAngle = -(360 / this.navItemCount) / 2 + this.navAngle;
     }
     else {
@@ -161,19 +178,19 @@ wheelnav.prototype.refreshWheel = function (selectedToFront) {
         var navItem = this.navItems[i];
 
         //Refresh slice
-        if (this.slicePathAttr != null) { navItem.slicePathAttr = this.slicePathAttr; }
-        if (this.sliceHoverAttr != null) { navItem.sliceHoverAttr = this.sliceHoverAttr; }
-        if (this.sliceSelectedAttr != null) { navItem.sliceSelectedAttr = this.sliceSelectedAttr; }
+        if (this.slicePathAttr !== null) { navItem.slicePathAttr = this.slicePathAttr; }
+        if (this.sliceHoverAttr !== null) { navItem.sliceHoverAttr = this.sliceHoverAttr; }
+        if (this.sliceSelectedAttr !== null) { navItem.sliceSelectedAttr = this.sliceSelectedAttr; }
 
         //Refresh title
-        if (this.titleAttr != null) { navItem.titleAttr = this.titleAttr; }
-        if (this.titleHoverAttr != null) { navItem.titleHoverAttr = this.titleHoverAttr; }
-        if (this.titleSelectedAttr != null) { navItem.titleSelectedAttr = this.titleSelectedAttr; }
+        if (this.titleAttr !== null) { navItem.titleAttr = this.titleAttr; }
+        if (this.titleHoverAttr !== null) { navItem.titleHoverAttr = this.titleHoverAttr; }
+        if (this.titleSelectedAttr !== null) { navItem.titleSelectedAttr = this.titleSelectedAttr; }
 
         //Refresh line
-        if (this.linePathAttr != null) { navItem.linePathAttr = this.linePathAttr; }
-        if (this.lineHoverAttr != null) { navItem.lineHoverAttr = this.lineHoverAttr; }
-        if (this.lineSelectedAttr != null) { navItem.lineSelectedAttr = this.lineSelectedAttr; }
+        if (this.linePathAttr !== null) { navItem.linePathAttr = this.linePathAttr; }
+        if (this.lineHoverAttr !== null) { navItem.lineHoverAttr = this.lineHoverAttr; }
+        if (this.lineSelectedAttr !== null) { navItem.lineSelectedAttr = this.lineSelectedAttr; }
 
         if (navItem.selected) {
             navItem.navSlice.attr(navItem.fillAttr);
@@ -181,7 +198,7 @@ wheelnav.prototype.refreshWheel = function (selectedToFront) {
             navItem.navTitle.attr(navItem.titleSelectedAttr);
             navItem.navLine.attr(navItem.lineSelectedAttr);
 
-            if (selectedToFront != null) {
+            if (selectedToFront !== undefined) {
                 if (selectedToFront) {
                     navItem.navSlice.toFront();
                     navItem.navTitle.toFront();
@@ -191,13 +208,13 @@ wheelnav.prototype.refreshWheel = function (selectedToFront) {
                     navItem.navSlice.toBack();
                 }
             }
-            
+
         }
         else {
             navItem.navSlice.attr(navItem.slicePathAttr);
             navItem.navTitle.attr(navItem.titleAttr);
             navItem.navLine.attr(navItem.linePathAttr);
-            
+
             navItem.navTitle.toBack();
             navItem.navSlice.toBack();
             navItem.navLine.toBack();
@@ -205,14 +222,16 @@ wheelnav.prototype.refreshWheel = function (selectedToFront) {
     }
 
     this.spreader.setVisibility();
-}
+};
 
 wheelnav.prototype.navigateWheel = function (clicked, selectedToFront) {
 
-    for (i = 0; i < this.navItemCount; i++) {
-        var navItem = this.navItems[i];
+    var navItem;
 
-        if (i == clicked) {
+    for (i = 0; i < this.navItemCount; i++) {
+        navItem = this.navItems[i];
+
+        if (i === clicked) {
             if (this.multiSelect) {
                 navItem.selected = !navItem.selected;
             } else {
@@ -234,7 +253,7 @@ wheelnav.prototype.navigateWheel = function (clicked, selectedToFront) {
     }
 
     for (i = 0; i < this.navItemCount; i++) {
-        var navItem = this.navItems[i];
+        navItem = this.navItems[i];
         navItem.setCurrentTransform();
         navItem.setNavDivCssClass();
     }
@@ -246,12 +265,12 @@ wheelnav.prototype.navigateWheel = function (clicked, selectedToFront) {
     }
 
     this.refreshWheel(selectedToFront);
-}
+};
 
 wheelnav.prototype.spreadWheel = function () {
 
-    if (this.currentPercent == this.maxPercent ||
-        this.currentPercent == null) {
+    if (this.currentPercent === this.maxPercent ||
+        this.currentPercent === null) {
         this.currentPercent = this.minPercent;
     }
     else {

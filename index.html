@@ -37,12 +37,16 @@
                 cogWheel.titleRotateAngle = -60;
                 cogWheel.spreaderEnable = true;
                 cogWheel.sliceTransformFunction = sliceTransform().ScaleTitleTransform;
+                cogWheel.sliceHoverTransformFunction = sliceTransform().ScaleTitleTransform;
                 cogWheel.sliceSelectedTransformFunction = sliceTransform().ScaleTitleTransform;
                 cogWheel.createWheel();
 
                 var textWheelRotatedTitle = new wheelnav("textWheelRotatedTitle");
                 textWheelRotatedTitle.slicePathFunction = slicePath().EyeSlice;
-                textWheelRotatedTitle.sliceSelectedTransformFunction = sliceTransform().RotateHalfTransform;
+                textWheelRotatedTitle.sliceSelectedTransformFunction = sliceTransform().CustomTransform;
+                textWheelRotatedTitle.sliceSelectedTransformCustom = new sliceTransformCustomization();
+                textWheelRotatedTitle.sliceSelectedTransformCustom.rotateString = "r450";
+                textWheelRotatedTitle.sliceSelectedTransformCustom.scaleString = "s2";
                 textWheelRotatedTitle.sliceSelectedPathFunction = slicePath().MenuSliceWithoutLine;
                 textWheelRotatedTitle.minPercent = 0.5;
                 textWheelRotatedTitle.titleRotateAngle = 270;
@@ -66,7 +70,7 @@
                 pieWheel.sliceSelectedTransformFunction = sliceTransform().ScaleTransform;
                 pieWheel.spreaderEnable = true;
                 pieWheel.hoverPercent = 1.05;
-                pieWheel.selectedPercent = 1.1
+                pieWheel.selectedPercent = 1.1;
                 pieWheel.wheelRadius = 1.4 * pieWheel.wheelRadius;
                 pieWheel.centerX = pieWheel.centerX * 0.4;
                 pieWheel.centerY = pieWheel.centerY * 0.4;
