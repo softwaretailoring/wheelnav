@@ -50,6 +50,9 @@ wheelnav = function (divId, raphael) {
     this.currentPercent = null;
 
     this.navItemCount = 0;
+    this.navItemCountLabeled = false;
+    this.navItemCountLabelOffset = 0;
+    this.selectedNavItemIndex = 0;
     this.navItems = [];
 
     this.colors = colorpalette.defaultpalette;
@@ -119,7 +122,11 @@ wheelnav.prototype.initWheel = function (titles) {
     }
     else {
         for (i = 0; i < this.navItemCount; i++) {
-            navItem = new wheelnavItem(this, "", i);
+            var countTitle = "";
+            if (this.navItemCountLabeled) {
+                countTitle = (i + this.navItemCountLabelOffset).toString();
+            }
+            navItem = new wheelnavItem(this, countTitle, i);
             this.navItems.push(navItem);
         }
     }
@@ -236,6 +243,7 @@ wheelnav.prototype.navigateWheel = function (clicked, selectedToFront) {
                 navItem.selected = !navItem.selected;
             } else {
                 navItem.selected = true;
+                this.selectedNavItemIndex = i;
             }
         }
         else {
