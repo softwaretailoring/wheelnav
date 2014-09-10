@@ -299,7 +299,7 @@ wheelnavItem.prototype.createNavItem = function () {
     var thisNavItem = this;
     var thisItemIndex = this.wheelItemIndex;
 
-    this.navItem.click(function () {
+    this.navItem.mouseup(function () {
         thisWheelNav.navigateWheel(thisItemIndex);
     });
     this.navItem.mouseover(function () {
