@@ -54,6 +54,9 @@ wheelnav = function (divId, raphael) {
     this.navItemCountLabelOffset = 0;
     this.selectedNavItemIndex = 0;
     this.navItems = [];
+    // These settings are useful when navItem.sliceAngle < 360 / this.navItemCount
+    this.navItemsContinuous = true; 
+    this.navItemsCentered = true; // This is reasoned when this.navItemsContinuous = false;
 
     this.colors = colorpalette.defaultpalette;
     this.titleSpreadScale = null;
@@ -129,21 +132,14 @@ wheelnav.prototype.initWheel = function (titles) {
             itemTitle = (i + this.navItemCountLabelOffset).toString();
         }
         else {
-            if (titles !== null) {
-                itemTitle = titles[i];
-            }
-            else {
-                itemTitle = "";
-            }
+            if (titles !== null)
+                { itemTitle = titles[i]; }
+            else
+                { itemTitle = ""; }
         }
 
         navItem = new wheelnavItem(this, itemTitle, i);
         this.navItems.push(navItem);
-    }
-
-    // Init angles
-    if (this.sliceAngle === null) {
-        this.sliceAngle = 360 / this.navItemCount;
     }
 
     //Init colors
@@ -257,12 +253,7 @@ wheelnav.prototype.navigateWheel = function (clicked, selectedToFront) {
             }
         }
 
-        if (this.clockwise) {
-            navItem.currentRotate -= (clicked - this.currentClick) * this.sliceAngle;
-        }
-        else {
-            navItem.currentRotate += (clicked - this.currentClick) * this.sliceAngle;
-        }
+        navItem.currentRotate -= (this.navItems[clicked].navAngle - this.navItems[this.currentClick].navAngle);
     }
 
     for (i = 0; i < this.navItemCount; i++) {
@@ -372,7 +363,6 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
 
     if (wheelnav.sliceAngle === null) { this.sliceAngle = 360 / wheelnav.navItemCount; }
     else { this.sliceAngle = wheelnav.sliceAngle;}
-    this.baseAngle = (this.itemIndex * this.sliceAngle) + ((-this.sliceAngle / 2) + wheelnav.navAngle);
 
     if (title !== null) {
         this.slicePathFunction = wheelnav.slicePathFunction;
@@ -452,6 +442,51 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
 };
 
 wheelnavItem.prototype.createNavItem = function () {
+
+    //Set angles
+    var prevItemIndex = this.wheelItemIndex - 1;
+    var wheelSliceAngle = 360 / this.wheelnav.navItemCount;
+
+    if (this.wheelnav.clockwise) {
+        if (this.wheelnav.navItemsContinuous) {
+            if (this.itemIndex === 0) {
+                this.baseAngle = (this.itemIndex * this.sliceAngle) + ((-this.sliceAngle / 2) + this.wheelnav.navAngle);
+            }
+            else {
+                this.baseAngle = this.wheelnav.navItems[prevItemIndex].baseAngle + this.wheelnav.navItems[prevItemIndex].sliceAngle;
+            }
+        }
+        else {
+            if (this.wheelnav.navItemsCentered) {
+                this.baseAngle = (this.itemIndex * wheelSliceAngle) + ((-this.sliceAngle / 2) + this.wheelnav.navAngle);
+            }
+            else {
+                this.baseAngle = (this.itemIndex * wheelSliceAngle) + ((-wheelSliceAngle / 2) + this.wheelnav.navAngle);
+                this.currentRotate += ((wheelSliceAngle / 2) - (this.wheelnav.navItems[0].sliceAngle / 2));
+            }
+        }
+    }
+    else {
+        if (this.wheelnav.navItemsContinuous) {
+            if (this.itemIndex === 0) {
+                this.baseAngle = (this.itemIndex * this.sliceAngle) + ((-this.sliceAngle / 2) + this.wheelnav.navAngle);
+            }
+            else {
+                this.baseAngle = this.wheelnav.navItems[prevItemIndex].baseAngle - this.wheelnav.navItems[this.wheelItemIndex].sliceAngle;
+            }
+        }
+        else {
+            if (this.wheelnav.navItemsCentered) {
+                this.baseAngle = (this.itemIndex * wheelSliceAngle) + ((-this.sliceAngle / 2) + this.wheelnav.navAngle);
+            }
+            else {
+                this.baseAngle = (this.itemIndex * wheelSliceAngle) + ((-wheelSliceAngle / 2) + this.wheelnav.navAngle) + (wheelSliceAngle - this.sliceAngle);
+                this.currentRotate -= ((wheelSliceAngle / 2) - (this.wheelnav.navItems[0].sliceAngle / 2));
+            }
+        }
+    }
+
+    this.navAngle = this.baseAngle + (this.sliceAngle / 2);
 
     //Set min/max sliecePaths
     //Default - min

@@ -53,6 +53,9 @@ wheelnav = function (divId, raphael) {
     this.navItemCountLabelOffset = 0;
     this.selectedNavItemIndex = 0;
     this.navItems = [];
+    // These settings are useful when navItem.sliceAngle < 360 / this.navItemCount
+    this.navItemsContinuous = true; 
+    this.navItemsCentered = true; // This is reasoned when this.navItemsContinuous = false;
 
     this.colors = colorpalette.defaultpalette;
     this.titleSpreadScale = null;
@@ -128,21 +131,14 @@ wheelnav.prototype.initWheel = function (titles) {
             itemTitle = (i + this.navItemCountLabelOffset).toString();
         }
         else {
-            if (titles !== null) {
-                itemTitle = titles[i];
-            }
-            else {
-                itemTitle = "";
-            }
+            if (titles !== null)
+                { itemTitle = titles[i]; }
+            else
+                { itemTitle = ""; }
         }
 
         navItem = new wheelnavItem(this, itemTitle, i);
         this.navItems.push(navItem);
-    }
-
-    // Init angles
-    if (this.sliceAngle === null) {
-        this.sliceAngle = 360 / this.navItemCount;
     }
 
     //Init colors
@@ -256,12 +252,7 @@ wheelnav.prototype.navigateWheel = function (clicked, selectedToFront) {
             }
         }
 
-        if (this.clockwise) {
-            navItem.currentRotate -= (clicked - this.currentClick) * this.sliceAngle;
-        }
-        else {
-            navItem.currentRotate += (clicked - this.currentClick) * this.sliceAngle;
-        }
+        navItem.currentRotate -= (this.navItems[clicked].navAngle - this.navItems[this.currentClick].navAngle);
     }
 
     for (i = 0; i < this.navItemCount; i++) {
