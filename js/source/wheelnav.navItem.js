@@ -72,52 +72,23 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
 
     this.fillAttr = { fill: "#CCC" };
 
-    if (wheelnav.animateeffect === null) { this.animateeffect = "bounce"; }
-    else { this.animateeffect = wheelnav.animateeffect; }
-    if (wheelnav.animatetime === null) { this.animatetime = 1500; }
-    else { this.animatetime = wheelnav.animatetime; }
+    this.animateeffect = wheelnav.animateeffect;
+    this.animatetime = wheelnav.animatetime;
 
-    if (wheelnav.slicePathAttr === null) { this.slicePathAttr = { stroke: "#111", "stroke-width": 3, cursor: 'pointer' }; }
-    else { this.slicePathAttr = wheelnav.slicePathAttr; }
-    if (wheelnav.sliceHoverAttr === null) { this.sliceHoverAttr = { stroke: "#111", "stroke-width": 4, cursor: 'pointer' }; }
-    else { this.sliceHoverAttr = wheelnav.sliceHoverAttr; }
-    if (wheelnav.sliceSelectedAttr === null) {
-        if (this.wheelnav.multiSelect) {
-            this.sliceSelectedAttr = { stroke: "#111", "stroke-width": 4, cursor: 'pointer' };
-        }
-        else {
-            this.sliceSelectedAttr = { stroke: "#111", "stroke-width": 4, cursor: 'default' };
-        }
-    }
-    else { this.sliceSelectedAttr = wheelnav.sliceSelectedAttr; }
+    this.slicePathAttr = wheelnav.slicePathAttr;
+    this.sliceHoverAttr = wheelnav.sliceHoverAttr;
+    this.sliceSelectedAttr = wheelnav.sliceSelectedAttr;
+    if (this.wheelnav.multiSelect) { this.sliceSelectedAttr = { cursor: 'pointer' }; }
 
-    if (wheelnav.titleAttr === null) { this.titleAttr = { font: this.titleFont, fill: "#111", stroke: "none", cursor: 'pointer' }; }
-    else { this.titleAttr = wheelnav.titleAttr; }
-    if (wheelnav.titleHoverAttr === null) { this.titleHoverAttr = { font: this.titleFont, fill: "#111", cursor: 'pointer', stroke: "none" }; }
-    else { this.titleHoverAttr = wheelnav.titleHoverAttr; }
-    if (wheelnav.titleSelectedAttr === null) {
-        if (this.wheelnav.multiSelect) {
-            this.titleSelectedAttr = { font: this.titleFont, fill: "#FFF", cursor: 'pointer' };
-        }
-        else {
-            this.titleSelectedAttr = { font: this.titleFont, fill: "#FFF", cursor: 'default' };
-        }
-    }
-    else { this.titleSelectedAttr = wheelnav.titleSelectedAttr; }
+    this.titleAttr = wheelnav.titleAttr;
+    this.titleHoverAttr = wheelnav.titleHoverAttr;
+    this.titleSelectedAttr = wheelnav.titleSelectedAttr;
+    if (this.wheelnav.multiSelect) { this.titleSelectedAttr = { cursor: 'pointer' }; }
 
-    if (wheelnav.linePathAttr === null) { this.linePathAttr = { stroke: "#111", "stroke-width": 2, cursor: 'pointer' }; }
-    else { this.linePathAttr = wheelnav.linePathAttr; }
-    if (wheelnav.lineHoverAttr === null) { this.lineHoverAttr = { stroke: "#111", "stroke-width": 3, cursor: 'pointer' }; }
-    else { this.lineHoverAttr = wheelnav.lineHoverAttr; }
-    if (wheelnav.lineSelectedAttr === null) {
-        if (this.wheelnav.multiSelect) {
-            this.lineSelectedAttr = { stroke: "#111", "stroke-width": 4, cursor: 'pointer' };
-        }
-        else {
-            this.lineSelectedAttr = { stroke: "#111", "stroke-width": 4, cursor: 'default' };
-        }
-    }
-    else { this.lineSelectedAttr = wheelnav.lineSelectedAttr; }
+    this.linePathAttr = wheelnav.linePathAttr;
+    this.lineHoverAttr = wheelnav.lineHoverAttr;
+    this.lineSelectedAttr = wheelnav.lineSelectedAttr;
+    if (this.wheelnav.multiSelect) { this.lineSelectedAttr = { cursor: 'pointer' }; }
 
     this.navDivId = null;
     if (wheelnav.navDivDefultCssClass === null) { this.navDivDefultCssClass = "tab-pane fade"; }
@@ -174,6 +145,10 @@ wheelnavItem.prototype.createNavItem = function () {
     }
 
     this.navAngle = this.baseAngle + (this.sliceAngle / 2);
+
+    if (this.wheelnav.animatetimeCalculated) {
+        this.animatetime = this.wheelnav.animatetime / this.wheelnav.navItemCount;
+    }
 
     //Set min/max sliecePaths
     //Default - min

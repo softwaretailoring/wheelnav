@@ -71,16 +71,19 @@ wheelnav = function (divId, raphael) {
     this.minPercent = 0.01;
     this.maxPercent = 1;
 
-    //NavItem settings. If it remains null, use default settings.
-    this.slicePathAttr = null;
-    this.sliceHoverAttr = null;
-    this.sliceSelectedAttr = null;
-    this.titleAttr = null;
-    this.titleHoverAttr = null;
-    this.titleSelectedAttr = null;
-    this.linePathAttr = null;
-    this.lineHoverAttr = null;
-    this.lineSelectedAttr = null;
+    //NavItem default settings. These are configurable between initWheel() and createWheel().
+    this.slicePathAttr = { stroke: "#111", "stroke-width": 3, cursor: 'pointer' };
+    this.sliceHoverAttr = { stroke: "#111", "stroke-width": 4, cursor: 'pointer' };
+    this.sliceSelectedAttr = { stroke: "#111", "stroke-width": 4, cursor: 'default' };
+    
+    this.titleFont = '100 24px Impact, Charcoal, sans-serif';
+    this.titleAttr = { font: this.titleFont, fill: "#111", stroke: "none", cursor: 'pointer' };
+    this.titleHoverAttr = { font: this.titleFont, fill: "#111", cursor: 'pointer', stroke: "none" };
+    this.titleSelectedAttr = { font: this.titleFont, fill: "#FFF", cursor: 'default' };
+
+    this.linePathAttr = { stroke: "#111", "stroke-width": 2, cursor: 'pointer' };
+    this.lineHoverAttr = { stroke: "#111", "stroke-width": 3, cursor: 'pointer' };
+    this.lineSelectedAttr = { stroke: "#111", "stroke-width": 4, cursor: 'default' };
 
     this.slicePathCustom = null;
     this.sliceSelectedPathCustom = null;
@@ -90,7 +93,7 @@ wheelnav = function (divId, raphael) {
     this.sliceSelectedTransformCustom = null;
     this.sliceHoverTransformCustom = null;
 
-    this.animateeffect = null;
+    this.animateeffect = "bounce";
     this.animatetime = 1500;
     this.slicePathFunction = slicePath().PieSlice;
     this.sliceTransformFunction = null;
@@ -98,7 +101,6 @@ wheelnav = function (divId, raphael) {
     this.sliceSelectedTransformFunction = null;
     this.sliceHoverPathFunction = null;
     this.sliceHoverTransformFunction = null;
-    this.titleFont = '100 24px Impact, Charcoal, sans-serif';
 
     this.navDivTabId = null; //Id of Bootstrap <ul class="nav nav-tabs">. It is necessary for proper fade effect.
     this.navDivDefultCssClass = null;
