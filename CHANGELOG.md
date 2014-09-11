@@ -1,4 +1,16 @@
-## 1.0.3
+## 1.1.0
+
+* Customizable slicePath and sliceTransform functions
+* New wheelnav and navItem properties: slicePathCustom, sliceSelectedPathCustom, sliceHoverPathCustom, sliceTransformCustom, sliceSelectedTransformCustom, sliceHoverTransformCustom
+* Add custom parameter to slicePath and sliceTransform functions
+* New wheelnav properties: selectedNavItemIndex, navItemCountLabeled, navItemCountLabelOffset
+* Refactor baseAngle and sliceAngle. Move them to navItem from core.
+* New wheelnav properties: navItemsContinuous, navItemsCentered
+* Improve rotate mode
+* New wheelnav properties: rotateRoundCount, animateRepeatCount, animatetimeCalculated
+
+
+### 1.0.3
 
 * New class: slicePathHelper
 * Refactor functions of slicePath
