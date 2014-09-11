@@ -30,7 +30,6 @@ wheelnav = function (divId, raphael) {
         this.raphael = raphael;
     }
 
-    this.currentRotate = 0;
     this.currentClick = 0;
 
     var canvasWidth = this.raphael.canvas.getAttribute('width');
@@ -41,7 +40,10 @@ wheelnav = function (divId, raphael) {
     this.sliceAngle = null;
     this.titleRotateAngle = null;
     this.clickModeRotate = true;
+    this.rotateRoundCount = 0;
     this.clickModeSpreadOff = false;
+    this.animatetimeCalculated = false; // In clickModeRotate, when animatetimeCalculated is true, the navItem.animatetime calculated by wheelnav.animatetime and current rotationAngle. In this case, the wheelnav.animatetime belongs to the full rotation.
+    this.animateRepeatCount = 0;
     this.clockwise = true;
     this.multiSelect = false;
     this.hoverPercent = 1;
@@ -54,7 +56,7 @@ wheelnav = function (divId, raphael) {
     this.selectedNavItemIndex = 0;
     this.navItems = [];
     // These settings are useful when navItem.sliceAngle < 360 / this.navItemCount
-    this.navItemsContinuous = true; 
+    this.navItemsContinuous = false; 
     this.navItemsCentered = true; // This is reasoned when this.navItemsContinuous = false;
 
     this.colors = colorpalette.defaultpalette;
@@ -89,7 +91,7 @@ wheelnav = function (divId, raphael) {
     this.sliceHoverTransformCustom = null;
 
     this.animateeffect = null;
-    this.animatetime = null;
+    this.animatetime = 1500;
     this.slicePathFunction = slicePath().PieSlice;
     this.sliceTransformFunction = null;
     this.sliceSelectedPathFunction = null;
@@ -169,9 +171,11 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
         this.navItems[i].createNavItem();
     }
 
-    this.navigateWheel(0);
+    if (this.rotateRoundCount === 0) {
+        this.navigateWheel(0);
+    }
 
-    if (withSpread) {
+    if (withSpread !== undefined) {
         this.spreadWheel();
     }
 
@@ -252,12 +256,27 @@ wheelnav.prototype.navigateWheel = function (clicked, selectedToFront) {
             }
         }
 
-        navItem.currentRotate -= (this.navItems[clicked].navAngle - this.navItems[this.currentClick].navAngle);
+        if (this.clickModeRotate) {
+            var rotationAngle = this.navItems[clicked].navAngle - this.navItems[this.currentClick].navAngle;
+            navItem.currentRotateAngle -= rotationAngle;
+
+            if (this.animatetimeCalculated &&
+                clicked !== this.currentClick) {
+                navItem.animatetime = this.animatetime * (Math.abs(rotationAngle) / 360);
+            }
+
+            if (this.rotateRoundCount > 0) {
+                if (this.clockwise) { navItem.currentRotateAngle += this.rotateRoundCount * 360; }
+                else { navItem.currentRotateAngle -= this.rotateRoundCount * 360; }
+
+                navItem.animatetime = this.animatetime * (this.rotateRoundCount + 1);
+            }
+        }
     }
 
     for (i = 0; i < this.navItemCount; i++) {
         navItem = this.navItems[i];
-        navItem.setCurrentTransform();
+        navItem.setCurrentTransform(this.animateRepeatCount);
         navItem.setNavDivCssClass();
     }
 
@@ -281,7 +300,7 @@ wheelnav.prototype.spreadWheel = function () {
     }
 
     for (i = 0; i < this.navItemCount; i++) {
-        this.navItems[i].setCurrentTransform();
+        this.navItems[i].setCurrentTransform(this.animateRepeatCount);
     }
 
     this.spreader.setVisibility();

@@ -31,12 +31,14 @@
 
                 var cogWheel = new wheelnav("cogWheel");
                 cogWheel.slicePathFunction = slicePath().CogBasePieSlice;
+                cogWheel.sliceHoverPathFunction = slicePath().CogSlice;
                 cogWheel.sliceSelectedPathFunction = slicePath().CogSlice;
                 cogWheel.wheelRadius = 0.85 * cogWheel.wheelRadius;
                 cogWheel.navAngle = 60;
                 cogWheel.titleRotateAngle = -60;
                 cogWheel.spreaderEnable = true;
                 cogWheel.sliceTransformFunction = sliceTransform().ScaleTitleTransform;
+                cogWheel.sliceHoverTransformFunction = sliceTransform().ScaleTitleTransform;
                 cogWheel.sliceSelectedTransformFunction = sliceTransform().ScaleTitleTransform;
                 cogWheel.createWheel();
 
@@ -110,6 +112,7 @@
                 optionWheel.sliceSelectedTransformFunction = sliceTransform().MoveMiddleTransform;
                 optionWheel.animatetime = 600;
                 optionWheel.animateeffect = "linear";
+                optionWheel.rotateRoundCount = 1;
                 optionWheel.clockwise = false;
                 optionWheel.createWheel(["-1-", "-2-", "-3-", "-4-", "-5-", "-6-"]);
 
