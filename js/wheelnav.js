@@ -1,6 +1,6 @@
 ///#source 1 1 /js/source/wheelnav.core.js
 /* ======================================================================================= */
-/*                                   wheelnav.js - v1.1.0                                  */
+/*                                   wheelnav.js - v1.2.0                                  */
 /* ======================================================================================= */
 /* This is a small javascript library for animated SVG based wheel navigation.             */
 /* Requires Raphaël JavaScript Vector Library (http://raphaeljs.com)                       */
@@ -31,9 +31,9 @@ wheelnav = function (divId, raphael) {
         this.raphael = raphael;
     }
 
-    this.currentClick = 0;
-
     var canvasWidth = this.raphael.canvas.getAttribute('width');
+
+    //Public properties
     this.centerX = canvasWidth / 2;
     this.centerY = canvasWidth / 2;
     this.wheelRadius = canvasWidth / 2;
@@ -41,6 +41,7 @@ wheelnav = function (divId, raphael) {
     this.sliceAngle = null;
     this.titleRotateAngle = null;
     this.clickModeRotate = true;
+    this.rotateRound = false;
     this.rotateRoundCount = 0;
     this.clickModeSpreadOff = false;
     this.animatetimeCalculated = false; // In clickModeRotate, when animatetimeCalculated is true, the navItem.animatetime calculated by wheelnav.animatetime and current rotationAngle. In this case, the wheelnav.animatetime belongs to the full rotation.
@@ -54,8 +55,10 @@ wheelnav = function (divId, raphael) {
     this.navItemCount = 0;
     this.navItemCountLabeled = false;
     this.navItemCountLabelOffset = 0;
-    this.selectedNavItemIndex = 0;
     this.navItems = [];
+    this.navItemsEnabled = true;
+    this.animateFinishFunction = null;
+
     // These settings are useful when navItem.sliceAngle < 360 / this.navItemCount
     this.navItemsContinuous = false; 
     this.navItemsCentered = true; // This is reasoned when this.navItemsContinuous = false;
@@ -72,19 +75,24 @@ wheelnav = function (divId, raphael) {
     this.minPercent = 0.01;
     this.maxPercent = 1;
 
+    //Private properties
+    this.currentClick = 0;
+    this.selectedNavItemIndex = 0;
+    this.animateLocked = false;
+
     //NavItem default settings. These are configurable between initWheel() and createWheel().
-    this.slicePathAttr = { stroke: "#111", "stroke-width": 3, cursor: 'pointer' };
-    this.sliceHoverAttr = { stroke: "#111", "stroke-width": 4, cursor: 'pointer' };
-    this.sliceSelectedAttr = { stroke: "#111", "stroke-width": 4, cursor: 'default' };
+    this.slicePathAttr = null;
+    this.sliceHoverAttr = null;
+    this.sliceSelectedAttr = null;
     
     this.titleFont = '100 24px Impact, Charcoal, sans-serif';
-    this.titleAttr = { font: this.titleFont, fill: "#111", stroke: "none", cursor: 'pointer' };
-    this.titleHoverAttr = { font: this.titleFont, fill: "#111", cursor: 'pointer', stroke: "none" };
-    this.titleSelectedAttr = { font: this.titleFont, fill: "#FFF", cursor: 'default' };
+    this.titleAttr = null;
+    this.titleHoverAttr = null;
+    this.titleSelectedAttr = null;
 
-    this.linePathAttr = { stroke: "#111", "stroke-width": 2, cursor: 'pointer' };
-    this.lineHoverAttr = { stroke: "#111", "stroke-width": 3, cursor: 'pointer' };
-    this.lineSelectedAttr = { stroke: "#111", "stroke-width": 4, cursor: 'default' };
+    this.linePathAttr = null;
+    this.lineHoverAttr = null;
+    this.lineSelectedAttr = null;
 
     this.slicePathCustom = null;
     this.sliceSelectedPathCustom = null;
@@ -206,6 +214,10 @@ wheelnav.prototype.refreshWheel = function (selectedToFront) {
         if (this.lineHoverAttr !== null) { navItem.lineHoverAttr = this.lineHoverAttr; }
         if (this.lineSelectedAttr !== null) { navItem.lineSelectedAttr = this.lineSelectedAttr; }
 
+        //Animation
+        if (this.animateeffect !== null) { navItem.animateeffect = this.animateeffect; }
+        if (this.animatetime !== null) { navItem.animatetime = this.animatetime; }
+
         if (navItem.selected) {
             navItem.navSlice.attr(navItem.fillAttr);
             navItem.navSlice.attr(navItem.sliceSelectedAttr);
@@ -240,75 +252,121 @@ wheelnav.prototype.refreshWheel = function (selectedToFront) {
 
 wheelnav.prototype.navigateWheel = function (clicked, selectedToFront) {
 
-    var navItem;
-
-    for (i = 0; i < this.navItemCount; i++) {
-        navItem = this.navItems[i];
-
-        if (i === clicked) {
-            if (this.multiSelect) {
-                navItem.selected = !navItem.selected;
-            } else {
-                navItem.selected = true;
-                this.selectedNavItemIndex = i;
-            }
-        }
-        else {
-            if (!this.multiSelect) {
-                navItem.selected = false;
-            }
-        }
+    if (!this.clickModeRotate || this.animateLocked === false) {
 
         if (this.clickModeRotate) {
-            var rotationAngle = this.navItems[clicked].navAngle - this.navItems[this.currentClick].navAngle;
-            navItem.currentRotateAngle -= rotationAngle;
+            this.animateLocked = true;
+        }
 
-            if (this.animatetimeCalculated &&
-                clicked !== this.currentClick) {
-                navItem.animatetime = this.animatetime * (Math.abs(rotationAngle) / 360);
+        var navItem;
+
+        for (i = 0; i < this.navItemCount; i++) {
+            navItem = this.navItems[i];
+
+            navItem.hovered = false;
+
+            if (i === clicked) {
+                if (this.multiSelect) {
+                    navItem.selected = !navItem.selected;
+                } else {
+                    navItem.selected = true;
+                    this.selectedNavItemIndex = i;
+                }
+            }
+            else {
+                if (!this.multiSelect) {
+                    navItem.selected = false;
+                }
             }
 
-            if (this.rotateRoundCount > 0) {
-                if (this.clockwise) { navItem.currentRotateAngle += this.rotateRoundCount * 360; }
-                else { navItem.currentRotateAngle -= this.rotateRoundCount * 360; }
+            if (this.clickModeRotate) {
+                var rotationAngle = this.navItems[clicked].navAngle - this.navItems[this.currentClick].navAngle;
 
-                navItem.animatetime = this.animatetime * (this.rotateRoundCount + 1);
+                if (this.rotateRound)
+                {
+                    if (this.clockwise && rotationAngle < 0) {
+                        rotationAngle = 360 + rotationAngle;
+                    }
+                    if (!this.clockwise && rotationAngle > 0) {
+                        rotationAngle = rotationAngle - 360;
+                    }
+                }
+
+                navItem.currentRotateAngle -= rotationAngle;
+                
+                if (this.animatetimeCalculated &&
+                    clicked !== this.currentClick) {
+                    navItem.animatetime = this.animatetime * (Math.abs(rotationAngle) / 360);
+                }
+
+                if (this.rotateRoundCount > 0) {
+                    if (this.clockwise) { navItem.currentRotateAngle -= this.rotateRoundCount * 360; }
+                    else { navItem.currentRotateAngle += this.rotateRoundCount * 360; }
+
+                    navItem.animatetime = this.animatetime * (this.rotateRoundCount + 1);
+                }
             }
+        }
+
+        for (i = 0; i < this.navItemCount; i++) {
+            navItem = this.navItems[i];
+
+            navItem.setCurrentTransform(this.animateRepeatCount, true);
+
+            navItem.setNavDivCssClass();
+        }
+
+        this.currentClick = clicked;
+
+        if (this.clickModeSpreadOff) {
+            this.spreadWheel();
+        }
+
+        this.refreshWheel(selectedToFront);
+    }
+};
+
+wheelnav.prototype.animateUnlock = function () {
+    for (var i = 0; i < this.navItemCount; i++) {
+        if (this.navItems[i].navSliceUnderAnimation === true ||
+            this.navItems[i].navTitleUnderAnimation === true ||
+            this.navItems[i].navLineUnderAnimation === true) {
+            return;
         }
     }
 
-    for (i = 0; i < this.navItemCount; i++) {
-        navItem = this.navItems[i];
-        navItem.setCurrentTransform(this.animateRepeatCount);
-        navItem.setNavDivCssClass();
+    this.animateLocked = false;
+    if (this.animateFinishFunction !== null) {
+        this.animateFinishFunction();
     }
-
-    this.currentClick = clicked;
-
-    if (this.clickModeSpreadOff) {
-        this.spreadWheel();
-    }
-
-    this.refreshWheel(selectedToFront);
 };
 
 wheelnav.prototype.spreadWheel = function () {
 
-    if (this.currentPercent === this.maxPercent ||
-        this.currentPercent === null) {
-        this.currentPercent = this.minPercent;
-    }
-    else {
-        this.currentPercent = this.maxPercent;
-    }
+    if (!this.clickModeRotate || this.animateLocked === false) {
 
-    for (i = 0; i < this.navItemCount; i++) {
-        this.navItems[i].setCurrentTransform(this.animateRepeatCount);
+        if (this.clickModeRotate) {
+            this.animateLocked = true;
+        }
+
+        if (this.currentPercent === this.maxPercent ||
+            this.currentPercent === null) {
+            this.currentPercent = this.minPercent;
+        }
+        else {
+            this.currentPercent = this.maxPercent;
+        }
+
+        for (i = 0; i < this.navItemCount; i++) {
+            var navItem = this.navItems[i];
+            navItem.hovered = false;
+            navItem.setCurrentTransform(this.animateRepeatCount, true);
+        }
+
+        this.spreader.setVisibility();
+
+        return this;
     }
-
-    this.spreader.setVisibility();
-
-    return this;
 };
 
 wheelnav.prototype.getItemId = function (index) {
@@ -350,6 +408,7 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
         this.itemIndex = -itemIndex;
     }
 
+    this.enabled = wheelnav.navItemsEnabled;
     this.selected = false;
     this.hovered = false;
 
@@ -361,6 +420,10 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     this.navSliceCurrentTransformString = null;
     this.navTitleCurrentTransformString = null;
     this.navLineCurrentTransformString = null;
+
+    this.navSliceUnderAnimation = false;
+    this.navTitleUnderAnimation = false;
+    this.navLineUnderAnimation = false;
 
     this.title = title;
     this.selectedTitle = title;
@@ -406,23 +469,20 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
 
     this.fillAttr = { fill: "#CCC" };
 
-    this.animateeffect = wheelnav.animateeffect;
-    this.animatetime = wheelnav.animatetime;
+    this.animateeffect = "bounce";
+    this.animatetime = 1500;
 
-    this.slicePathAttr = wheelnav.slicePathAttr;
-    this.sliceHoverAttr = wheelnav.sliceHoverAttr;
-    this.sliceSelectedAttr = wheelnav.sliceSelectedAttr;
-    if (this.wheelnav.multiSelect) { this.sliceSelectedAttr = { cursor: 'pointer' }; }
+    this.slicePathAttr = { stroke: "#111", "stroke-width": 3, cursor: 'pointer' };
+    this.sliceHoverAttr = { stroke: "#111", "stroke-width": 4, cursor: 'pointer' };
+    this.sliceSelectedAttr = { stroke: "#111", "stroke-width": 4, cursor: 'default' };
 
-    this.titleAttr = wheelnav.titleAttr;
-    this.titleHoverAttr = wheelnav.titleHoverAttr;
-    this.titleSelectedAttr = wheelnav.titleSelectedAttr;
-    if (this.wheelnav.multiSelect) { this.titleSelectedAttr = { cursor: 'pointer' }; }
+    this.titleAttr = { font: this.titleFont, fill: "#111", stroke: "none", cursor: 'pointer' };
+    this.titleHoverAttr = { font: this.titleFont, fill: "#111", cursor: 'pointer', stroke: "none" };
+    this.titleSelectedAttr = { font: this.titleFont, fill: "#FFF", cursor: 'default' };
 
-    this.linePathAttr = wheelnav.linePathAttr;
-    this.lineHoverAttr = wheelnav.lineHoverAttr;
-    this.lineSelectedAttr = wheelnav.lineSelectedAttr;
-    if (this.wheelnav.multiSelect) { this.lineSelectedAttr = { cursor: 'pointer' }; }
+    this.linePathAttr = { stroke: "#111", "stroke-width": 2, cursor: 'pointer' };
+    this.lineHoverAttr = { stroke: "#111", "stroke-width": 3, cursor: 'pointer' };
+    this.lineSelectedAttr = { stroke: "#111", "stroke-width": 4, cursor: 'default' };
 
     this.navDivId = null;
     if (wheelnav.navDivDefultCssClass === null) { this.navDivDefultCssClass = "tab-pane fade"; }
@@ -434,6 +494,16 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
 };
 
 wheelnavItem.prototype.createNavItem = function () {
+
+    //Set attrs
+    if (!this.enabled) {
+        this.slicePathAttr.cursor = "default";
+        this.sliceHoverAttr.cursor = "default";
+        this.titleAttr.cursor = "default";
+        this.titleHoverAttr.cursor = "default";
+        this.linePathAttr.cursor = "default";
+        this.lineHoverAttr.cursor = "default";
+    }
 
     //Set angles
     var prevItemIndex = this.wheelItemIndex - 1;
@@ -608,49 +678,213 @@ wheelnavItem.prototype.createNavItem = function () {
     var thisNavItem = this;
     var thisItemIndex = this.wheelItemIndex;
 
-    this.navItem.mouseup(function () {
-        thisWheelNav.navigateWheel(thisItemIndex);
-    });
-    this.navItem.mouseover(function () {
-        thisNavItem.hoverEffect(thisItemIndex, true);
-    });
-    this.navItem.mouseout(function () {
-        thisNavItem.hoverEffect(thisItemIndex, false);
-    });
+    if (this.enabled) {
+        this.navItem.mouseup(function () {
+            thisWheelNav.navigateWheel(thisItemIndex);
+        });
+        this.navItem.mouseover(function () {
+            thisNavItem.hoverEffect(thisItemIndex, true);
+        });
+        this.navItem.mouseout(function () {
+            thisNavItem.hoverEffect(thisItemIndex, false);
+        });
+    }
 };
 
 wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
 
-    for (i = 0; i < this.wheelnav.navItemCount; i++) {
-
-        var navItem = this.wheelnav.navItems[i];
-
-        if (isEnter && i === hovered && i !== this.wheelnav.currentClick) {
-            navItem.navSlice.attr(navItem.sliceHoverAttr);
-            navItem.navTitle.attr(navItem.titleHoverAttr);
-            navItem.navLine.attr(navItem.lineHoverAttr);
-            navItem.hovered = true;
+    if (!this.wheelnav.clickModeRotate || this.wheelnav.animateLocked === false) {
+        if (isEnter && hovered !== this.wheelnav.currentClick) {
+            this.navSlice.attr(this.sliceHoverAttr);
+            this.navTitle.attr(this.titleHoverAttr);
+            this.navLine.attr(this.lineHoverAttr);
+            this.hovered = true;
         }
         else {
-            navItem.hovered = false;
+            this.hovered = false;
 
-            if (navItem.selected) {
-                navItem.navSlice.attr(navItem.sliceSelectedAttr);
-                navItem.navTitle.attr(navItem.titleSelectedAttr);
-                navItem.navLine.attr(navItem.lineSelectedAttr);
+            if (this.selected) {
+                this.navSlice.attr(this.sliceSelectedAttr);
+                this.navTitle.attr(this.titleSelectedAttr);
+                this.navLine.attr(this.lineSelectedAttr);
             }
             else {
-                navItem.navSlice.attr(navItem.slicePathAttr);
-                navItem.navSlice.attr(navItem.fillAttr);
-                navItem.navTitle.attr(navItem.titleAttr);
-                navItem.navLine.attr(navItem.linePathAttr);
+                this.navSlice.attr(this.slicePathAttr);
+                this.navSlice.attr(this.fillAttr);
+                this.navTitle.attr(this.titleAttr);
+                this.navLine.attr(this.linePathAttr);
             }
         }
 
         if (this.hoverPercent !== 1 ||
             this.sliceHoverPathFunction !== null ||
             this.sliceHoverTransformFunction !== null) {
-            navItem.setCurrentTransform(this.wheelnav.animateRepeatCount);
+                this.setCurrentTransform(this.wheelnav.animateRepeatCount);
+        }
+    }
+};
+
+wheelnavItem.prototype.setCurrentTransform = function (animateRepeatCount, locked) {
+
+    if (!this.wheelnav.clickModeRotate || (!this.navSliceUnderAnimation &&
+        !this.navTitleUnderAnimation &&
+        !this.navLineUnderAnimation)) {
+
+        if (locked !== undefined &&
+            locked === true) {
+            this.navSliceUnderAnimation = true;
+            this.navTitleUnderAnimation = true;
+            this.navLineUnderAnimation = true;
+        }
+
+        //Set transforms
+        this.navSliceCurrentTransformString = "";
+        if (this.wheelnav.clickModeRotate) { this.navSliceCurrentTransformString += this.getItemRotateString(); }
+        if (this.selected) {
+            this.navSliceCurrentTransformString += this.selectTransform.sliceTransformString;
+        }
+        else if (this.hovered) {
+            this.navSliceCurrentTransformString += this.hoverTransform.sliceTransformString;
+        }
+        this.navSliceCurrentTransformString += this.sliceTransform.sliceTransformString;
+
+        this.navLineCurrentTransformString = "";
+        if (this.wheelnav.clickModeRotate) { this.navLineCurrentTransformString += this.getItemRotateString(); }
+        if (this.selected) {
+            this.navLineCurrentTransformString += this.selectTransform.lineTransformString;
+        }
+        else if (this.hovered) {
+            this.navLineCurrentTransformString += this.hoverTransform.lineTransformString;
+        }
+        this.navLineCurrentTransformString += this.sliceTransform.lineTransformString;
+
+        this.navTitleCurrentTransformString = "";
+        if (this.wheelnav.clickModeRotate) { this.navTitleCurrentTransformString += this.getTitleRotateString(); }
+
+        if (this.selected) {
+            if (this.selectTransform.titleTransformString === "" ||
+                this.selectTransform.titleTransformString === undefined) {
+                this.navTitleCurrentTransformString += ",s1";
+            }
+            else {
+                this.navTitleCurrentTransformString += "," + this.selectTransform.titleTransformString;
+            }
+            if (this.wheelnav.currentPercent < 0.05) {
+                this.navTitleCurrentTransformString += ",s0.05";
+            }
+        }
+        else if (this.hovered) {
+            if (this.hoverTransform.titleTransformString === "" ||
+                this.hoverTransform.titleTransformString === undefined) {
+                this.navTitleCurrentTransformString += ",s1";
+            }
+            else {
+                this.navTitleCurrentTransformString += "," + this.hoverTransform.titleTransformString;
+            }
+        }
+        else if (this.wheelnav.currentPercent < 0.05) {
+            this.navTitleCurrentTransformString += ",s0.05";
+        }
+        else if (this.titleSpreadScale) {
+            this.navTitleCurrentTransformString += ",s" + this.wheelnav.currentPercent;
+        }
+        else {
+            if (this.sliceTransform.titleTransformString === "" ||
+                this.sliceTransform.titleTransformString === undefined) {
+                this.navTitleCurrentTransformString += ",s1";
+            }
+            else {
+                this.navTitleCurrentTransformString += "," + this.sliceTransform.titleTransformString;
+            }
+        }
+
+        //Set path
+        var slicePath = this.getCurrentPath();
+
+        var sliceTransformAttr = {};
+
+        sliceTransformAttr = {
+            path: slicePath.slicePathString,
+            transform: this.navSliceCurrentTransformString
+        };
+
+        var lineTransformAttr = {};
+
+        lineTransformAttr = {
+            path: slicePath.linePathString,
+            transform: this.navLineCurrentTransformString
+        };
+
+        //Set title
+        var currentTitle = this.title;
+        if (this.selected) { currentTitle = this.selectedTitle; }
+
+        if (this.navTitle.type === "path") {
+            titleCurrentPath = new wheelnavTitle(currentTitle, this.wheelnav.raphael.raphael);
+        }
+        else {
+            titleCurrentPath = new wheelnavTitle(currentTitle);
+        }
+
+        var percentAttr = this.getTitlePercentAttr(slicePath.titlePosX, slicePath.titlePosY, titleCurrentPath);
+
+        var titleTransformAttr = {};
+
+        if (this.navTitle.type === "path") {
+            titleTransformAttr = {
+                path: percentAttr.path,
+                transform: this.navTitleCurrentTransformString
+            };
+        }
+        else {
+            titleTransformAttr = {
+                x: percentAttr.x,
+                y: percentAttr.y,
+                transform: this.navTitleCurrentTransformString
+            };
+
+            this.navTitle.attr({ text: currentTitle });
+        }
+
+        var thisNavItem = this;
+        var thisWheelnav = this.wheelnav;
+
+        //Animate navitem
+        this.animSlice = Raphael.animation(sliceTransformAttr, this.animatetime, this.animateeffect, function () {
+            thisNavItem.navSliceUnderAnimation = false;
+            thisWheelnav.animateUnlock();
+        });
+        this.animLine = Raphael.animation(lineTransformAttr, this.animatetime, this.animateeffect, function () {
+            thisNavItem.navLineUnderAnimation = false;
+            thisWheelnav.animateUnlock();
+        });
+        this.animTitle = Raphael.animation(titleTransformAttr, this.animatetime, this.animateeffect, function () {
+            thisNavItem.navTitleUnderAnimation = false;
+            thisWheelnav.animateUnlock();
+        });
+
+        if (locked !== undefined &&
+            locked === true) {
+            if (this.wheelItemIndex === this.wheelnav.navItemCount - 1) {
+
+                for (i = 0; i < this.wheelnav.navItemCount; i++) {
+                    var navItemSlice = this.wheelnav.navItems[i];
+                    navItemSlice.navSlice.animate(navItemSlice.animSlice.repeat(animateRepeatCount));
+                }
+                for (i = 0; i < this.wheelnav.navItemCount; i++) {
+                    var navItemLine = this.wheelnav.navItems[i];
+                    navItemLine.navLine.animate(navItemLine.animLine.repeat(animateRepeatCount));
+                }
+                for (i = 0; i < this.wheelnav.navItemCount; i++) {
+                    var navItemTitle = this.wheelnav.navItems[i];
+                    navItemTitle.navTitle.animate(navItemTitle.animTitle.repeat(animateRepeatCount));
+                }
+            }
+        }
+        else {
+            this.navSlice.animate(this.animSlice.repeat(animateRepeatCount));
+            this.navLine.animate(this.animLine.repeat(animateRepeatCount));
+            this.navTitle.animate(this.animTitle.repeat(animateRepeatCount));
         }
     }
 };
@@ -672,127 +906,6 @@ wheelnavItem.prototype.setNavDivCssClass = function () {
             }
         }
     }
-};
-
-wheelnavItem.prototype.setCurrentTransform = function (animateRepeatCount) {
-
-    //Set transforms
-    this.navSliceCurrentTransformString = "";
-    if (this.wheelnav.clickModeRotate) { this.navSliceCurrentTransformString += this.getItemRotateString(); }
-    if (this.selected) {
-        this.navSliceCurrentTransformString += this.selectTransform.sliceTransformString;
-    }
-    else if (this.hovered) {
-        this.navSliceCurrentTransformString += this.hoverTransform.sliceTransformString;
-    }
-    this.navSliceCurrentTransformString += this.sliceTransform.sliceTransformString;
-
-    this.navLineCurrentTransformString = "";
-    if (this.wheelnav.clickModeRotate) { this.navLineCurrentTransformString += this.getItemRotateString(); }
-    if (this.selected) {
-        this.navLineCurrentTransformString += this.selectTransform.lineTransformString;
-    }
-    else if (this.hovered) {
-        this.navLineCurrentTransformString += this.hoverTransform.lineTransformString;
-    }
-    this.navLineCurrentTransformString += this.sliceTransform.lineTransformString;
-
-    this.navTitleCurrentTransformString = "";
-    if (this.wheelnav.clickModeRotate) { this.navTitleCurrentTransformString += this.getTitleRotateString(); }
-
-    if (this.selected) {
-        if (this.selectTransform.titleTransformString === "" ||
-            this.selectTransform.titleTransformString === undefined) {
-            this.navTitleCurrentTransformString += ",s1";
-        }
-        else {
-            this.navTitleCurrentTransformString += "," + this.selectTransform.titleTransformString;
-        }
-        if (this.wheelnav.currentPercent < 0.05) {
-            this.navTitleCurrentTransformString += ",s0.05";
-        }
-    }
-    else if (this.hovered) {
-        if (this.hoverTransform.titleTransformString === "" ||
-            this.hoverTransform.titleTransformString === undefined) {
-            this.navTitleCurrentTransformString += ",s1";
-        }
-        else {
-            this.navTitleCurrentTransformString += "," + this.hoverTransform.titleTransformString;
-        }
-    }
-    else if (this.wheelnav.currentPercent < 0.05) {
-        this.navTitleCurrentTransformString += ",s0.05";
-    }
-    else if (this.titleSpreadScale) {
-        this.navTitleCurrentTransformString += ",s" + this.wheelnav.currentPercent;
-    }
-    else {
-        if (this.sliceTransform.titleTransformString === "" ||
-            this.sliceTransform.titleTransformString === undefined) {
-            this.navTitleCurrentTransformString += ",s1";
-        }
-        else {
-            this.navTitleCurrentTransformString += "," + this.sliceTransform.titleTransformString;
-        }
-    }
-
-    //Set path
-    var slicePath = this.getCurrentPath();
-
-    var sliceTransformAttr = {};
-
-    sliceTransformAttr = {
-        path: slicePath.slicePathString,
-        transform: this.navSliceCurrentTransformString
-    };
-
-    var lineTransformAttr = {};
-
-    lineTransformAttr = {
-        path: slicePath.linePathString,
-        transform: this.navLineCurrentTransformString
-    };
-
-    //Set title
-    var currentTitle = this.title;
-    if (this.selected) { currentTitle = this.selectedTitle; }
-
-    if (this.navTitle.type === "path") {
-        titleCurrentPath = new wheelnavTitle(currentTitle, this.wheelnav.raphael.raphael);
-    }
-    else {
-        titleCurrentPath = new wheelnavTitle(currentTitle);
-    }
-
-    var percentAttr = this.getTitlePercentAttr(slicePath.titlePosX, slicePath.titlePosY, titleCurrentPath);
-
-    var titleTransformAttr = {};
-
-    if (this.navTitle.type === "path") {
-        titleTransformAttr = {
-            path: percentAttr.path,
-            transform: this.navTitleCurrentTransformString
-        };
-    }
-    else {
-        titleTransformAttr = {
-            x: percentAttr.x,
-            y: percentAttr.y,
-            transform: this.navTitleCurrentTransformString
-        };
-
-        this.navTitle.attr({ text: currentTitle });
-    }
-
-    //Animate navitem
-    var animSlice = Raphael.animation(sliceTransformAttr, this.animatetime, this.animateeffect);
-    var animLine = Raphael.animation(lineTransformAttr, this.animatetime, this.animateeffect);
-    var animTitle = Raphael.animation(titleTransformAttr, this.animatetime, this.animateeffect);
-
-    this.navSlice.animate(animSlice.repeat(animateRepeatCount));
-    this.navLine.animate(animLine.repeat(animateRepeatCount));
-    this.navTitle.animate(animTitle.repeat(animateRepeatCount));
 };
 
 wheelnavItem.prototype.getTitlePercentAttr = function (currentX, currentY, thisPath) {
@@ -855,7 +968,7 @@ wheelnavItem.prototype.getCurrentPath = function () {
 
 wheelnavItem.prototype.isPathTitle = function () {
     if (this.title.substr(0, 1) === "M" &&
-            this.title.substr(this.title.length - 1, 1) === "z") {
+         this.title.substr(this.title.length - 1, 1) === "z") {
         return true;
     }
     else {
