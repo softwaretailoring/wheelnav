@@ -181,12 +181,12 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
         this.navItems[i].createNavItem();
     }
 
-    if (this.rotateRoundCount === 0) {
-        this.navigateWheel(0);
-    }
-
     if (withSpread !== undefined) {
+        this.navItems[0].selected = true;
         this.spreadWheel();
+    }
+    else if (this.rotateRoundCount === 0) {
+        this.navigateWheel(0);
     }
 
     return this;
@@ -251,120 +251,128 @@ wheelnav.prototype.refreshWheel = function (selectedToFront) {
 
 wheelnav.prototype.navigateWheel = function (clicked, selectedToFront) {
 
-    if (!this.clickModeRotate || this.animateLocked === false) {
+    this.animateUnlock(true);
+
+    if (this.clickModeRotate) {
+        this.animateLocked = true;
+    }
+
+    var navItem;
+
+    for (i = 0; i < this.navItemCount; i++) {
+        navItem = this.navItems[i];
+
+        navItem.hovered = false;
+
+        if (i === clicked) {
+            if (this.multiSelect) {
+                navItem.selected = !navItem.selected;
+            } else {
+                navItem.selected = true;
+                this.selectedNavItemIndex = i;
+            }
+        }
+        else {
+            if (!this.multiSelect) {
+                navItem.selected = false;
+            }
+        }
 
         if (this.clickModeRotate) {
-            this.animateLocked = true;
-        }
+            var rotationAngle = this.navItems[clicked].navAngle - this.navItems[this.currentClick].navAngle;
 
-        var navItem;
-
-        for (i = 0; i < this.navItemCount; i++) {
-            navItem = this.navItems[i];
-
-            navItem.hovered = false;
-
-            if (i === clicked) {
-                if (this.multiSelect) {
-                    navItem.selected = !navItem.selected;
-                } else {
-                    navItem.selected = true;
-                    this.selectedNavItemIndex = i;
+            if (this.rotateRound) {
+                if (this.clockwise && rotationAngle < 0) {
+                    rotationAngle = 360 + rotationAngle;
                 }
-            }
-            else {
-                if (!this.multiSelect) {
-                    navItem.selected = false;
+                if (!this.clockwise && rotationAngle > 0) {
+                    rotationAngle = rotationAngle - 360;
                 }
             }
 
-            if (this.clickModeRotate) {
-                var rotationAngle = this.navItems[clicked].navAngle - this.navItems[this.currentClick].navAngle;
+            navItem.currentRotateAngle -= rotationAngle;
 
-                if (this.rotateRound)
-                {
-                    if (this.clockwise && rotationAngle < 0) {
-                        rotationAngle = 360 + rotationAngle;
-                    }
-                    if (!this.clockwise && rotationAngle > 0) {
-                        rotationAngle = rotationAngle - 360;
-                    }
-                }
+            if (this.animatetimeCalculated &&
+                clicked !== this.currentClick) {
+                navItem.animatetime = this.animatetime * (Math.abs(rotationAngle) / 360);
+            }
 
-                navItem.currentRotateAngle -= rotationAngle;
-                
-                if (this.animatetimeCalculated &&
-                    clicked !== this.currentClick) {
-                    navItem.animatetime = this.animatetime * (Math.abs(rotationAngle) / 360);
-                }
+            if (this.rotateRoundCount > 0) {
+                if (this.clockwise) { navItem.currentRotateAngle -= this.rotateRoundCount * 360; }
+                else { navItem.currentRotateAngle += this.rotateRoundCount * 360; }
 
-                if (this.rotateRoundCount > 0) {
-                    if (this.clockwise) { navItem.currentRotateAngle -= this.rotateRoundCount * 360; }
-                    else { navItem.currentRotateAngle += this.rotateRoundCount * 360; }
-
-                    navItem.animatetime = this.animatetime * (this.rotateRoundCount + 1);
-                }
+                navItem.animatetime = this.animatetime * (this.rotateRoundCount + 1);
             }
         }
-
-        for (i = 0; i < this.navItemCount; i++) {
-            navItem = this.navItems[i];
-
-            navItem.setCurrentTransform(this.animateRepeatCount, true);
-
-            navItem.setNavDivCssClass();
-        }
-
-        this.currentClick = clicked;
-
-        if (this.clickModeSpreadOff) {
-            this.spreadWheel();
-        }
-
-        this.refreshWheel(selectedToFront);
-    }
-};
-
-wheelnav.prototype.animateUnlock = function () {
-    for (var i = 0; i < this.navItemCount; i++) {
-        if (this.navItems[i].navSliceUnderAnimation === true ||
-            this.navItems[i].navTitleUnderAnimation === true ||
-            this.navItems[i].navLineUnderAnimation === true) {
-            return;
-        }
     }
 
-    this.animateLocked = false;
-    if (this.animateFinishFunction !== null) {
-        this.animateFinishFunction();
+    for (i = 0; i < this.navItemCount; i++) {
+        navItem = this.navItems[i];
+        navItem.setCurrentTransform(this.animateRepeatCount, true);
+        navItem.setNavDivCssClass();
     }
+
+    this.currentClick = clicked;
+
+    if (this.clickModeSpreadOff) {
+        this.spreadWheel();
+    }
+
+    this.refreshWheel(selectedToFront);
 };
 
 wheelnav.prototype.spreadWheel = function () {
 
-    if (!this.clickModeRotate || this.animateLocked === false) {
+    this.animateUnlock(true);
 
-        if (this.clickModeRotate) {
-            this.animateLocked = true;
+    if (this.clickModeRotate) {
+        this.animateLocked = true;
+    }
+
+    if (this.currentPercent === this.maxPercent ||
+        this.currentPercent === null) {
+        this.currentPercent = this.minPercent;
+    }
+    else {
+        this.currentPercent = this.maxPercent;
+    }
+
+    for (i = 0; i < this.navItemCount; i++) {
+        var navItem = this.navItems[i];
+        navItem.hovered = false;
+        navItem.setCurrentTransform(this.animateRepeatCount, true);
+    }
+
+    this.spreader.setVisibility();
+
+    return this;
+};
+
+wheelnav.prototype.animateUnlock = function (force) {
+
+    if (force !== undefined) {
+        for (var f = 0; f < this.navItemCount; f++) {
+            this.navItems[f].navSliceUnderAnimation = false;
+            this.navItems[f].navTitleUnderAnimation = false;
+            this.navItems[f].navLineUnderAnimation = false;
+            this.navItems[f].navSlice.stop();
+            this.navItems[f].navLine.stop();
+            this.navItems[f].navTitle.stop();
+        }
+    }
+    else {
+        for (var i = 0; i < this.navItemCount; i++) {
+            if (this.navItems[i].navSliceUnderAnimation === true ||
+                this.navItems[i].navTitleUnderAnimation === true ||
+                this.navItems[i].navLineUnderAnimation === true) {
+                return;
+            }
         }
 
-        if (this.currentPercent === this.maxPercent ||
-            this.currentPercent === null) {
-            this.currentPercent = this.minPercent;
+        this.animateLocked = false;
+        if (this.animateFinishFunction !== null) {
+            this.animateFinishFunction();
         }
-        else {
-            this.currentPercent = this.maxPercent;
-        }
-
-        for (i = 0; i < this.navItemCount; i++) {
-            var navItem = this.navItems[i];
-            navItem.hovered = false;
-            navItem.setCurrentTransform(this.animateRepeatCount, true);
-        }
-
-        this.spreader.setVisibility();
-
-        return this;
     }
 };
 

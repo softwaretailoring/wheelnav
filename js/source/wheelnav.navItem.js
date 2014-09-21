@@ -301,7 +301,8 @@ wheelnavItem.prototype.createNavItem = function () {
 
 wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
 
-    if (!this.wheelnav.clickModeRotate || this.wheelnav.animateLocked === false) {
+    if (this.wheelnav.clickModeRotate === false ||
+        this.wheelnav.animateLocked === false) {
         if (isEnter && hovered !== this.wheelnav.currentClick) {
             this.navSlice.attr(this.sliceHoverAttr);
             this.navTitle.attr(this.titleHoverAttr);
@@ -327,14 +328,15 @@ wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
         if (this.hoverPercent !== 1 ||
             this.sliceHoverPathFunction !== null ||
             this.sliceHoverTransformFunction !== null) {
-                this.setCurrentTransform(this.wheelnav.animateRepeatCount);
+            this.setCurrentTransform(this.wheelnav.animateRepeatCount);
         }
     }
 };
 
 wheelnavItem.prototype.setCurrentTransform = function (animateRepeatCount, locked) {
 
-    if (!this.wheelnav.clickModeRotate || (!this.navSliceUnderAnimation &&
+    if (!this.wheelnav.clickModeRotate ||
+        (!this.navSliceUnderAnimation &&
         !this.navTitleUnderAnimation &&
         !this.navLineUnderAnimation)) {
 
