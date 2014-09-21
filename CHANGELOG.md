@@ -1,4 +1,11 @@
-## 1.1.0
+## 1.2.0
+
+* Removal of lag between slices under rotation and hover
+* New wheelnav properties: rotateRound, navItemsEnabled
+* New wheelnav callback function: animateFinishFunction
+* New navItem property: enabled
+
+### 1.1.0
 
 * Customizable slicePath and sliceTransform functions
 * New wheelnav and navItem properties: slicePathCustom, sliceSelectedPathCustom, sliceHoverPathCustom, sliceTransformCustom, sliceSelectedTransformCustom, sliceHoverTransformCustom
@@ -8,7 +15,6 @@
 * New wheelnav properties: navItemsContinuous, navItemsCentered
 * Improve rotate mode
 * New wheelnav properties: rotateRoundCount, animateRepeatCount, animatetimeCalculated
-
 
 ### 1.0.3
 
