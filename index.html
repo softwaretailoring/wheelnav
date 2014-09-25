@@ -38,6 +38,9 @@
                 cogWheel.titleRotateAngle = -60;
                 cogWheel.spreaderEnable = true;
                 cogWheel.rotateRound = true;
+                cogWheel.sliceClickablePathFunction = slicePath().CogSlice;
+                cogWheel.clickablePercentMax = 1.3;
+                cogWheel.colors = new Array("315-#ddd-green", "225-#ddd-yellow", "135-#ddd-red", "45-#ddd-blue");
                 cogWheel.sliceTransformFunction = sliceTransform().ScaleTitleTransform;
                 cogWheel.sliceHoverTransformFunction = sliceTransform().ScaleTitleTransform;
                 cogWheel.sliceSelectedTransformFunction = sliceTransform().ScaleTitleTransform;

@@ -24,6 +24,7 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     this.navSlice = null;
     this.navTitle = null;
     this.navLine = null;
+    this.navClickableSlice = null;
 
     this.navSliceCurrentTransformString = null;
     this.navTitleCurrentTransformString = null;
@@ -44,6 +45,8 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     this.maxPercent = wheelnav.maxPercent;
     this.hoverPercent = wheelnav.hoverPercent;
     this.selectedPercent = wheelnav.selectedPercent;
+    this.clickablePercentMin = wheelnav.clickablePercentMin;
+    this.clickablePercentMax = wheelnav.clickablePercentMax;
 
     this.slicePathCustom = wheelnav.slicePathCustom;
     this.sliceSelectedPathCustom = wheelnav.sliceSelectedPathCustom;
@@ -57,6 +60,7 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     else { this.sliceAngle = wheelnav.sliceAngle;}
 
     if (title !== null) {
+        this.sliceClickablePathFunction = wheelnav.sliceClickablePathFunction;
         this.slicePathFunction = wheelnav.slicePathFunction;
         this.sliceSelectedPathFunction = wheelnav.sliceSelectedPathFunction;
         this.sliceHoverPathFunction = wheelnav.sliceHoverPathFunction;
@@ -67,6 +71,7 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     }
     else {
         this.title = "";
+        this.sliceClickablePathFunction = slicePath().NullSlice;
         this.slicePathFunction = slicePath().NullSlice;
         this.sliceSelectedPathFunction = null;
         this.sliceHoverPathFunction = null;
@@ -75,14 +80,20 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
         this.sliceHoverTransformFunction = null;
     }
 
-    this.fillAttr = { fill: "#CCC" };
+    this.fillAttr = "#CCC";
 
     this.animateeffect = "bounce";
     this.animatetime = 1500;
 
-    this.slicePathAttr = { stroke: "#111", "stroke-width": 3, cursor: 'pointer' };
-    this.sliceHoverAttr = { stroke: "#111", "stroke-width": 4, cursor: 'pointer' };
-    this.sliceSelectedAttr = { stroke: "#111", "stroke-width": 4, cursor: 'default' };
+    this.slicePathAttr = { fill: "#CCC", stroke: "#111", "stroke-width": 3, cursor: 'pointer' };
+    this.sliceHoverAttr = { fill: "#CCC", stroke: "#111", "stroke-width": 4, cursor: 'pointer' };
+    this.sliceSelectedAttr = { fill: "#CCC", stroke: "#111", "stroke-width": 4, cursor: 'default' };
+
+    //Useful for sliceClickablePath testing.
+    //this.sliceClickablePathAttr = { fill: "#FFF", stroke: "#FFF", "stroke-width": 0, cursor: 'pointer', "fill-opacity": 0.51 };
+    this.sliceClickablePathAttr = { fill: "#FFF", stroke: "#FFF", "stroke-width": 0, cursor: 'pointer', "fill-opacity": 0.01 };
+    this.sliceClickableHoverAttr = { stroke: "#FFF", "stroke-width": 0, cursor: 'pointer' };
+    this.sliceClickableSelectedAttr = { stroke: "#FFF", "stroke-width": 0, cursor: 'default' };
 
     this.titleAttr = { font: this.titleFont, fill: "#111", stroke: "none", cursor: 'pointer' };
     this.titleHoverAttr = { font: this.titleFont, fill: "#111", cursor: 'pointer', stroke: "none" };
@@ -102,6 +113,11 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
 };
 
 wheelnavItem.prototype.createNavItem = function () {
+
+    //Set colors
+    this.slicePathAttr.fill = this.fillAttr;
+    this.sliceHoverAttr.fill = this.fillAttr;
+    this.sliceSelectedAttr.fill = this.fillAttr;
 
     //Set attrs
     if (!this.enabled) {
@@ -242,7 +258,6 @@ wheelnavItem.prototype.createNavItem = function () {
     //Create slice
     this.navSlice = this.wheelnav.raphael.path(slicePath.slicePathString);
     this.navSlice.attr(this.slicePathAttr);
-    this.navSlice.attr(this.fillAttr);
     this.navSlice.id = this.wheelnav.getSliceId(this.wheelItemIndex);
     this.navSlice.node.id = this.navSlice.id;
 
@@ -271,11 +286,39 @@ wheelnavItem.prototype.createNavItem = function () {
 
     //Create item set
     this.navItem = this.wheelnav.raphael.set();
-    this.navItem.push(
-        this.navSlice,
-        this.navTitle,
-        this.navLine
-    );
+
+    if (this.clickablePercentMax > 0) {
+        //Set min/max sliececlickablePaths
+        //Default - min
+        if (this.clickableSlicePathMin === undefined) {
+            this.clickableSlicePathMin = this.sliceClickablePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.clickablePercentMin, this.slicePathCustom);
+        }
+        //Default - max
+        if (this.clickableSlicePathMax === undefined) {
+            this.clickableSlicePathMax = this.sliceClickablePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.clickablePercentMax, this.slicePathCustom);
+        }
+
+        //Create clickable slice
+        var sliceClickablePath = this.getCurrentClickablePath();
+        this.navClickableSlice = this.wheelnav.raphael.path(sliceClickablePath.slicePathString).attr(this.sliceClickablePathAttr).toBack();
+
+        this.navItem.push(
+            this.navClickableSlice,
+            this.navSlice,
+            this.navTitle,
+            this.navLine
+        );
+    }
+    else {
+        this.navItem.push(
+            this.navSlice,
+            this.navTitle,
+            this.navLine
+        );
+    }
+
+    
+    
 
     if (this.tooltip !== null) {
         this.navItem.attr({ title: this.tooltip });
@@ -307,6 +350,7 @@ wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
             this.navSlice.attr(this.sliceHoverAttr);
             this.navTitle.attr(this.titleHoverAttr);
             this.navLine.attr(this.lineHoverAttr);
+            if (this.navClickableSlice !== null) { this.navClickableSlice.attr(this.sliceClickableHoverAttr); }
             this.hovered = true;
         }
         else {
@@ -316,12 +360,13 @@ wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
                 this.navSlice.attr(this.sliceSelectedAttr);
                 this.navTitle.attr(this.titleSelectedAttr);
                 this.navLine.attr(this.lineSelectedAttr);
+                if (this.navClickableSlice !== null) { this.navClickableSlice.attr(this.sliceClickableSelectedAttr); }
             }
             else {
                 this.navSlice.attr(this.slicePathAttr);
-                this.navSlice.attr(this.fillAttr);
                 this.navTitle.attr(this.titleAttr);
                 this.navLine.attr(this.linePathAttr);
+                if (this.navClickableSlice !== null) { this.navClickableSlice.attr(this.sliceClickablePathAttr); }
             }
         }
 
@@ -418,6 +463,15 @@ wheelnavItem.prototype.setCurrentTransform = function (animateRepeatCount, locke
             transform: this.navSliceCurrentTransformString
         };
 
+        if (this.clickablePercentMax > 0) {
+            var sliceClickablePath = this.getCurrentClickablePath();
+
+            var sliceClickableTransformAttr = {
+                path: sliceClickablePath.slicePathString,
+                transform: this.navSliceCurrentTransformString
+            };
+        }
+
         var lineTransformAttr = {};
 
         lineTransformAttr = {
@@ -473,6 +527,10 @@ wheelnavItem.prototype.setCurrentTransform = function (animateRepeatCount, locke
             thisWheelnav.animateUnlock();
         });
 
+        if (this.clickablePercentMax > 0) {
+            this.animClickableSlice = Raphael.animation(sliceClickableTransformAttr, this.animatetime, this.animateeffect);
+        }
+
         if (locked !== undefined &&
             locked === true) {
             if (this.wheelItemIndex === this.wheelnav.navItemCount - 1) {
@@ -489,12 +547,23 @@ wheelnavItem.prototype.setCurrentTransform = function (animateRepeatCount, locke
                     var navItemTitle = this.wheelnav.navItems[i];
                     navItemTitle.navTitle.animate(navItemTitle.animTitle.repeat(animateRepeatCount));
                 }
+
+                if (this.clickablePercentMax > 0) {
+                    for (i = 0; i < this.wheelnav.navItemCount; i++) {
+                        var navItemClickableSlice = this.wheelnav.navItems[i];
+                        navItemClickableSlice.navClickableSlice.animate(navItemClickableSlice.animClickableSlice.repeat(animateRepeatCount));
+                    }
+                }
             }
         }
         else {
             this.navSlice.animate(this.animSlice.repeat(animateRepeatCount));
             this.navLine.animate(this.animLine.repeat(animateRepeatCount));
             this.navTitle.animate(this.animTitle.repeat(animateRepeatCount));
+
+            if (this.clickablePercentMax > 0) {
+                this.navClickableSlice.animate(this.animClickableSlice.repeat(animateRepeatCount));
+            }
         }
     }
 };
@@ -574,6 +643,19 @@ wheelnavItem.prototype.getCurrentPath = function () {
     }
 
     return slicePath;
+};
+
+wheelnavItem.prototype.getCurrentClickablePath = function () {
+    var sliceClickablePath;
+
+    if (this.wheelnav.currentPercent === this.wheelnav.maxPercent) {
+        sliceClickablePath = this.clickableSlicePathMax;
+    }
+    else {
+        sliceClickablePath = this.clickableSlicePathMin;
+    }
+
+    return sliceClickablePath;
 };
 
 wheelnavItem.prototype.isPathTitle = function () {

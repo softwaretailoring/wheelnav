@@ -1,5 +1,5 @@
 ﻿/* ======================================================================================= */
-/*                                   wheelnav.js - v1.2.0                                  */
+/*                                   wheelnav.js - v1.3.0                                  */
 /* ======================================================================================= */
 /* This is a small javascript library for animated SVG based wheel navigation.             */
 /* Requires Raphaël JavaScript Vector Library (http://raphaeljs.com)                       */
@@ -49,6 +49,8 @@ wheelnav = function (divId, raphael) {
     this.multiSelect = false;
     this.hoverPercent = 1;
     this.selectedPercent = 1;
+    this.clickablePercentMin = 0;
+    this.clickablePercentMax = 0;
     this.currentPercent = null;
 
     this.navItemCount = 0;
@@ -104,6 +106,7 @@ wheelnav = function (divId, raphael) {
     this.animateeffect = "bounce";
     this.animatetime = 1500;
     this.slicePathFunction = slicePath().PieSlice;
+    this.sliceClickablePathFunction = slicePath().PieSlice;
     this.sliceTransformFunction = null;
     this.sliceSelectedPathFunction = null;
     this.sliceSelectedTransformFunction = null;
@@ -156,7 +159,7 @@ wheelnav.prototype.initWheel = function (titles) {
     //Init colors
     var colorIndex = 0;
     for (i = 0; i < this.navItems.length; i++) {
-        this.navItems[i].fillAttr = { fill: this.colors[colorIndex] };
+        this.navItems[i].fillAttr = this.colors[colorIndex];
         colorIndex++;
         if (colorIndex === this.colors.length) { colorIndex = 0;}
     }
@@ -218,7 +221,6 @@ wheelnav.prototype.refreshWheel = function (selectedToFront) {
         if (this.animatetime !== null) { navItem.animatetime = this.animatetime; }
 
         if (navItem.selected) {
-            navItem.navSlice.attr(navItem.fillAttr);
             navItem.navSlice.attr(navItem.sliceSelectedAttr);
             navItem.navTitle.attr(navItem.titleSelectedAttr);
             navItem.navLine.attr(navItem.lineSelectedAttr);
