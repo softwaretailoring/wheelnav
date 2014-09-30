@@ -113,10 +113,6 @@ wheelnav = function (divId, raphael) {
     this.sliceHoverPathFunction = null;
     this.sliceHoverTransformFunction = null;
 
-    this.navDivTabId = null; //Id of Bootstrap <ul class="nav nav-tabs">. It is necessary for proper fade effect.
-    this.navDivDefultCssClass = null;
-    this.navDivSelectedCssClass = null;
-
     return this;
 };
 
@@ -311,7 +307,6 @@ wheelnav.prototype.navigateWheel = function (clicked, selectedToFront) {
     for (i = 0; i < this.navItemCount; i++) {
         navItem = this.navItems[i];
         navItem.setCurrentTransform(this.animateRepeatCount, true);
-        navItem.setNavDivCssClass();
     }
 
     this.currentClick = clicked;

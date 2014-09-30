@@ -114,10 +114,6 @@ wheelnav = function (divId, raphael) {
     this.sliceHoverPathFunction = null;
     this.sliceHoverTransformFunction = null;
 
-    this.navDivTabId = null; //Id of Bootstrap <ul class="nav nav-tabs">. It is necessary for proper fade effect.
-    this.navDivDefultCssClass = null;
-    this.navDivSelectedCssClass = null;
-
     return this;
 };
 
@@ -312,7 +308,6 @@ wheelnav.prototype.navigateWheel = function (clicked, selectedToFront) {
     for (i = 0; i < this.navItemCount; i++) {
         navItem = this.navItems[i];
         navItem.setCurrentTransform(this.animateRepeatCount, true);
-        navItem.setNavDivCssClass();
     }
 
     this.currentClick = clicked;
@@ -491,8 +486,6 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     this.sliceHoverAttr = { fill: "#CCC", stroke: "#111", "stroke-width": 4, cursor: 'pointer' };
     this.sliceSelectedAttr = { fill: "#CCC", stroke: "#111", "stroke-width": 4, cursor: 'default' };
 
-    //Useful for sliceClickablePath testing.
-    //this.sliceClickablePathAttr = { fill: "#FFF", stroke: "#FFF", "stroke-width": 0, cursor: 'pointer', "fill-opacity": 0.51 };
     this.sliceClickablePathAttr = { fill: "#FFF", stroke: "#FFF", "stroke-width": 0, cursor: 'pointer', "fill-opacity": 0.01 };
     this.sliceClickableHoverAttr = { stroke: "#FFF", "stroke-width": 0, cursor: 'pointer' };
     this.sliceClickableSelectedAttr = { stroke: "#FFF", "stroke-width": 0, cursor: 'default' };
@@ -504,12 +497,6 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     this.linePathAttr = { stroke: "#111", "stroke-width": 2, cursor: 'pointer' };
     this.lineHoverAttr = { stroke: "#111", "stroke-width": 3, cursor: 'pointer' };
     this.lineSelectedAttr = { stroke: "#111", "stroke-width": 4, cursor: 'default' };
-
-    this.navDivId = null;
-    if (wheelnav.navDivDefultCssClass === null) { this.navDivDefultCssClass = "tab-pane fade"; }
-    else { this.navDivDefultCssClass = wheelnav.navDivDefultCssClass; }
-    if (wheelnav.navDivSelectedCssClass === null) { this.navDivSelectedCssClass = "tab-pane fade in active"; }
-    else { this.navDivSelectedCssClass = wheelnav.navDivSelectedCssClass; }
 
     return this;
 };
@@ -865,10 +852,12 @@ wheelnavItem.prototype.setCurrentTransform = function (animateRepeatCount, locke
             transform: this.navSliceCurrentTransformString
         };
 
+        var sliceClickableTransformAttr = {};
+
         if (this.clickablePercentMax > 0) {
             var sliceClickablePath = this.getCurrentClickablePath();
 
-            var sliceClickableTransformAttr = {
+            sliceClickableTransformAttr = {
                 path: sliceClickablePath.slicePathString,
                 transform: this.navSliceCurrentTransformString
             };
@@ -965,25 +954,6 @@ wheelnavItem.prototype.setCurrentTransform = function (animateRepeatCount, locke
 
             if (this.clickablePercentMax > 0) {
                 this.navClickableSlice.animate(this.animClickableSlice.repeat(animateRepeatCount));
-            }
-        }
-    }
-};
-
-wheelnavItem.prototype.setNavDivCssClass = function () {
-
-    if (this.navDivId !== null) {
-        if (this.wheelnav.navDivTabId !== null) {
-            if (this.selected) {
-                $('#' + this.wheelnav.navDivTabId + ' a[href="#' + this.navDivId + '"]').tab('show');
-            }
-        }
-        else {
-            if (this.selected) {
-                document.getElementById(this.navDivId).className = this.navDivSelectedCssClass;
-            }
-            else {
-                document.getElementById(this.navDivId).className = this.navDivDefultCssClass;
             }
         }
     }
