@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="wheelnav.js">
+        <meta name="author" content="gabor.berkesi@softwaretailoring.net">
+
+        <title>wheelnav.js - slicePath test page</title>
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <link href="css/index.css" rel="stylesheet">
+
+        <script type="text/javascript" src="js/required/raphael.min.2.1.2.js"></script> 
+        <script type="text/javascript" src="js/required/raphael.icons.js"></script>
+        <script type="text/javascript" src="js/dist/wheelnav.js"></script>
+        <script type="text/javascript">
+
+            window.onload = function () {
+
+                var PieSlice = new wheelnav("PieSlice");
+                PieSlice.slicePathFunction = slicePath().PieSlice;
+                PieSlice.createWheel();
+
+                var DonutSlice = new wheelnav("DonutSlice");
+                DonutSlice.slicePathFunction = slicePath().DonutSlice;
+                DonutSlice.createWheel();
+
+                var StarSlice = new wheelnav("StarSlice");
+                StarSlice.slicePathFunction = slicePath().StarSlice;
+                StarSlice.createWheel(["1", "2", "3", "4", "5"]);
+
+                var StarBasePieSlice = new wheelnav("StarBasePieSlice");
+                StarBasePieSlice.slicePathFunction = slicePath().StarBasePieSlice;
+                StarBasePieSlice.sliceHoverPathFunction = slicePath().StarSlice;
+                StarBasePieSlice.createWheel(["1", "2", "3", "4", "5"]);
+
+                var CogSlice = new wheelnav("CogSlice");
+                CogSlice.slicePathFunction = slicePath().CogSlice;
+                CogSlice.createWheel();
+
+                var CogBasePieSlice = new wheelnav("CogBasePieSlice");
+                CogBasePieSlice.slicePathFunction = slicePath().CogBasePieSlice;
+                CogBasePieSlice.sliceHoverPathFunction = slicePath().CogSlice;
+                CogBasePieSlice.createWheel();
+
+                var MenuSlice = new wheelnav("MenuSlice");
+                MenuSlice.slicePathFunction = slicePath().MenuSlice;
+                MenuSlice.createWheel(["1", "2", "3", "4", "5"]);
+
+                var MenuSliceSelectedLine = new wheelnav("MenuSliceSelectedLine");
+                MenuSliceSelectedLine.slicePathFunction = slicePath().MenuSliceSelectedLine;
+                MenuSliceSelectedLine.createWheel(["1", "2", "3", "4", "5"]);
+
+                var MenuSliceWithoutLine = new wheelnav("MenuSliceWithoutLine");
+                MenuSliceWithoutLine.slicePathFunction = slicePath().MenuSliceWithoutLine;
+                MenuSliceWithoutLine.spreaderEnable = true;
+                MenuSliceWithoutLine.createWheel(["1", "2", "3", "4", "5"]);
+
+                var MenuSquareSlice = new wheelnav("MenuSquareSlice");
+                MenuSquareSlice.slicePathFunction = slicePath().MenuSquareSlice;
+                MenuSquareSlice.createWheel(["1", "2", "3", "4", "5"]);
+
+                var FlowerSlice = new wheelnav("FlowerSlice");
+                FlowerSlice.slicePathFunction = slicePath().FlowerSlice;
+                FlowerSlice.createWheel(["1", "2", "3", "4", "5", "6"]);
+
+                var EyeSlice = new wheelnav("EyeSlice");
+                EyeSlice.slicePathFunction = slicePath().EyeSlice;
+                EyeSlice.createWheel(["1", "2", "3", "4", "5", "6"]);
+
+                var WheelSlice = new wheelnav("WheelSlice");
+                WheelSlice.slicePathFunction = slicePath().WheelSlice;
+                WheelSlice.createWheel();
+
+                var LineSlice = new wheelnav("LineSlice");
+                LineSlice.slicePathFunction = slicePath().LineSlice;
+                LineSlice.createWheel();
+
+                var TabSlice = new wheelnav("TabSlice");
+                TabSlice.slicePathFunction = slicePath().TabSlice;
+                TabSlice.clickModeRotate = false;
+                TabSlice.createWheel();
+
+                var YinYangSlice = new wheelnav("YinYangSlice");
+                YinYangSlice.slicePathFunction = slicePath().YinYangSlice;
+                YinYangSlice.createWheel(["yin", "yang"]);
+
+                var PieArrowSlice = new wheelnav("PieArrowSlice");
+                PieArrowSlice.slicePathFunction = slicePath().PieArrowBasePieSlice;
+                PieArrowSlice.sliceSelectedPathFunction = slicePath().PieArrowSlice;
+                PieArrowSlice.createWheel();
+            };
+
+        </script>
+    </head>
+    <body>
+        <header>
+            <p>
+                This is a test page for available slicePaths in wheelnav.js library. 
+                For more information please visit the <a href="http://wheelnavjs.softwaretailoring.net" target="_blank">project page</a>
+            </p>
+        </header>
+        
+        <h2>PieSlice</h2>
+        <div id="PieSlice" class="wheelNav"></div>
+        <h2>DonutSlice</h2>
+        <div id="DonutSlice" class="wheelNav"></div>
+        <h2>StarSlice</h2>
+        <div id="StarSlice" class="wheelNav"></div>
+        <h2>StarBasePieSlice</h2>
+        <div id="StarBasePieSlice" class="wheelNav"></div>
+        <h2>CogSlice</h2>
+        <div id="CogSlice" class="wheelNav"></div>
+        <h2>CogBasePieSlice</h2>
+        <div id="CogBasePieSlice" class="wheelNav"></div>
+        <h2>MenuSlice</h2>
+        <div id="MenuSlice" class="wheelNav"></div>
+        <h2>MenuSliceSelectedLine</h2>
+        <div id="MenuSliceSelectedLine" class="wheelNav"></div>
+        <h2>MenuSliceWithoutLine</h2>
+        <div id="MenuSliceWithoutLine" class="wheelNav"></div>
+        <h2>MenuSquareSlice</h2>
+        <div id="MenuSquareSlice" class="wheelNav"></div>
+        <h2>FlowerSlice</h2>
+        <div id="FlowerSlice" class="wheelNav"></div>
+        <h2>EyeSlice</h2>
+        <div id="EyeSlice" class="wheelNav"></div>
+        <h2>WheelSlice</h2>
+        <div id="WheelSlice" class="wheelNav"></div>
+        <h2>LineSlice</h2>
+        <div id="LineSlice" class="wheelNav"></div>
+        <h2>TabSlice</h2>
+        <div id="TabSlice" class="wheelNav"></div>
+        <h2>YinYangSlice</h2>
+        <div id="YinYangSlice" class="wheelNav"></div>
+        <h2>PieArrowSlice</h2>
+        <div id="PieArrowSlice" class="wheelNav"></div>
+
+        <footer>
+            <p>&copy; 2014 <a href="http://softwaretailoring.net" target="_blank">softwaretailoring.net</a></p>
+        </footer>
+    </body>
+</html>
