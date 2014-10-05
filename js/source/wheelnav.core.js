@@ -30,7 +30,7 @@ wheelnav = function (divId, raphael) {
         this.raphael = raphael;
     }
 
-    var canvasWidth = this.raphael.canvas.getAttribute('width');
+    var canvasWidth = holderDiv.clientWidth;
 
     //Public properties
     this.centerX = canvasWidth / 2;

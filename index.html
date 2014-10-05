@@ -4,8 +4,9 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="wheelnav.js">
+        <meta name="description" content="wheelnav.js test page">
         <meta name="author" content="gabor.berkesi@softwaretailoring.net">
+        <link rel="shortcut icon" href="wheelnav_favicon.png">
 
         <title>wheelnav.js - test page</title>
 
@@ -28,6 +29,13 @@
                 myWheelnav.slicePathFunction = slicePath().DonutSlice;
                 myWheelnav.colors = new Array("mediumorchid", "royalblue", "darkorange");
                 myWheelnav.createWheel([icon.github, icon.people, icon.smile]);
+
+                var radialWheel = new wheelnav("radialWheel");
+                radialWheel.slicePathFunction = slicePath().MenuSliceWithoutLine;
+                radialWheel.sliceSelectedTransformFunction = sliceTransform().ScaleTransform;
+                radialWheel.spreaderEnable = true;
+                radialWheel.clickModeRotate = false;
+                radialWheel.createWheel([icon.merge, icon.filter, icon.charging, icon.biohazard, icon.book, icon.coffee]);
 
                 var cogWheel = new wheelnav("cogWheel");
                 cogWheel.slicePathFunction = slicePath().CogBasePieSlice;
@@ -110,16 +118,6 @@
                 iconWheel.navItems[5].maxPercent = 0.63;
                 iconWheel.createWheel();
                
-                var optionWheel = new wheelnav("optionWheel");
-                optionWheel.colors = colorpalette.fractallove;
-                optionWheel.slicePathFunction = slicePath().FlowerSlice;
-                optionWheel.sliceSelectedTransformFunction = sliceTransform().MoveMiddleTransform;
-                optionWheel.animatetime = 600;
-                optionWheel.animateeffect = "linear";
-                optionWheel.rotateRoundCount = 1;
-                optionWheel.clockwise = false;
-                optionWheel.createWheel(["-1-", "-2-", "-3-", "-4-", "-5-", "-6-"]);
-
                 var textWheel = new wheelnav("textWheel");
                 textWheel.slicePathFunction = slicePath().TabSlice;
                 textWheel.sliceSelectedTransformFunction = sliceTransform().ScaleTransform;
@@ -141,11 +139,11 @@
         </header>
         
         <div id="divWheelnav" class="wheelNavGitHub"></div>
+        <div id="radialWheel" class="wheelNav"></div>        
         <div id="cogWheel" class="wheelNav"></div>
         <div id="textWheelRotatedTitle" class="wheelNav"></div>
         <div id="pieWheel" class="wheelNav"></div>
         <div id="iconWheel" class="wheelNav"></div>
-        <div id="optionWheel" class="wheelNav"></div>
         <div style="height:50px;" ></div>
         <div id="textWheel" class="wheelNav"></div>
         <footer>
