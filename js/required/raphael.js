@@ -5798,7 +5798,9 @@
                 if (key.substring(0, 6) == "xlink:") {
                     el.setAttributeNS(xlink, key.substring(6), Str(attr[key]));
                 } else {
-                    el.setAttribute(key, Str(attr[key]));
+                    if (el !== undefined) {
+                        el.setAttribute(key, Str(attr[key]));
+                    }
                 }
             }
         } else {
