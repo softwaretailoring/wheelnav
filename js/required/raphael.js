@@ -556,6 +556,7 @@
         toInt = parseInt,
         upperCase = Str.prototype.toUpperCase,
         availableAttrs = R._availableAttrs = {
+            "class": "",
             "arrow-end": "none",
             "arrow-start": "none",
             blur: 0,
