@@ -18,7 +18,7 @@
 
         <link href="css/index.css" rel="stylesheet">
 
-        <script type="text/javascript" src="js/required/raphael.min.2.1.2.js"></script> 
+        <script type="text/javascript" src="js/required/raphael.min.js"></script> 
         <script type="text/javascript" src="js/required/raphael.icons.js"></script>
         <script type="text/javascript" src="js/dist/wheelnav.js"></script>
         <script type="text/javascript">
@@ -35,7 +35,8 @@
                 radialWheel.sliceSelectedTransformFunction = sliceTransform().ScaleTransform;
                 radialWheel.spreaderEnable = true;
                 radialWheel.clickModeRotate = false;
-                radialWheel.createWheel([icon.merge, icon.filter, icon.charging, icon.biohazard, icon.book, icon.coffee]);
+                radialWheel.cssMode = true;
+                radialWheel.createWheel([icon.merge, icon.filter, icon.charging, icon.biohazard, icon.book, "6"]);
 
                 var cogWheel = new wheelnav("cogWheel");
                 cogWheel.slicePathFunction = slicePath().CogBasePieSlice;

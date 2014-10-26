@@ -16,16 +16,33 @@
 /* Documentation: http://wheelnavjs.softwaretailoring.net/documentation/core.html          */
 /* ======================================================================================= */
 
-wheelnav = function (divId, raphael) {
+wheelnav = function (divId, raphael, divWidth, divHeight) {
 
-    this.holderId = divId;
+    this.holderId = "wheel";
+
+    if (divId !== undefined &&
+        divId !== null) {
+        this.holderId = divId;
+    }
 
     var holderDiv = document.getElementById(divId);
 
-    if (raphael === undefined) {
+    if (raphael === undefined ||
+        raphael === null) {
         holderDiv.innerText = "";
         holderDiv.innerHTML = "";
-        this.raphael = new Raphael(divId);
+
+        if (divWidth !== undefined &&
+            divWidth !== null) {
+            if (divHeight === undefined ||
+                divHeight === null) {
+                divHeight = divWidth;
+            }
+            this.raphael = new Raphael(divId, divWidth, divHeight);
+        }
+        else {
+            this.raphael = new Raphael(divId);
+        }
     }
     else {
         this.raphael = raphael;
@@ -51,8 +68,9 @@ wheelnav = function (divId, raphael) {
     this.hoverPercent = 1;
     this.selectedPercent = 1;
     this.clickablePercentMin = 0;
-    this.clickablePercentMax = 0;
+    this.clickablePercentMax = 1;
     this.currentPercent = null;
+    this.cssMode = false;
 
     this.navItemCount = 0;
     this.navItemCountLabeled = false;
@@ -71,9 +89,6 @@ wheelnav = function (divId, raphael) {
     //Spreader settings
     this.spreaderEnable = false;
     this.spreaderRadius = 15;
-    this.spreaderCircleAttr = { fill: "#777", "stroke-width": 3 };
-    this.spreaderOnAttr = { font: '100 32px Impact, Charcoal, sans-serif', fill: "#FFF", cursor: 'pointer' };
-    this.spreaderOffAttr = { font: '100 32px Impact, Charcoal, sans-serif', fill: "#FFF", cursor: 'pointer' };
     this.minPercent = 0.01;
     this.maxPercent = 1;
 
@@ -107,7 +122,7 @@ wheelnav = function (divId, raphael) {
     this.animateeffect = "bounce";
     this.animatetime = 1500;
     this.slicePathFunction = slicePath().PieSlice;
-    this.sliceClickablePathFunction = slicePath().PieSlice;
+    this.sliceClickablePathFunction = null;
     this.sliceTransformFunction = null;
     this.sliceSelectedPathFunction = null;
     this.sliceSelectedTransformFunction = null;
@@ -120,6 +135,21 @@ wheelnav = function (divId, raphael) {
 wheelnav.prototype.initWheel = function (titles) {
 
     //Init slices and titles
+    if (this.sliceClickablePathFunction === null) {
+        this.sliceClickablePathFunction = this.slicePathFunction;
+    }
+
+    if (!this.cssMode) {
+        this.spreaderCircleAttr = { fill: "#777", "stroke-width": 3, cursor: 'pointer' };
+        this.spreaderOnAttr = { fill: "#FFF", cursor: 'pointer' };
+        this.spreaderOffAttr = { fill: "#FFF", cursor: 'pointer' };
+    }
+    else {
+        this.spreaderCircleAttr = { "class": this.getSpreaderId() };
+        this.spreaderOnAttr = { "class": this.getSpreadOnId() };
+        this.spreaderOffAttr = { "class": this.getSpreadOffId() };
+    }
+
     var navItem;
     if (this.navItemCount === 0) {
 
@@ -386,6 +416,9 @@ wheelnav.prototype.getTitleId = function (index) {
 wheelnav.prototype.getLineId = function (index) {
     return "wheelnav-" + this.holderId + "-line-" + index;
 };
+wheelnav.prototype.getSpreaderId = function () {
+    return "wheelnav-" + this.holderId + "-spreader";
+};
 wheelnav.prototype.getSpreadOnId = function () {
     return "wheelnav-" + this.holderId + "-spreadon";
 };
@@ -482,21 +515,36 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     this.animateeffect = "bounce";
     this.animatetime = 1500;
 
-    this.slicePathAttr = { fill: "#CCC", stroke: "#111", "stroke-width": 3, cursor: 'pointer' };
-    this.sliceHoverAttr = { fill: "#CCC", stroke: "#111", "stroke-width": 4, cursor: 'pointer' };
-    this.sliceSelectedAttr = { fill: "#CCC", stroke: "#111", "stroke-width": 4, cursor: 'default' };
+    if (!wheelnav.cssMode) {
+        this.slicePathAttr = { fill: "#CCC", stroke: "#111", "stroke-width": 3, cursor: 'pointer' };
+        this.sliceHoverAttr = { fill: "#CCC", stroke: "#111", "stroke-width": 4, cursor: 'pointer' };
+        this.sliceSelectedAttr = { fill: "#CCC", stroke: "#111", "stroke-width": 4, cursor: 'default' };
+
+        this.titleAttr = { font: this.titleFont, fill: "#111", stroke: "none", cursor: 'pointer' };
+        this.titleHoverAttr = { font: this.titleFont, fill: "#111", cursor: 'pointer', stroke: "none" };
+        this.titleSelectedAttr = { font: this.titleFont, fill: "#FFF", cursor: 'default' };
+
+        this.linePathAttr = { stroke: "#111", "stroke-width": 2, cursor: 'pointer' };
+        this.lineHoverAttr = { stroke: "#111", "stroke-width": 3, cursor: 'pointer' };
+        this.lineSelectedAttr = { stroke: "#111", "stroke-width": 4, cursor: 'default' };
+    }
+    else {
+        this.slicePathAttr = { "class": this.wheelnav.getSliceId(this.wheelItemIndex) };
+        this.sliceHoverAttr = { "class": this.wheelnav.getSliceId(this.wheelItemIndex) + "-hover" };
+        this.sliceSelectedAttr = { "class": this.wheelnav.getSliceId(this.wheelItemIndex) + "-selected" };
+
+        this.titleAttr = { "class": this.wheelnav.getTitleId(this.wheelItemIndex) };
+        this.titleHoverAttr = { "class": this.wheelnav.getTitleId(this.wheelItemIndex) + "-hover" };
+        this.titleSelectedAttr = { "class": this.wheelnav.getTitleId(this.wheelItemIndex) + "-selected" };
+
+        this.linePathAttr = { "class": this.wheelnav.getLineId(this.wheelItemIndex) };
+        this.lineHoverAttr = { "class": this.wheelnav.getLineId(this.wheelItemIndex) + "-hover" };
+        this.lineSelectedAttr = { "class": this.wheelnav.getLineId(this.wheelItemIndex) + "-selected" };
+    }
 
     this.sliceClickablePathAttr = { fill: "#FFF", stroke: "#FFF", "stroke-width": 0, cursor: 'pointer', "fill-opacity": 0.01 };
     this.sliceClickableHoverAttr = { stroke: "#FFF", "stroke-width": 0, cursor: 'pointer' };
     this.sliceClickableSelectedAttr = { stroke: "#FFF", "stroke-width": 0, cursor: 'default' };
-
-    this.titleAttr = { font: this.titleFont, fill: "#111", stroke: "none", cursor: 'pointer' };
-    this.titleHoverAttr = { font: this.titleFont, fill: "#111", cursor: 'pointer', stroke: "none" };
-    this.titleSelectedAttr = { font: this.titleFont, fill: "#FFF", cursor: 'default' };
-
-    this.linePathAttr = { stroke: "#111", "stroke-width": 2, cursor: 'pointer' };
-    this.lineHoverAttr = { stroke: "#111", "stroke-width": 3, cursor: 'pointer' };
-    this.lineSelectedAttr = { stroke: "#111", "stroke-width": 4, cursor: 'default' };
 
     return this;
 };
@@ -504,18 +552,25 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
 wheelnavItem.prototype.createNavItem = function () {
 
     //Set colors
-    this.slicePathAttr.fill = this.fillAttr;
-    this.sliceHoverAttr.fill = this.fillAttr;
-    this.sliceSelectedAttr.fill = this.fillAttr;
+    if (!this.wheelnav.cssMode) {
+        this.slicePathAttr.fill = this.fillAttr;
+        this.sliceHoverAttr.fill = this.fillAttr;
+        this.sliceSelectedAttr.fill = this.fillAttr;
+    }
 
     //Set attrs
     if (!this.enabled) {
-        this.slicePathAttr.cursor = "default";
-        this.sliceHoverAttr.cursor = "default";
-        this.titleAttr.cursor = "default";
-        this.titleHoverAttr.cursor = "default";
-        this.linePathAttr.cursor = "default";
-        this.lineHoverAttr.cursor = "default";
+        if (!this.wheelnav.cssMode) {
+            this.slicePathAttr.cursor = "default";
+            this.sliceHoverAttr.cursor = "default";
+            this.titleAttr.cursor = "default";
+            this.titleHoverAttr.cursor = "default";
+            this.linePathAttr.cursor = "default";
+            this.lineHoverAttr.cursor = "default";
+        }
+
+        this.sliceClickablePathAttr.cursor = "default";
+        this.sliceClickableHoverAttr.cursor = "default";
     }
 
     //Set angles
@@ -655,14 +710,15 @@ wheelnavItem.prototype.createNavItem = function () {
     if (this.isPathTitle()) {
         this.titlePath = new wheelnavTitle(this.title, this.wheelnav.raphael.raphael);
         var relativePath = this.getTitlePercentAttr(slicePath.titlePosX, slicePath.titlePosY, this.titlePath).path;
-        this.navTitle = this.wheelnav.raphael.path(relativePath).attr(this.titleAttr);
+        this.navTitle = this.wheelnav.raphael.path(relativePath);
     }
     //Title defined by text
     else {
         this.titlePath = new wheelnavTitle(this.title);
-        this.navTitle = this.wheelnav.raphael.text(slicePath.titlePosX, slicePath.titlePosY, this.title).attr(this.titleAttr);
+        this.navTitle = this.wheelnav.raphael.text(slicePath.titlePosX, slicePath.titlePosY, this.title);
     }
 
+    this.navTitle.attr(this.titleAttr);
     this.navTitle.id = this.wheelnav.getTitleId(this.wheelItemIndex);
     this.navTitle.node.id = this.navTitle.id;
 
@@ -670,7 +726,8 @@ wheelnavItem.prototype.createNavItem = function () {
     this.navTitle.attr({ transform: titleRotateString });
 
     //Create linepath
-    this.navLine = this.wheelnav.raphael.path(slicePath.linePathString).attr(this.linePathAttr).toBack();
+    this.navLine = this.wheelnav.raphael.path(slicePath.linePathString).toBack();
+    this.navLine.attr(this.linePathAttr);
     this.navLine.id = this.wheelnav.getLineId(this.wheelItemIndex);
 
     //Create item set
@@ -705,9 +762,6 @@ wheelnavItem.prototype.createNavItem = function () {
             this.navLine
         );
     }
-
-    
-    
 
     if (this.tooltip !== null) {
         this.navItem.attr({ title: this.tooltip });
@@ -1396,13 +1450,25 @@ spreader = function (wheelnav) {
     if (this.wheelnav.spreaderEnable) {
         var thisWheelNav = this.wheelnav;
 
-        this.spreaderCircle = thisWheelNav.raphael.circle(thisWheelNav.centerX, thisWheelNav.centerY, thisWheelNav.spreaderRadius).attr(thisWheelNav.spreaderCircleAttr);
-        this.spreadOnTitle = thisWheelNav.raphael.text(thisWheelNav.centerX, thisWheelNav.centerY, "+").attr(thisWheelNav.spreaderOnAttr);
+        var fontAttr = { font: '100 32px Impact, Charcoal, sans-serif' };
+
+        this.spreaderCircle = thisWheelNav.raphael.circle(thisWheelNav.centerX, thisWheelNav.centerY, thisWheelNav.spreaderRadius);
+        this.spreaderCircle.attr(thisWheelNav.spreaderCircleAttr);
+        this.spreaderCircle.click(function () {
+            thisWheelNav.spreadWheel();
+        });
+
+        this.spreadOnTitle = thisWheelNav.raphael.text(thisWheelNav.centerX, thisWheelNav.centerY, "+");
+        this.spreadOnTitle.attr(fontAttr);
+        this.spreadOnTitle.attr(thisWheelNav.spreaderOnAttr);
         this.spreadOnTitle.id = thisWheelNav.getSpreadOnId();
         this.spreadOnTitle.click(function () {
             thisWheelNav.spreadWheel();
         });
-        this.spreadOffTitle = thisWheelNav.raphael.text(thisWheelNav.centerX, thisWheelNav.centerY - 3, "–").attr(thisWheelNav.spreaderOffAttr);
+
+        this.spreadOffTitle = thisWheelNav.raphael.text(thisWheelNav.centerX, thisWheelNav.centerY - 3, "–");
+        this.spreadOffTitle.attr(fontAttr);
+        this.spreadOffTitle.attr(thisWheelNav.spreaderOffAttr);
         this.spreadOffTitle.id = thisWheelNav.getSpreadOffId();
         this.spreadOffTitle.click(function () {
             thisWheelNav.spreadWheel();

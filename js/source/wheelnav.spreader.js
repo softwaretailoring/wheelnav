@@ -11,13 +11,25 @@ spreader = function (wheelnav) {
     if (this.wheelnav.spreaderEnable) {
         var thisWheelNav = this.wheelnav;
 
-        this.spreaderCircle = thisWheelNav.raphael.circle(thisWheelNav.centerX, thisWheelNav.centerY, thisWheelNav.spreaderRadius).attr(thisWheelNav.spreaderCircleAttr);
-        this.spreadOnTitle = thisWheelNav.raphael.text(thisWheelNav.centerX, thisWheelNav.centerY, "+").attr(thisWheelNav.spreaderOnAttr);
+        var fontAttr = { font: '100 32px Impact, Charcoal, sans-serif' };
+
+        this.spreaderCircle = thisWheelNav.raphael.circle(thisWheelNav.centerX, thisWheelNav.centerY, thisWheelNav.spreaderRadius);
+        this.spreaderCircle.attr(thisWheelNav.spreaderCircleAttr);
+        this.spreaderCircle.click(function () {
+            thisWheelNav.spreadWheel();
+        });
+
+        this.spreadOnTitle = thisWheelNav.raphael.text(thisWheelNav.centerX, thisWheelNav.centerY, "+");
+        this.spreadOnTitle.attr(fontAttr);
+        this.spreadOnTitle.attr(thisWheelNav.spreaderOnAttr);
         this.spreadOnTitle.id = thisWheelNav.getSpreadOnId();
         this.spreadOnTitle.click(function () {
             thisWheelNav.spreadWheel();
         });
-        this.spreadOffTitle = thisWheelNav.raphael.text(thisWheelNav.centerX, thisWheelNav.centerY - 3, "–").attr(thisWheelNav.spreaderOffAttr);
+
+        this.spreadOffTitle = thisWheelNav.raphael.text(thisWheelNav.centerX, thisWheelNav.centerY - 3, "–");
+        this.spreadOffTitle.attr(fontAttr);
+        this.spreadOffTitle.attr(thisWheelNav.spreaderOffAttr);
         this.spreadOffTitle.id = thisWheelNav.getSpreadOffId();
         this.spreadOffTitle.click(function () {
             thisWheelNav.spreadWheel();

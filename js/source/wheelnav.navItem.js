@@ -85,21 +85,36 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     this.animateeffect = "bounce";
     this.animatetime = 1500;
 
-    this.slicePathAttr = { fill: "#CCC", stroke: "#111", "stroke-width": 3, cursor: 'pointer' };
-    this.sliceHoverAttr = { fill: "#CCC", stroke: "#111", "stroke-width": 4, cursor: 'pointer' };
-    this.sliceSelectedAttr = { fill: "#CCC", stroke: "#111", "stroke-width": 4, cursor: 'default' };
+    if (!wheelnav.cssMode) {
+        this.slicePathAttr = { fill: "#CCC", stroke: "#111", "stroke-width": 3, cursor: 'pointer' };
+        this.sliceHoverAttr = { fill: "#CCC", stroke: "#111", "stroke-width": 4, cursor: 'pointer' };
+        this.sliceSelectedAttr = { fill: "#CCC", stroke: "#111", "stroke-width": 4, cursor: 'default' };
+
+        this.titleAttr = { font: this.titleFont, fill: "#111", stroke: "none", cursor: 'pointer' };
+        this.titleHoverAttr = { font: this.titleFont, fill: "#111", cursor: 'pointer', stroke: "none" };
+        this.titleSelectedAttr = { font: this.titleFont, fill: "#FFF", cursor: 'default' };
+
+        this.linePathAttr = { stroke: "#111", "stroke-width": 2, cursor: 'pointer' };
+        this.lineHoverAttr = { stroke: "#111", "stroke-width": 3, cursor: 'pointer' };
+        this.lineSelectedAttr = { stroke: "#111", "stroke-width": 4, cursor: 'default' };
+    }
+    else {
+        this.slicePathAttr = { "class": this.wheelnav.getSliceId(this.wheelItemIndex) };
+        this.sliceHoverAttr = { "class": this.wheelnav.getSliceId(this.wheelItemIndex) + "-hover" };
+        this.sliceSelectedAttr = { "class": this.wheelnav.getSliceId(this.wheelItemIndex) + "-selected" };
+
+        this.titleAttr = { "class": this.wheelnav.getTitleId(this.wheelItemIndex) };
+        this.titleHoverAttr = { "class": this.wheelnav.getTitleId(this.wheelItemIndex) + "-hover" };
+        this.titleSelectedAttr = { "class": this.wheelnav.getTitleId(this.wheelItemIndex) + "-selected" };
+
+        this.linePathAttr = { "class": this.wheelnav.getLineId(this.wheelItemIndex) };
+        this.lineHoverAttr = { "class": this.wheelnav.getLineId(this.wheelItemIndex) + "-hover" };
+        this.lineSelectedAttr = { "class": this.wheelnav.getLineId(this.wheelItemIndex) + "-selected" };
+    }
 
     this.sliceClickablePathAttr = { fill: "#FFF", stroke: "#FFF", "stroke-width": 0, cursor: 'pointer', "fill-opacity": 0.01 };
     this.sliceClickableHoverAttr = { stroke: "#FFF", "stroke-width": 0, cursor: 'pointer' };
     this.sliceClickableSelectedAttr = { stroke: "#FFF", "stroke-width": 0, cursor: 'default' };
-
-    this.titleAttr = { font: this.titleFont, fill: "#111", stroke: "none", cursor: 'pointer' };
-    this.titleHoverAttr = { font: this.titleFont, fill: "#111", cursor: 'pointer', stroke: "none" };
-    this.titleSelectedAttr = { font: this.titleFont, fill: "#FFF", cursor: 'default' };
-
-    this.linePathAttr = { stroke: "#111", "stroke-width": 2, cursor: 'pointer' };
-    this.lineHoverAttr = { stroke: "#111", "stroke-width": 3, cursor: 'pointer' };
-    this.lineSelectedAttr = { stroke: "#111", "stroke-width": 4, cursor: 'default' };
 
     return this;
 };
@@ -107,18 +122,25 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
 wheelnavItem.prototype.createNavItem = function () {
 
     //Set colors
-    this.slicePathAttr.fill = this.fillAttr;
-    this.sliceHoverAttr.fill = this.fillAttr;
-    this.sliceSelectedAttr.fill = this.fillAttr;
+    if (!this.wheelnav.cssMode) {
+        this.slicePathAttr.fill = this.fillAttr;
+        this.sliceHoverAttr.fill = this.fillAttr;
+        this.sliceSelectedAttr.fill = this.fillAttr;
+    }
 
     //Set attrs
     if (!this.enabled) {
-        this.slicePathAttr.cursor = "default";
-        this.sliceHoverAttr.cursor = "default";
-        this.titleAttr.cursor = "default";
-        this.titleHoverAttr.cursor = "default";
-        this.linePathAttr.cursor = "default";
-        this.lineHoverAttr.cursor = "default";
+        if (!this.wheelnav.cssMode) {
+            this.slicePathAttr.cursor = "default";
+            this.sliceHoverAttr.cursor = "default";
+            this.titleAttr.cursor = "default";
+            this.titleHoverAttr.cursor = "default";
+            this.linePathAttr.cursor = "default";
+            this.lineHoverAttr.cursor = "default";
+        }
+
+        this.sliceClickablePathAttr.cursor = "default";
+        this.sliceClickableHoverAttr.cursor = "default";
     }
 
     //Set angles
@@ -258,14 +280,15 @@ wheelnavItem.prototype.createNavItem = function () {
     if (this.isPathTitle()) {
         this.titlePath = new wheelnavTitle(this.title, this.wheelnav.raphael.raphael);
         var relativePath = this.getTitlePercentAttr(slicePath.titlePosX, slicePath.titlePosY, this.titlePath).path;
-        this.navTitle = this.wheelnav.raphael.path(relativePath).attr(this.titleAttr);
+        this.navTitle = this.wheelnav.raphael.path(relativePath);
     }
     //Title defined by text
     else {
         this.titlePath = new wheelnavTitle(this.title);
-        this.navTitle = this.wheelnav.raphael.text(slicePath.titlePosX, slicePath.titlePosY, this.title).attr(this.titleAttr);
+        this.navTitle = this.wheelnav.raphael.text(slicePath.titlePosX, slicePath.titlePosY, this.title);
     }
 
+    this.navTitle.attr(this.titleAttr);
     this.navTitle.id = this.wheelnav.getTitleId(this.wheelItemIndex);
     this.navTitle.node.id = this.navTitle.id;
 
@@ -273,7 +296,8 @@ wheelnavItem.prototype.createNavItem = function () {
     this.navTitle.attr({ transform: titleRotateString });
 
     //Create linepath
-    this.navLine = this.wheelnav.raphael.path(slicePath.linePathString).attr(this.linePathAttr).toBack();
+    this.navLine = this.wheelnav.raphael.path(slicePath.linePathString).toBack();
+    this.navLine.attr(this.linePathAttr);
     this.navLine.id = this.wheelnav.getLineId(this.wheelItemIndex);
 
     //Create item set
@@ -308,9 +332,6 @@ wheelnavItem.prototype.createNavItem = function () {
             this.navLine
         );
     }
-
-    
-    
 
     if (this.tooltip !== null) {
         this.navItem.attr({ title: this.tooltip });

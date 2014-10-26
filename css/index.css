@@ -40,3 +40,75 @@ footer {
     width: 80px;
   }
 }
+
+/* Css classes for radialWheel */
+
+#wheelnav-radialWheel-slice-0 {
+    fill: #cbff71;
+}
+
+#wheelnav-radialWheel-slice-1 {
+    fill: #a2ff00;
+}
+
+#wheelnav-radialWheel-slice-2 {
+    fill: #6ad400;
+}
+
+#wheelnav-radialWheel-slice-3 {
+    fill: #09b501;
+}
+
+#wheelnav-radialWheel-slice-4 {
+    fill: #028f27;
+}
+
+#wheelnav-radialWheel-slice-5 {
+    fill: #0a6f25;
+}
+
+.wheelnav-radialWheel-slice-0-hover,
+.wheelnav-radialWheel-slice-1-hover,
+.wheelnav-radialWheel-slice-2-hover,
+.wheelnav-radialWheel-slice-3-hover,
+.wheelnav-radialWheel-slice-4-hover,
+.wheelnav-radialWheel-slice-5-hover {
+    stroke-width: 2px;
+}
+
+.wheelnav-radialWheel-slice-0-selected,
+.wheelnav-radialWheel-slice-1-selected,
+.wheelnav-radialWheel-slice-2-selected,
+.wheelnav-radialWheel-slice-3-selected,
+.wheelnav-radialWheel-slice-4-selected,
+.wheelnav-radialWheel-slice-5-selected {
+    stroke-width: 3px;
+}
+    
+#wheelnav-radialWheel-title-5 > tspan {
+    font-family: 'Bookman Old Style', Bookman, 'URW Bookman L', 'Palatino Linotype', serif;
+}
+
+.wheelnav-radialWheel-title-5 > tspan {
+    font-size: 17px;
+}
+
+.wheelnav-radialWheel-title-5-hover > tspan {
+    font-size: 23px;
+}
+
+.wheelnav-radialWheel-title-5-selected > tspan {
+    font-size: 33px;
+}
+
+.wheelnav-radialWheel-spreader {
+    fill: #0a6f25;
+    stroke-width: 3px;
+    cursor: pointer;
+}
+
+.wheelnav-radialWheel-spreadon > tspan,
+.wheelnav-radialWheel-spreadoff > tspan {
+    fill: #FFF;
+    cursor: pointer;
+}

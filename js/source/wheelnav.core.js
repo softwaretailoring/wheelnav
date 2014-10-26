@@ -15,16 +15,33 @@
 /* Documentation: http://wheelnavjs.softwaretailoring.net/documentation/core.html          */
 /* ======================================================================================= */
 
-wheelnav = function (divId, raphael) {
+wheelnav = function (divId, raphael, divWidth, divHeight) {
 
-    this.holderId = divId;
+    this.holderId = "wheel";
+
+    if (divId !== undefined &&
+        divId !== null) {
+        this.holderId = divId;
+    }
 
     var holderDiv = document.getElementById(divId);
 
-    if (raphael === undefined) {
+    if (raphael === undefined ||
+        raphael === null) {
         holderDiv.innerText = "";
         holderDiv.innerHTML = "";
-        this.raphael = new Raphael(divId);
+
+        if (divWidth !== undefined &&
+            divWidth !== null) {
+            if (divHeight === undefined ||
+                divHeight === null) {
+                divHeight = divWidth;
+            }
+            this.raphael = new Raphael(divId, divWidth, divHeight);
+        }
+        else {
+            this.raphael = new Raphael(divId);
+        }
     }
     else {
         this.raphael = raphael;
@@ -50,8 +67,9 @@ wheelnav = function (divId, raphael) {
     this.hoverPercent = 1;
     this.selectedPercent = 1;
     this.clickablePercentMin = 0;
-    this.clickablePercentMax = 0;
+    this.clickablePercentMax = 1;
     this.currentPercent = null;
+    this.cssMode = false;
 
     this.navItemCount = 0;
     this.navItemCountLabeled = false;
@@ -70,9 +88,6 @@ wheelnav = function (divId, raphael) {
     //Spreader settings
     this.spreaderEnable = false;
     this.spreaderRadius = 15;
-    this.spreaderCircleAttr = { fill: "#777", "stroke-width": 3 };
-    this.spreaderOnAttr = { font: '100 32px Impact, Charcoal, sans-serif', fill: "#FFF", cursor: 'pointer' };
-    this.spreaderOffAttr = { font: '100 32px Impact, Charcoal, sans-serif', fill: "#FFF", cursor: 'pointer' };
     this.minPercent = 0.01;
     this.maxPercent = 1;
 
@@ -106,7 +121,7 @@ wheelnav = function (divId, raphael) {
     this.animateeffect = "bounce";
     this.animatetime = 1500;
     this.slicePathFunction = slicePath().PieSlice;
-    this.sliceClickablePathFunction = slicePath().PieSlice;
+    this.sliceClickablePathFunction = null;
     this.sliceTransformFunction = null;
     this.sliceSelectedPathFunction = null;
     this.sliceSelectedTransformFunction = null;
@@ -119,6 +134,21 @@ wheelnav = function (divId, raphael) {
 wheelnav.prototype.initWheel = function (titles) {
 
     //Init slices and titles
+    if (this.sliceClickablePathFunction === null) {
+        this.sliceClickablePathFunction = this.slicePathFunction;
+    }
+
+    if (!this.cssMode) {
+        this.spreaderCircleAttr = { fill: "#777", "stroke-width": 3, cursor: 'pointer' };
+        this.spreaderOnAttr = { fill: "#FFF", cursor: 'pointer' };
+        this.spreaderOffAttr = { fill: "#FFF", cursor: 'pointer' };
+    }
+    else {
+        this.spreaderCircleAttr = { "class": this.getSpreaderId() };
+        this.spreaderOnAttr = { "class": this.getSpreadOnId() };
+        this.spreaderOffAttr = { "class": this.getSpreadOffId() };
+    }
+
     var navItem;
     if (this.navItemCount === 0) {
 
@@ -384,6 +414,9 @@ wheelnav.prototype.getTitleId = function (index) {
 };
 wheelnav.prototype.getLineId = function (index) {
     return "wheelnav-" + this.holderId + "-line-" + index;
+};
+wheelnav.prototype.getSpreaderId = function () {
+    return "wheelnav-" + this.holderId + "-spreader";
 };
 wheelnav.prototype.getSpreadOnId = function () {
     return "wheelnav-" + this.holderId + "-spreadon";
