@@ -317,7 +317,6 @@ var slicePath = function () {
 
         var menuRadius = percent * custom.menuRadius;
 
-        if (menuRadius < 15) { menuRadius = 15; }
         if (percent <= 0.05) { menuRadius = 10; }
 
         middleTheta = helper.middleTheta;
@@ -405,8 +404,6 @@ var slicePath = function () {
         helper.setTitlePos(x, y);
 
         var menuRadius = percent * custom.menuRadius;
-
-        if (menuRadius < 15) { menuRadius = 15; }
 
         if (percent <= 0.05) { menuRadius = 10; }
 
