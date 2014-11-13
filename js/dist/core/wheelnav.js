@@ -729,6 +729,7 @@ wheelnavItem.prototype.createNavItem = function () {
     this.navLine = this.wheelnav.raphael.path(slicePath.linePathString).toBack();
     this.navLine.attr(this.linePathAttr);
     this.navLine.id = this.wheelnav.getLineId(this.wheelItemIndex);
+    this.navLine.node.id = this.navLine.id;
 
     //Create item set
     this.navItem = this.wheelnav.raphael.set();

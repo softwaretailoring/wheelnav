@@ -67,7 +67,7 @@ var slicePath = function () {
 
         var custom = new slicePathCustomization();
         custom.minRadiusPercent = 0.37;
-        custom.maxRadiusPercent = 0.95;
+        custom.maxRadiusPercent = 0.9;
 
         return custom;
     };
@@ -193,9 +193,8 @@ var slicePath = function () {
 
         helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom);
 
-        r = helper.sliceRadius;
-        r = helper.sliceRadius * 0.98;
-        rbase = helper.sliceRadius * 0.9;
+        r = helper.sliceRadius * 0.9;
+        rbase = helper.sliceRadius * 0.83;
 
         startTheta = helper.startTheta;
         endTheta = helper.endTheta;
@@ -487,8 +486,7 @@ var slicePath = function () {
 
         helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom);
 
-        r = helper.sliceRadius;
-        r = r * 0.85;
+        r = helper.sliceRadius * 0.9;
 
         startTheta = helper.startTheta;
         middleTheta = helper.middleTheta;
@@ -497,7 +495,7 @@ var slicePath = function () {
         var innerRadiusPercent;
 
         if (sliceAngle < 120) {
-            helper.titleRadius = r * 0.62;
+            helper.titleRadius = r * 0.6;
             innerRadiusPercent = 0.97;
         }
         else if (sliceAngle < 180) {
@@ -509,19 +507,20 @@ var slicePath = function () {
             innerRadiusPercent = 0.905;
         }
 
-        slicePathString = [["M", (r * 0.1) * Math.cos(middleTheta) + x, (r * 0.1) * Math.sin(middleTheta) + y],
-             ["L", (r * 0.1) * Math.cos(middleTheta) + (r * 0.9) * Math.cos(startTheta) + x, (r * 0.1) * Math.sin(middleTheta) + (r * 0.9) * Math.sin(startTheta) + y],
-             ["A", (r * innerRadiusPercent), (r * innerRadiusPercent), 0, 0, 1, (r * 0.1) * Math.cos(middleTheta) + (r * 0.9) * Math.cos(endTheta) + x, (r * 0.1) * Math.sin(middleTheta) + (r * 0.9) * Math.sin(endTheta) + y],
-             ["z"],
-             ["M", (r * 1.1) * Math.cos(startTheta) + x, (r * 1.1) * Math.sin(startTheta) + y],
-             ["A", (r * 1.1), (r * 1.1), 0, 0, 1, (r * 1.1) * Math.cos(endTheta) + x, (r * 1.1) * Math.sin(endTheta) + y],
-             ["A", (r * 1.1), (r * 1.1), 0, 0, 0, (r * 1.1) * Math.cos(startTheta) + x, (r * 1.1) * Math.sin(startTheta) + y]];
+        slicePathString = [["M", (r * 0.07) * Math.cos(middleTheta) + x, (r * 0.07) * Math.sin(middleTheta) + y],
+             ["L", (r * 0.07) * Math.cos(middleTheta) + (r * 0.87) * Math.cos(startTheta) + x, (r * 0.07) * Math.sin(middleTheta) + (r * 0.87) * Math.sin(startTheta) + y],
+             ["A", (r * innerRadiusPercent), (r * innerRadiusPercent), 0, 0, 1, (r * 0.07) * Math.cos(middleTheta) + (r * 0.87) * Math.cos(endTheta) + x, (r * 0.07) * Math.sin(middleTheta) + (r * 0.87) * Math.sin(endTheta) + y],
+             ["z"]];
+
+        linePathString = [["M", r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
+             ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
+             ["A", r, r, 0, 0, 0, r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y]];
 
         helper.setTitlePos(x, y);
 
         return {
             slicePathString: slicePathString,
-            linePathString: "",
+            linePathString: linePathString,
             titlePosX: helper.titlePosX,
             titlePosY: helper.titlePosY
         };
