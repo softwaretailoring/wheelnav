@@ -361,8 +361,8 @@ wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
     if (this.wheelnav.clickModeRotate === false ||
         this.wheelnav.animateLocked === false) {
         if (isEnter && hovered !== this.wheelnav.currentClick) {
-            this.navSlice.attr(this.sliceHoverAttr);
-            this.navTitle.attr(this.titleHoverAttr);
+            this.navSlice.attr(this.sliceHoverAttr).toFront();
+            this.navTitle.attr(this.titleHoverAttr).toFront();
             this.navLine.attr(this.lineHoverAttr);
             if (this.navClickableSlice !== null) { this.navClickableSlice.attr(this.sliceClickableHoverAttr); }
             this.hovered = true;
@@ -371,8 +371,8 @@ wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
             this.hovered = false;
 
             if (this.selected) {
-                this.navSlice.attr(this.sliceSelectedAttr);
-                this.navTitle.attr(this.titleSelectedAttr);
+                this.navSlice.attr(this.sliceSelectedAttr).toFront();
+                this.navTitle.attr(this.titleSelectedAttr).toFront();
                 this.navLine.attr(this.lineSelectedAttr);
                 if (this.navClickableSlice !== null) { this.navClickableSlice.attr(this.sliceClickableSelectedAttr); }
             }
