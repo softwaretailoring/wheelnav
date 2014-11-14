@@ -1,4 +1,13 @@
-## 1.2.0
+## 1.3.0
+
+* New wheelnav, navItem properties: clickablePercentMin, clickablePercentMax, sliceClickablePathFunction
+* Refactor navItem.fillAttr for proper gradients
+* Optimize slicePaths for customization
+* New parameters in wheelnav constructor: divWidth, divHeight
+* New wheelnav property: cssMode, implement css handling
+* Switch to custom raphael.min.js (because of css handling)
+
+### 1.2.0
 
 * Removal of lag between slices under rotation and hover
 * New wheelnav properties: rotateRound, navItemsEnabled
