@@ -389,6 +389,8 @@ wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
             this.sliceHoverTransformFunction !== null) {
             this.setCurrentTransform(this.wheelnav.animateRepeatCount);
         }
+
+        this.wheelnav.spreader.setVisibility();
     }
 };
 

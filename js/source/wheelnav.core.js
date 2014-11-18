@@ -1,5 +1,5 @@
 ﻿/* ======================================================================================= */
-/*                                   wheelnav.js - v1.3.0                                  */
+/*                                   wheelnav.js - v1.3.1                                  */
 /* ======================================================================================= */
 /* This is a small javascript library for animated SVG based wheel navigation.             */
 /* Requires Raphaël JavaScript Vector Library (http://raphaeljs.com)                       */
@@ -189,8 +189,6 @@ wheelnav.prototype.initWheel = function (titles) {
         colorIndex++;
         if (colorIndex === this.colors.length) { colorIndex = 0;}
     }
-
-    this.spreader = new spreader(this);
 };
 
 wheelnav.prototype.createWheel = function (titles, withSpread) {
@@ -209,6 +207,8 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
     for (i = 0; i < this.navItemCount; i++) {
         this.navItems[i].createNavItem();
     }
+
+    this.spreader = new spreader(this);
 
     if (withSpread !== undefined) {
         this.navItems[0].selected = true;
