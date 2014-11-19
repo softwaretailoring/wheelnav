@@ -99,17 +99,17 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
         this.lineSelectedAttr = { stroke: "#111", "stroke-width": 4, cursor: 'default' };
     }
     else {
-        this.slicePathAttr = { "class": this.wheelnav.getSliceId(this.wheelItemIndex) };
-        this.sliceHoverAttr = { "class": this.wheelnav.getSliceId(this.wheelItemIndex) + "-hover" };
-        this.sliceSelectedAttr = { "class": this.wheelnav.getSliceId(this.wheelItemIndex) + "-selected" };
+        this.slicePathAttr = { "class": this.wheelnav.getSliceCssClass(this.wheelItemIndex, "basic") };
+        this.sliceHoverAttr = { "class": this.wheelnav.getSliceCssClass(this.wheelItemIndex, "hover") };
+        this.sliceSelectedAttr = { "class": this.wheelnav.getSliceCssClass(this.wheelItemIndex, "selected") };
 
-        this.titleAttr = { "class": this.wheelnav.getTitleId(this.wheelItemIndex) };
-        this.titleHoverAttr = { "class": this.wheelnav.getTitleId(this.wheelItemIndex) + "-hover" };
-        this.titleSelectedAttr = { "class": this.wheelnav.getTitleId(this.wheelItemIndex) + "-selected" };
+        this.titleAttr = { "class": this.wheelnav.getTitleCssClass(this.wheelItemIndex, "basic") };
+        this.titleHoverAttr = { "class": this.wheelnav.getTitleCssClass(this.wheelItemIndex, "hover") };
+        this.titleSelectedAttr = { "class": this.wheelnav.getTitleCssClass(this.wheelItemIndex, "selected") };
 
-        this.linePathAttr = { "class": this.wheelnav.getLineId(this.wheelItemIndex) };
-        this.lineHoverAttr = { "class": this.wheelnav.getLineId(this.wheelItemIndex) + "-hover" };
-        this.lineSelectedAttr = { "class": this.wheelnav.getLineId(this.wheelItemIndex) + "-selected" };
+        this.linePathAttr = { "class": this.wheelnav.getLineCssClass(this.wheelItemIndex, "basic") };
+        this.lineHoverAttr = { "class": this.wheelnav.getLineCssClass(this.wheelItemIndex, "hover") };
+        this.lineSelectedAttr = { "class": this.wheelnav.getLineCssClass(this.wheelItemIndex, "selected") };
     }
 
     this.sliceClickablePathAttr = { fill: "#FFF", stroke: "#FFF", "stroke-width": 0, cursor: 'pointer', "fill-opacity": 0.01 };

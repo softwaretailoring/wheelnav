@@ -415,6 +415,15 @@ wheelnav.prototype.getTitleId = function (index) {
 wheelnav.prototype.getLineId = function (index) {
     return "wheelnav-" + this.holderId + "-line-" + index;
 };
+wheelnav.prototype.getSliceCssClass = function (index, subclass) {
+    return "wheelnav-" + this.holderId + "-slice-" + subclass + "-" + index;
+};
+wheelnav.prototype.getTitleCssClass = function (index, subclass) {
+    return "wheelnav-" + this.holderId + "-title-" + subclass + "-" + index;
+};
+wheelnav.prototype.getLineCssClass = function (index, subclass) {
+    return "wheelnav-" + this.holderId + "-line-" + subclass + "-" + index;
+};
 wheelnav.prototype.getSpreaderId = function () {
     return "wheelnav-" + this.holderId + "-spreader";
 };
