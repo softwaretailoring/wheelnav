@@ -1,4 +1,11 @@
-## 1.3.0
+## 1.3.1
+
+* Fix spreader Attrs handling and visibility
+* Fix names of css classes for proper css selector using
+* Fix hoverEffect issue in IE
+* Fix path issue with d="M,0,0" (in custom raphael)
+
+### 1.3.0
 
 * New wheelnav, navItem properties: clickablePercentMin, clickablePercentMax, sliceClickablePathFunction
 * Refactor navItem.fillAttr for proper gradients
