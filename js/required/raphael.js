@@ -5799,7 +5799,10 @@
                     el.setAttributeNS(xlink, key.substring(6), Str(attr[key]));
                 } else {
                     if (el !== undefined) {
-                        el.setAttribute(key, Str(attr[key]));
+                        var elValue = Str(attr[key]);
+                        if (key !== "d" || key === "d" && elValue !== "M,0,0") {
+                            el.setAttribute(key, elValue);
+                        }
                     }
                 }
             }
