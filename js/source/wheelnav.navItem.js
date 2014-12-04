@@ -275,6 +275,12 @@ wheelnavItem.prototype.createNavItem = function () {
     this.navSlice.id = this.wheelnav.getSliceId(this.wheelItemIndex);
     this.navSlice.node.id = this.navSlice.id;
 
+    //Create linepath
+    this.navLine = this.wheelnav.raphael.path(slicePath.linePathString);
+    this.navLine.attr(this.linePathAttr);
+    this.navLine.id = this.wheelnav.getLineId(this.wheelItemIndex);
+    this.navLine.node.id = this.navLine.id;
+
     //Create title
     //Title defined by path
     if (this.isPathTitle()) {
@@ -294,12 +300,6 @@ wheelnavItem.prototype.createNavItem = function () {
 
     var titleRotateString = this.getTitleRotateString();
     this.navTitle.attr({ transform: titleRotateString });
-
-    //Create linepath
-    this.navLine = this.wheelnav.raphael.path(slicePath.linePathString).toBack();
-    this.navLine.attr(this.linePathAttr);
-    this.navLine.id = this.wheelnav.getLineId(this.wheelItemIndex);
-    this.navLine.node.id = this.navLine.id;
 
     //Create item set
     this.navItem = this.wheelnav.raphael.set();
@@ -322,15 +322,15 @@ wheelnavItem.prototype.createNavItem = function () {
         this.navItem.push(
             this.navClickableSlice,
             this.navSlice,
-            this.navTitle,
-            this.navLine
+            this.navLine,
+            this.navTitle
         );
     }
     else {
         this.navItem.push(
             this.navSlice,
-            this.navTitle,
-            this.navLine
+            this.navLine,
+            this.navTitle
         );
     }
 
@@ -367,22 +367,22 @@ wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
         if (isEnter) {
             if (hovered !== this.wheelnav.currentClick) {
                 this.navSlice.attr(this.sliceHoverAttr).toFront();
+                this.navLine.attr(this.lineHoverAttr).toFront();
                 this.navTitle.attr(this.titleHoverAttr).toFront();
-                this.navLine.attr(this.lineHoverAttr);
                 if (this.navClickableSlice !== null) { this.navClickableSlice.attr(this.sliceClickableHoverAttr); }
             }
         }
         else {
             if (this.selected) {
                 this.navSlice.attr(this.sliceSelectedAttr).toFront();
+                this.navLine.attr(this.lineSelectedAttr).toFront();
                 this.navTitle.attr(this.titleSelectedAttr).toFront();
-                this.navLine.attr(this.lineSelectedAttr);
                 if (this.navClickableSlice !== null) { this.navClickableSlice.attr(this.sliceClickableSelectedAttr); }
             }
             else {
                 this.navSlice.attr(this.slicePathAttr);
-                this.navTitle.attr(this.titleAttr);
                 this.navLine.attr(this.linePathAttr);
+                this.navTitle.attr(this.titleAttr);
                 if (this.navClickableSlice !== null) { this.navClickableSlice.attr(this.sliceClickablePathAttr); }
             }
         }

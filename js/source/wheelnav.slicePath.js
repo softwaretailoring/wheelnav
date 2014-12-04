@@ -291,7 +291,6 @@ var slicePath = function () {
         };
     };
 
-
     this.MenuSliceCustomization = function () {
 
         var custom = new slicePathCustomization();
@@ -378,57 +377,6 @@ var slicePath = function () {
             linePathString: "",
             titlePosX: slicePath.titlePosX,
             titlePosY: slicePath.titlePosY
-        };
-    };
-
-    this.MenuSquareSliceCustomization = function () {
-
-        var custom = new slicePathCustomization();
-        custom.menuRadius = 30;
-        custom.titleRadiusPercent = 0.63;
-
-        return custom;
-    };
-
-    this.MenuSquareSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom) {
-
-        if (custom === null) {
-            custom = MenuSquareSliceCustomization();
-        }
-
-        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom);
-
-        r = helper.sliceRadius;
-        helper.titleRadius = r * custom.titleRadiusPercent;
-        helper.setTitlePos(x, y);
-
-        var menuRadius = percent * custom.menuRadius;
-
-        if (percent <= 0.05) { menuRadius = 10; }
-
-        slicePathString = [["M", helper.titlePosX + menuRadius, helper.titlePosY + menuRadius],
-                    ["L", helper.titlePosX - menuRadius, helper.titlePosY + menuRadius],
-                    ["L", helper.titlePosX - menuRadius, helper.titlePosY - menuRadius],
-                    ["L", helper.titlePosX + menuRadius, helper.titlePosY - menuRadius],
-                    ["z"]];
-
-        if (percent <= 0.05) {
-            linePathString = [["M", x, y],
-                    ["A", 1, 1, 0, 0, 1, x + 1, y + 1]];
-        }
-        else {
-            lineEndX = helper.titleRadius - menuRadius;
-            lineEndY = helper.titleRadius - menuRadius;
-
-            linePathString = [["M", x, y],
-                        ["L", helper.titlePosX, helper.titlePosY]];
-        }
-
-        return {
-            slicePathString: slicePathString,
-            linePathString: linePathString,
-            titlePosX: helper.titlePosX,
-            titlePosY: helper.titlePosY
         };
     };
 

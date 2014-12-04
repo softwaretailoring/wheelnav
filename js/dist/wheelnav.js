@@ -1,6 +1,6 @@
 ///#source 1 1 /js/source/wheelnav.core.js
 /* ======================================================================================= */
-/*                                   wheelnav.js - v1.3.1                                  */
+/*                                   wheelnav.js - v1.4.0                                  */
 /* ======================================================================================= */
 /* This is a small javascript library for animated SVG based wheel navigation.             */
 /* Requires Raphaël JavaScript Vector Library (http://raphaeljs.com)                       */
@@ -249,29 +249,30 @@ wheelnav.prototype.refreshWheel = function (selectedToFront) {
 
         if (navItem.selected) {
             navItem.navSlice.attr(navItem.sliceSelectedAttr);
-            navItem.navTitle.attr(navItem.titleSelectedAttr);
             navItem.navLine.attr(navItem.lineSelectedAttr);
+            navItem.navTitle.attr(navItem.titleSelectedAttr);
 
             if (selectedToFront !== undefined) {
                 if (selectedToFront) {
                     navItem.navSlice.toFront();
+                    navItem.navLine.toFront();
                     navItem.navTitle.toFront();
                 }
                 else {
                     navItem.navTitle.toBack();
+                    navItem.navLine.toBack();
                     navItem.navSlice.toBack();
                 }
             }
-
         }
         else {
             navItem.navSlice.attr(navItem.slicePathAttr);
-            navItem.navTitle.attr(navItem.titleAttr);
             navItem.navLine.attr(navItem.linePathAttr);
+            navItem.navTitle.attr(navItem.titleAttr);
 
             navItem.navTitle.toBack();
-            navItem.navSlice.toBack();
             navItem.navLine.toBack();
+            navItem.navSlice.toBack();
         }
     }
 
@@ -714,6 +715,12 @@ wheelnavItem.prototype.createNavItem = function () {
     this.navSlice.id = this.wheelnav.getSliceId(this.wheelItemIndex);
     this.navSlice.node.id = this.navSlice.id;
 
+    //Create linepath
+    this.navLine = this.wheelnav.raphael.path(slicePath.linePathString);
+    this.navLine.attr(this.linePathAttr);
+    this.navLine.id = this.wheelnav.getLineId(this.wheelItemIndex);
+    this.navLine.node.id = this.navLine.id;
+
     //Create title
     //Title defined by path
     if (this.isPathTitle()) {
@@ -733,12 +740,6 @@ wheelnavItem.prototype.createNavItem = function () {
 
     var titleRotateString = this.getTitleRotateString();
     this.navTitle.attr({ transform: titleRotateString });
-
-    //Create linepath
-    this.navLine = this.wheelnav.raphael.path(slicePath.linePathString).toBack();
-    this.navLine.attr(this.linePathAttr);
-    this.navLine.id = this.wheelnav.getLineId(this.wheelItemIndex);
-    this.navLine.node.id = this.navLine.id;
 
     //Create item set
     this.navItem = this.wheelnav.raphael.set();
@@ -761,15 +762,15 @@ wheelnavItem.prototype.createNavItem = function () {
         this.navItem.push(
             this.navClickableSlice,
             this.navSlice,
-            this.navTitle,
-            this.navLine
+            this.navLine,
+            this.navTitle
         );
     }
     else {
         this.navItem.push(
             this.navSlice,
-            this.navTitle,
-            this.navLine
+            this.navLine,
+            this.navTitle
         );
     }
 
@@ -806,22 +807,22 @@ wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
         if (isEnter) {
             if (hovered !== this.wheelnav.currentClick) {
                 this.navSlice.attr(this.sliceHoverAttr).toFront();
+                this.navLine.attr(this.lineHoverAttr).toFront();
                 this.navTitle.attr(this.titleHoverAttr).toFront();
-                this.navLine.attr(this.lineHoverAttr);
                 if (this.navClickableSlice !== null) { this.navClickableSlice.attr(this.sliceClickableHoverAttr); }
             }
         }
         else {
             if (this.selected) {
                 this.navSlice.attr(this.sliceSelectedAttr).toFront();
+                this.navLine.attr(this.lineSelectedAttr).toFront();
                 this.navTitle.attr(this.titleSelectedAttr).toFront();
-                this.navLine.attr(this.lineSelectedAttr);
                 if (this.navClickableSlice !== null) { this.navClickableSlice.attr(this.sliceClickableSelectedAttr); }
             }
             else {
                 this.navSlice.attr(this.slicePathAttr);
-                this.navTitle.attr(this.titleAttr);
                 this.navLine.attr(this.linePathAttr);
+                this.navTitle.attr(this.titleAttr);
                 if (this.navClickableSlice !== null) { this.navClickableSlice.attr(this.sliceClickablePathAttr); }
             }
         }
@@ -1517,7 +1518,6 @@ var slicePath = function () {
         };
     };
 
-
     this.MenuSliceCustomization = function () {
 
         var custom = new slicePathCustomization();
@@ -1604,57 +1604,6 @@ var slicePath = function () {
             linePathString: "",
             titlePosX: slicePath.titlePosX,
             titlePosY: slicePath.titlePosY
-        };
-    };
-
-    this.MenuSquareSliceCustomization = function () {
-
-        var custom = new slicePathCustomization();
-        custom.menuRadius = 30;
-        custom.titleRadiusPercent = 0.63;
-
-        return custom;
-    };
-
-    this.MenuSquareSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom) {
-
-        if (custom === null) {
-            custom = MenuSquareSliceCustomization();
-        }
-
-        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom);
-
-        r = helper.sliceRadius;
-        helper.titleRadius = r * custom.titleRadiusPercent;
-        helper.setTitlePos(x, y);
-
-        var menuRadius = percent * custom.menuRadius;
-
-        if (percent <= 0.05) { menuRadius = 10; }
-
-        slicePathString = [["M", helper.titlePosX + menuRadius, helper.titlePosY + menuRadius],
-                    ["L", helper.titlePosX - menuRadius, helper.titlePosY + menuRadius],
-                    ["L", helper.titlePosX - menuRadius, helper.titlePosY - menuRadius],
-                    ["L", helper.titlePosX + menuRadius, helper.titlePosY - menuRadius],
-                    ["z"]];
-
-        if (percent <= 0.05) {
-            linePathString = [["M", x, y],
-                    ["A", 1, 1, 0, 0, 1, x + 1, y + 1]];
-        }
-        else {
-            lineEndX = helper.titleRadius - menuRadius;
-            lineEndY = helper.titleRadius - menuRadius;
-
-            linePathString = [["M", x, y],
-                        ["L", helper.titlePosX, helper.titlePosY]];
-        }
-
-        return {
-            slicePathString: slicePathString,
-            linePathString: linePathString,
-            titlePosX: helper.titlePosX,
-            titlePosY: helper.titlePosY
         };
     };
 

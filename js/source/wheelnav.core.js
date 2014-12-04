@@ -1,5 +1,5 @@
 ﻿/* ======================================================================================= */
-/*                                   wheelnav.js - v1.3.1                                  */
+/*                                   wheelnav.js - v1.4.0                                  */
 /* ======================================================================================= */
 /* This is a small javascript library for animated SVG based wheel navigation.             */
 /* Requires Raphaël JavaScript Vector Library (http://raphaeljs.com)                       */
@@ -248,29 +248,30 @@ wheelnav.prototype.refreshWheel = function (selectedToFront) {
 
         if (navItem.selected) {
             navItem.navSlice.attr(navItem.sliceSelectedAttr);
-            navItem.navTitle.attr(navItem.titleSelectedAttr);
             navItem.navLine.attr(navItem.lineSelectedAttr);
+            navItem.navTitle.attr(navItem.titleSelectedAttr);
 
             if (selectedToFront !== undefined) {
                 if (selectedToFront) {
                     navItem.navSlice.toFront();
+                    navItem.navLine.toFront();
                     navItem.navTitle.toFront();
                 }
                 else {
                     navItem.navTitle.toBack();
+                    navItem.navLine.toBack();
                     navItem.navSlice.toBack();
                 }
             }
-
         }
         else {
             navItem.navSlice.attr(navItem.slicePathAttr);
-            navItem.navTitle.attr(navItem.titleAttr);
             navItem.navLine.attr(navItem.linePathAttr);
+            navItem.navTitle.attr(navItem.titleAttr);
 
             navItem.navTitle.toBack();
-            navItem.navSlice.toBack();
             navItem.navLine.toBack();
+            navItem.navSlice.toBack();
         }
     }
 
