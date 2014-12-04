@@ -404,6 +404,17 @@ wheelnav.prototype.animateUnlock = function (force) {
     }
 };
 
+wheelnav.prototype.setTooltips = function (tooltips) {
+    if (tooltips !== undefined &&
+        tooltips !== null &&
+        Array.isArray(tooltips) &&
+        tooltips.length <= this.navItems.length) {
+        for (var i = 0; i < tooltips.length; i++) {
+            this.navItems[i].setTooltip(tooltips[i]);
+        }
+    }
+};
+
 wheelnav.prototype.getItemId = function (index) {
     return "wheelnav-" + this.holderId + "-item-" + index;
 };

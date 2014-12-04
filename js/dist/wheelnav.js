@@ -405,6 +405,17 @@ wheelnav.prototype.animateUnlock = function (force) {
     }
 };
 
+wheelnav.prototype.setTooltips = function (tooltips) {
+    if (tooltips !== undefined &&
+        tooltips !== null &&
+        Array.isArray(tooltips) &&
+        tooltips.length <= this.navItems.length) {
+        for (var i = 0; i < tooltips.length; i++) {
+            this.navItems[i].setTooltip(tooltips[i]);
+        }
+    }
+};
+
 wheelnav.prototype.getItemId = function (index) {
     return "wheelnav-" + this.holderId + "-item-" + index;
 };
@@ -774,9 +785,7 @@ wheelnavItem.prototype.createNavItem = function () {
         );
     }
 
-    if (this.tooltip !== null) {
-        this.navItem.attr({ title: this.tooltip });
-    }
+    this.setTooltip(this.tooltip);
     this.navItem.id = this.wheelnav.getItemId(this.wheelItemIndex);
 
     var thisWheelNav = this.wheelnav;
@@ -1026,6 +1035,12 @@ wheelnavItem.prototype.setCurrentTransform = function (animateRepeatCount, locke
                 this.navClickableSlice.animate(this.animClickableSlice.repeat(animateRepeatCount));
             }
         }
+    }
+};
+
+wheelnavItem.prototype.setTooltip = function (tooltip) {
+    if (tooltip !== null) {
+        this.navItem.attr({ title: tooltip });
     }
 };
 
