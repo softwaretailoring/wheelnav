@@ -71,6 +71,7 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     this.clickablePercentMax = 1;
     this.currentPercent = null;
     this.cssMode = false;
+    this.selectedToFront = true;
 
     this.navItemCount = 0;
     this.navItemCountLabeled = false;
@@ -222,7 +223,7 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
     return this;
 };
 
-wheelnav.prototype.refreshWheel = function (selectedToFront) {
+wheelnav.prototype.refreshWheel = function (withPathAndTransform) {
 
     for (i = 0; i < this.navItemCount; i++) {
 
@@ -247,39 +248,13 @@ wheelnav.prototype.refreshWheel = function (selectedToFront) {
         if (this.animateeffect !== null) { navItem.animateeffect = this.animateeffect; }
         if (this.animatetime !== null) { navItem.animatetime = this.animatetime; }
 
-        if (navItem.selected) {
-            navItem.navSlice.attr(navItem.sliceSelectedAttr);
-            navItem.navLine.attr(navItem.lineSelectedAttr);
-            navItem.navTitle.attr(navItem.titleSelectedAttr);
-
-            if (selectedToFront !== undefined) {
-                if (selectedToFront) {
-                    navItem.navSlice.toFront();
-                    navItem.navLine.toFront();
-                    navItem.navTitle.toFront();
-                }
-                else {
-                    navItem.navTitle.toBack();
-                    navItem.navLine.toBack();
-                    navItem.navSlice.toBack();
-                }
-            }
-        }
-        else {
-            navItem.navSlice.attr(navItem.slicePathAttr);
-            navItem.navLine.attr(navItem.linePathAttr);
-            navItem.navTitle.attr(navItem.titleAttr);
-
-            navItem.navTitle.toBack();
-            navItem.navLine.toBack();
-            navItem.navSlice.toBack();
-        }
+        navItem.refreshNavItem(withPathAndTransform);
     }
 
     this.spreader.setVisibility();
 };
 
-wheelnav.prototype.navigateWheel = function (clicked, selectedToFront) {
+wheelnav.prototype.navigateWheel = function (clicked) {
 
     this.animateUnlock(true);
 
@@ -339,6 +314,7 @@ wheelnav.prototype.navigateWheel = function (clicked, selectedToFront) {
     for (i = 0; i < this.navItemCount; i++) {
         navItem = this.navItems[i];
         navItem.setCurrentTransform(this.animateRepeatCount, true);
+        navItem.refreshNavItem();
     }
 
     this.currentClick = clicked;
@@ -346,8 +322,6 @@ wheelnav.prototype.navigateWheel = function (clicked, selectedToFront) {
     if (this.clickModeSpreadOff) {
         this.spreadWheel();
     }
-
-    this.refreshWheel(selectedToFront);
 };
 
 wheelnav.prototype.spreadWheel = function () {
@@ -499,37 +473,8 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     this.clickablePercentMin = wheelnav.clickablePercentMin;
     this.clickablePercentMax = wheelnav.clickablePercentMax;
 
-    this.slicePathCustom = wheelnav.slicePathCustom;
-    this.sliceSelectedPathCustom = wheelnav.sliceSelectedPathCustom;
-    this.sliceHoverPathCustom = wheelnav.sliceHoverPathCustom;
-
-    this.sliceTransformCustom = wheelnav.sliceTransformCustom; 
-    this.sliceSelectedTransformCustom = wheelnav.sliceSelectedTransformCustom;
-    this.sliceHoverTransformCustom = wheelnav.sliceHoverTransformCustom;
-
     if (wheelnav.sliceAngle === null) { this.sliceAngle = 360 / wheelnav.navItemCount; }
     else { this.sliceAngle = wheelnav.sliceAngle;}
-
-    if (title !== null) {
-        this.sliceClickablePathFunction = wheelnav.sliceClickablePathFunction;
-        this.slicePathFunction = wheelnav.slicePathFunction;
-        this.sliceSelectedPathFunction = wheelnav.sliceSelectedPathFunction;
-        this.sliceHoverPathFunction = wheelnav.sliceHoverPathFunction;
-
-        this.sliceTransformFunction = wheelnav.sliceTransformFunction;
-        this.sliceSelectedTransformFunction = wheelnav.sliceSelectedTransformFunction;
-        this.sliceHoverTransformFunction = wheelnav.sliceHoverTransformFunction;
-    }
-    else {
-        this.title = "";
-        this.sliceClickablePathFunction = slicePath().NullSlice;
-        this.slicePathFunction = slicePath().NullSlice;
-        this.sliceSelectedPathFunction = null;
-        this.sliceHoverPathFunction = null;
-        this.sliceTransformFunction = null;
-        this.sliceSelectedTransformFunction = null;
-        this.sliceHoverTransformFunction = null;
-    }
 
     this.fillAttr = "#CCC";
 
@@ -643,80 +588,7 @@ wheelnavItem.prototype.createNavItem = function () {
         this.animatetime = this.wheelnav.animatetime / this.wheelnav.navItemCount;
     }
 
-    //Set min/max sliecePaths
-    //Default - min
-    if (this.slicePathMin === undefined) {
-        this.slicePathMin = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.minPercent, this.slicePathCustom);
-    }
-    //Default - max
-    if (this.slicePathMax === undefined) {
-        this.slicePathMax = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.maxPercent, this.slicePathCustom);
-    }
-    //Selected - min
-    if (this.selectedSlicePathMin === undefined) {
-        if (this.sliceSelectedPathFunction !== null) {
-            this.selectedSlicePathMin = this.sliceSelectedPathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.selectedPercent * this.minPercent, this.sliceSelectedPathCustom);
-        }
-        else {
-            this.selectedSlicePathMin = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.selectedPercent * this.minPercent, this.sliceSelectedPathCustom);
-        }
-    }
-    //Selected - max
-    if (this.selectedSlicePathMax === undefined) {
-        if (this.sliceSelectedPathFunction !== null) {
-            this.selectedSlicePathMax = this.sliceSelectedPathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.selectedPercent * this.maxPercent, this.sliceSelectedPathCustom);
-        }
-        else {
-            this.selectedSlicePathMax = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.selectedPercent * this.maxPercent, this.sliceSelectedPathCustom);
-        }
-    }
-    //Hovered - min
-    if (this.hoverSlicePathMin === undefined) {
-        if (this.sliceHoverPathFunction !== null) {
-            this.hoverSlicePathMin = this.sliceHoverPathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.hoverPercent * this.minPercent, this.sliceHoverPathCustom);
-        }
-        else {
-            this.hoverSlicePathMin = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.hoverPercent * this.minPercent, this.sliceHoverPathCustom);
-        }
-    }
-    //Hovered - max
-    if (this.hoverSlicePathMax === undefined) {
-        if (this.sliceHoverPathFunction !== null) {
-            this.hoverSlicePathMax = this.sliceHoverPathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.hoverPercent * this.maxPercent, this.sliceHoverPathCustom);
-        }
-        else {
-            this.hoverSlicePathMax = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.hoverPercent * this.maxPercent, this.sliceHoverPathCustom);
-        }
-    }
-
-    //Set sliceTransforms
-    //Default
-    if (this.sliceTransform === undefined) {
-        if (this.sliceTransformFunction !== null) {
-            this.sliceTransform = this.sliceTransformFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.wheelnav.titleRotateAngle, this.itemIndex, this.sliceTransformCustom);
-        }
-        else {
-            this.sliceTransform = sliceTransform().NullTransform;
-        }
-    }
-    //Selected
-    if (this.selectTransform === undefined) {
-        if (this.sliceSelectedTransformFunction !== null) {
-            this.selectTransform = this.sliceSelectedTransformFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.wheelnav.titleRotateAngle, this.itemIndex, this.sliceSelectedTransformCustom);
-        }
-        else {
-            this.selectTransform = sliceTransform().NullTransform;
-        }
-    }
-    //Hovered
-    if (this.hoverTransform === undefined) {
-        if (this.sliceHoverTransformFunction !== null) {
-            this.hoverTransform = this.sliceHoverTransformFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.wheelnav.titleRotateAngle, this.itemIndex, this.sliceHoverTransformCustom);
-        }
-        else {
-            this.hoverTransform = sliceTransform().NullTransform;
-        }
-    }
+    this.initPathsAndTransforms();
 
     var slicePath = this.getCurrentPath();
 
@@ -756,16 +628,6 @@ wheelnavItem.prototype.createNavItem = function () {
     this.navItem = this.wheelnav.raphael.set();
 
     if (this.clickablePercentMax > 0) {
-        //Set min/max sliececlickablePaths
-        //Default - min
-        if (this.clickableSlicePathMin === undefined) {
-            this.clickableSlicePathMin = this.sliceClickablePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.clickablePercentMin, this.slicePathCustom);
-        }
-        //Default - max
-        if (this.clickableSlicePathMax === undefined) {
-            this.clickableSlicePathMax = this.sliceClickablePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.clickablePercentMax, this.slicePathCustom);
-        }
-
         //Create clickable slice
         var sliceClickablePath = this.getCurrentClickablePath();
         this.navClickableSlice = this.wheelnav.raphael.path(sliceClickablePath.slicePathString).attr(this.sliceClickablePathAttr).toBack();
@@ -819,21 +681,12 @@ wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
                 this.navLine.attr(this.lineHoverAttr).toFront();
                 this.navTitle.attr(this.titleHoverAttr).toFront();
                 if (this.navClickableSlice !== null) { this.navClickableSlice.attr(this.sliceClickableHoverAttr); }
+
+                this.wheelnav.spreader.setVisibility();
             }
         }
         else {
-            if (this.selected) {
-                this.navSlice.attr(this.sliceSelectedAttr).toFront();
-                this.navLine.attr(this.lineSelectedAttr).toFront();
-                this.navTitle.attr(this.titleSelectedAttr).toFront();
-                if (this.navClickableSlice !== null) { this.navClickableSlice.attr(this.sliceClickableSelectedAttr); }
-            }
-            else {
-                this.navSlice.attr(this.slicePathAttr);
-                this.navLine.attr(this.linePathAttr);
-                this.navTitle.attr(this.titleAttr);
-                if (this.navClickableSlice !== null) { this.navClickableSlice.attr(this.sliceClickablePathAttr); }
-            }
+            this.refreshNavItem();
         }
 
         if (this.hoverPercent !== 1 ||
@@ -841,8 +694,6 @@ wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
             this.sliceHoverTransformFunction !== null) {
             this.setCurrentTransform(this.wheelnav.animateRepeatCount);
         }
-
-        this.wheelnav.spreader.setVisibility();
     }
 };
 
@@ -1041,6 +892,150 @@ wheelnavItem.prototype.setCurrentTransform = function (animateRepeatCount, locke
 wheelnavItem.prototype.setTooltip = function (tooltip) {
     if (tooltip !== null) {
         this.navItem.attr({ title: tooltip });
+    }
+};
+
+wheelnavItem.prototype.refreshNavItem = function (withPathAndTransform) {
+
+    if (this.selected) {
+        this.navSlice.attr(this.sliceSelectedAttr);
+        this.navLine.attr(this.lineSelectedAttr);
+        this.navTitle.attr(this.titleSelectedAttr);
+        if (this.navClickableSlice !== null) { this.navClickableSlice.attr(this.sliceClickableSelectedAttr); }
+
+        if (this.wheelnav.selectedToFront) {
+            this.navSlice.toFront();
+            this.navLine.toFront();
+            this.navTitle.toFront();
+        }
+        else {
+            this.navTitle.toBack();
+            this.navLine.toBack();
+            this.navSlice.toBack();
+        }
+    }
+    else {
+        this.navSlice.attr(this.slicePathAttr);
+        this.navLine.attr(this.linePathAttr);
+        this.navTitle.attr(this.titleAttr);
+        if (this.navClickableSlice !== null) { this.navClickableSlice.attr(this.sliceClickablePathAttr); }
+
+        this.navTitle.toBack();
+        this.navLine.toBack();
+        this.navSlice.toBack();
+    }
+
+    if (withPathAndTransform !== undefined &&
+        withPathAndTransform === true) {
+        this.initPathsAndTransforms();
+        this.setCurrentTransform(this.wheelnav.animateRepeatCount);
+    }
+
+    this.wheelnav.spreader.setVisibility();
+};
+
+wheelnavItem.prototype.initPathsAndTransforms = function () {
+
+    if (this.title !== null) {
+        this.sliceClickablePathFunction = this.wheelnav.sliceClickablePathFunction;
+        this.slicePathFunction = this.wheelnav.slicePathFunction;
+        this.sliceSelectedPathFunction = this.wheelnav.sliceSelectedPathFunction;
+        this.sliceHoverPathFunction = this.wheelnav.sliceHoverPathFunction;
+
+        this.sliceTransformFunction = this.wheelnav.sliceTransformFunction;
+        this.sliceSelectedTransformFunction = this.wheelnav.sliceSelectedTransformFunction;
+        this.sliceHoverTransformFunction = this.wheelnav.sliceHoverTransformFunction;
+    }
+    else {
+        this.title = "";
+        this.sliceClickablePathFunction = slicePath().NullSlice;
+        this.slicePathFunction = slicePath().NullSlice;
+        this.sliceSelectedPathFunction = null;
+        this.sliceHoverPathFunction = null;
+        this.sliceTransformFunction = null;
+        this.sliceSelectedTransformFunction = null;
+        this.sliceHoverTransformFunction = null;
+    }
+
+    this.slicePathCustom = this.wheelnav.slicePathCustom;
+    this.sliceSelectedPathCustom = this.wheelnav.sliceSelectedPathCustom;
+    this.sliceHoverPathCustom = this.wheelnav.sliceHoverPathCustom;
+
+    this.sliceTransformCustom = this.wheelnav.sliceTransformCustom;
+    this.sliceSelectedTransformCustom = this.wheelnav.sliceSelectedTransformCustom;
+    this.sliceHoverTransformCustom = this.wheelnav.sliceHoverTransformCustom;
+
+    //Set min/max sliecePaths
+    //Default - min
+     this.slicePathMin = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.minPercent, this.slicePathCustom);
+
+    //Default - max
+    this.slicePathMax = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.maxPercent, this.slicePathCustom);
+
+    //Selected - min
+    if (this.sliceSelectedPathFunction !== null) {
+        this.selectedSlicePathMin = this.sliceSelectedPathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.selectedPercent * this.minPercent, this.sliceSelectedPathCustom);
+    }
+    else {
+        this.selectedSlicePathMin = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.selectedPercent * this.minPercent, this.sliceSelectedPathCustom);
+    }
+
+    //Selected - max
+    if (this.sliceSelectedPathFunction !== null) {
+        this.selectedSlicePathMax = this.sliceSelectedPathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.selectedPercent * this.maxPercent, this.sliceSelectedPathCustom);
+    }
+    else {
+        this.selectedSlicePathMax = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.selectedPercent * this.maxPercent, this.sliceSelectedPathCustom);
+    }
+
+    //Hovered - min
+    if (this.sliceHoverPathFunction !== null) {
+        this.hoverSlicePathMin = this.sliceHoverPathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.hoverPercent * this.minPercent, this.sliceHoverPathCustom);
+    }
+    else {
+        this.hoverSlicePathMin = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.hoverPercent * this.minPercent, this.sliceHoverPathCustom);
+    }
+
+    //Hovered - max
+    if (this.sliceHoverPathFunction !== null) {
+        this.hoverSlicePathMax = this.sliceHoverPathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.hoverPercent * this.maxPercent, this.sliceHoverPathCustom);
+    }
+    else {
+        this.hoverSlicePathMax = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.hoverPercent * this.maxPercent, this.sliceHoverPathCustom);
+    }
+
+    //Set min/max sliececlickablePaths
+    
+    if (this.sliceClickablePathFunction !== null) {
+        //Default - min
+        this.clickableSlicePathMin = this.sliceClickablePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.clickablePercentMin, this.slicePathCustom);
+        //Default - max
+        this.clickableSlicePathMax = this.sliceClickablePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.clickablePercentMax, this.slicePathCustom);
+    }
+
+    //Set sliceTransforms
+    //Default
+    if (this.sliceTransformFunction !== null) {
+        this.sliceTransform = this.sliceTransformFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.wheelnav.titleRotateAngle, this.itemIndex, this.sliceTransformCustom);
+    }
+    else {
+        this.sliceTransform = sliceTransform().NullTransform;
+    }
+
+    //Selected
+    if (this.sliceSelectedTransformFunction !== null) {
+        this.selectTransform = this.sliceSelectedTransformFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.wheelnav.titleRotateAngle, this.itemIndex, this.sliceSelectedTransformCustom);
+    }
+    else {
+        this.selectTransform = sliceTransform().NullTransform;
+    }
+
+    //Hovered
+    if (this.sliceHoverTransformFunction !== null) {
+        this.hoverTransform = this.sliceHoverTransformFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.wheelnav.titleRotateAngle, this.itemIndex, this.sliceHoverTransformCustom);
+    }
+    else {
+        this.hoverTransform = sliceTransform().NullTransform;
     }
 };
 

@@ -70,6 +70,7 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     this.clickablePercentMax = 1;
     this.currentPercent = null;
     this.cssMode = false;
+    this.selectedToFront = true;
 
     this.navItemCount = 0;
     this.navItemCountLabeled = false;
@@ -221,7 +222,7 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
     return this;
 };
 
-wheelnav.prototype.refreshWheel = function (selectedToFront) {
+wheelnav.prototype.refreshWheel = function (withPathAndTransform) {
 
     for (i = 0; i < this.navItemCount; i++) {
 
@@ -246,39 +247,13 @@ wheelnav.prototype.refreshWheel = function (selectedToFront) {
         if (this.animateeffect !== null) { navItem.animateeffect = this.animateeffect; }
         if (this.animatetime !== null) { navItem.animatetime = this.animatetime; }
 
-        if (navItem.selected) {
-            navItem.navSlice.attr(navItem.sliceSelectedAttr);
-            navItem.navLine.attr(navItem.lineSelectedAttr);
-            navItem.navTitle.attr(navItem.titleSelectedAttr);
-
-            if (selectedToFront !== undefined) {
-                if (selectedToFront) {
-                    navItem.navSlice.toFront();
-                    navItem.navLine.toFront();
-                    navItem.navTitle.toFront();
-                }
-                else {
-                    navItem.navTitle.toBack();
-                    navItem.navLine.toBack();
-                    navItem.navSlice.toBack();
-                }
-            }
-        }
-        else {
-            navItem.navSlice.attr(navItem.slicePathAttr);
-            navItem.navLine.attr(navItem.linePathAttr);
-            navItem.navTitle.attr(navItem.titleAttr);
-
-            navItem.navTitle.toBack();
-            navItem.navLine.toBack();
-            navItem.navSlice.toBack();
-        }
+        navItem.refreshNavItem(withPathAndTransform);
     }
 
     this.spreader.setVisibility();
 };
 
-wheelnav.prototype.navigateWheel = function (clicked, selectedToFront) {
+wheelnav.prototype.navigateWheel = function (clicked) {
 
     this.animateUnlock(true);
 
@@ -338,6 +313,7 @@ wheelnav.prototype.navigateWheel = function (clicked, selectedToFront) {
     for (i = 0; i < this.navItemCount; i++) {
         navItem = this.navItems[i];
         navItem.setCurrentTransform(this.animateRepeatCount, true);
+        navItem.refreshNavItem();
     }
 
     this.currentClick = clicked;
@@ -345,8 +321,6 @@ wheelnav.prototype.navigateWheel = function (clicked, selectedToFront) {
     if (this.clickModeSpreadOff) {
         this.spreadWheel();
     }
-
-    this.refreshWheel(selectedToFront);
 };
 
 wheelnav.prototype.spreadWheel = function () {
