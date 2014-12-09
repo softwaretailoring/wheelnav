@@ -135,10 +135,6 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
 wheelnav.prototype.initWheel = function (titles) {
 
     //Init slices and titles
-    if (this.sliceClickablePathFunction === null) {
-        this.sliceClickablePathFunction = this.slicePathFunction;
-    }
-
     if (!this.cssMode) {
         this.spreaderCircleAttr = { fill: "#777", "stroke-width": 3, cursor: 'pointer' };
         this.spreaderOnAttr = { fill: "#FFF", cursor: 'pointer' };

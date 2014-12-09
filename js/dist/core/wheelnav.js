@@ -136,10 +136,6 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
 wheelnav.prototype.initWheel = function (titles) {
 
     //Init slices and titles
-    if (this.sliceClickablePathFunction === null) {
-        this.sliceClickablePathFunction = this.slicePathFunction;
-    }
-
     if (!this.cssMode) {
         this.spreaderCircleAttr = { fill: "#777", "stroke-width": 3, cursor: 'pointer' };
         this.spreaderOnAttr = { fill: "#FFF", cursor: 'pointer' };
@@ -627,7 +623,7 @@ wheelnavItem.prototype.createNavItem = function () {
     //Create item set
     this.navItem = this.wheelnav.raphael.set();
 
-    if (this.clickablePercentMax > 0) {
+    if (this.sliceClickablePathFunction !== null) {
         //Create clickable slice
         var sliceClickablePath = this.getCurrentClickablePath();
         this.navClickableSlice = this.wheelnav.raphael.path(sliceClickablePath.slicePathString).attr(this.sliceClickablePathAttr).toBack();
@@ -784,7 +780,7 @@ wheelnavItem.prototype.setCurrentTransform = function (animateRepeatCount, locke
 
         var sliceClickableTransformAttr = {};
 
-        if (this.clickablePercentMax > 0) {
+        if (this.sliceClickablePathFunction !== null) {
             var sliceClickablePath = this.getCurrentClickablePath();
 
             sliceClickableTransformAttr = {
@@ -869,7 +865,7 @@ wheelnavItem.prototype.setCurrentTransform = function (animateRepeatCount, locke
                     navItemTitle.navTitle.animate(navItemTitle.animTitle.repeat(animateRepeatCount));
                 }
 
-                if (this.clickablePercentMax > 0) {
+                if (this.wheelnav.sliceClickablePathFunction !== null) {
                     for (i = 0; i < this.wheelnav.navItemCount; i++) {
                         var navItemClickableSlice = this.wheelnav.navItems[i];
                         navItemClickableSlice.navClickableSlice.animate(navItemClickableSlice.animClickableSlice.repeat(animateRepeatCount));
@@ -882,7 +878,7 @@ wheelnavItem.prototype.setCurrentTransform = function (animateRepeatCount, locke
             this.navLine.animate(this.animLine.repeat(animateRepeatCount));
             this.navTitle.animate(this.animTitle.repeat(animateRepeatCount));
 
-            if (this.clickablePercentMax > 0) {
+            if (this.navClickableSlice !== null) {
                 this.navClickableSlice.animate(this.animClickableSlice.repeat(animateRepeatCount));
             }
         }
