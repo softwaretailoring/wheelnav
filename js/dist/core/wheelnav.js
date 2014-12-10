@@ -488,6 +488,8 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     //Wheelnav settings
     this.setWheelSettings();
 
+    this.navigateFunction = null;
+
     return this;
 };
 
@@ -633,6 +635,9 @@ wheelnavItem.prototype.createNavItem = function () {
     if (this.enabled) {
         this.navItem.mouseup(function () {
             thisWheelNav.navigateWheel(thisItemIndex);
+            if (thisNavItem.navigateFunction !== null) {
+                thisNavItem.navigateFunction();
+            }
         });
         this.navItem.mouseover(function () {
             if (thisNavItem.hovered !== true) {

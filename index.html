@@ -127,19 +127,19 @@
                 textWheel.navAngle = 45;
                 textWheel.animatetime = 2000;
                 textWheel.animateeffect = "elastic";
-                textWheel.createWheel(["0", "1", icon["?"], "3", "4", icon["!"], "6"]);
+                textWheel.createWheel(["0", "1", icon["?"], "3", icon["!"]]);
 
-                textWheel.navItems[2].navItem.mouseup(function () {
+                textWheel.navItems[2].navigateFunction = function () {
                     textWheel.slicePathFunction = slicePath().MenuSliceWithoutLine;
                     textWheel.sliceClickablePathFunction = slicePath().MenuSliceWithoutLine;
                     textWheel.refreshWheel(true);
-                });
+                };
 
-                textWheel.navItems[5].navItem.mouseup(function () {
+                textWheel.navItems[4].navigateFunction = function () {
                     textWheel.slicePathFunction = slicePath().TabSlice;
                     textWheel.sliceClickablePathFunction = slicePath().TabSlice;
                     textWheel.refreshWheel(true);
-                });
+                };
             };
 
         </script>
