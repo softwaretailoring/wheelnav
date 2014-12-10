@@ -119,8 +119,8 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     this.sliceSelectedTransformCustom = null;
     this.sliceHoverTransformCustom = null;
 
-    this.animateeffect = "bounce";
-    this.animatetime = 1500;
+    this.animateeffect = null;
+    this.animatetime = null;
     this.slicePathFunction = slicePath().PieSlice;
     this.sliceClickablePathFunction = null;
     this.sliceTransformFunction = null;
@@ -206,13 +206,8 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
     }
 
     this.spreader = new spreader(this);
-
     if (withSpread !== undefined) {
-        this.navItems[0].selected = true;
         this.spreadWheel();
-    }
-    else if (this.rotateRoundCount === 0) {
-        this.navigateWheel(0);
     }
 
     return this;
@@ -221,28 +216,8 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
 wheelnav.prototype.refreshWheel = function (withPathAndTransform) {
 
     for (i = 0; i < this.navItemCount; i++) {
-
         var navItem = this.navItems[i];
-
-        //Refresh slice
-        if (this.slicePathAttr !== null) { navItem.slicePathAttr = this.slicePathAttr; }
-        if (this.sliceHoverAttr !== null) { navItem.sliceHoverAttr = this.sliceHoverAttr; }
-        if (this.sliceSelectedAttr !== null) { navItem.sliceSelectedAttr = this.sliceSelectedAttr; }
-
-        //Refresh title
-        if (this.titleAttr !== null) { navItem.titleAttr = this.titleAttr; }
-        if (this.titleHoverAttr !== null) { navItem.titleHoverAttr = this.titleHoverAttr; }
-        if (this.titleSelectedAttr !== null) { navItem.titleSelectedAttr = this.titleSelectedAttr; }
-
-        //Refresh line
-        if (this.linePathAttr !== null) { navItem.linePathAttr = this.linePathAttr; }
-        if (this.lineHoverAttr !== null) { navItem.lineHoverAttr = this.lineHoverAttr; }
-        if (this.lineSelectedAttr !== null) { navItem.lineSelectedAttr = this.lineSelectedAttr; }
-
-        //Animation
-        if (this.animateeffect !== null) { navItem.animateeffect = this.animateeffect; }
-        if (this.animatetime !== null) { navItem.animatetime = this.animatetime; }
-
+        navItem.setWheelSettings();
         navItem.refreshNavItem(withPathAndTransform);
     }
 

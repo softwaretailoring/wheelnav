@@ -17,9 +17,15 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     }
 
     this.enabled = wheelnav.navItemsEnabled;
-    this.selected = false;
+    if (itemIndex === 0) {
+        this.selected = true;
+    }
+    else {
+        this.selected = false;
+    }
     this.hovered = false;
 
+    //Private properties
     this.navItem = null;
     this.navSlice = null;
     this.navTitle = null;
@@ -34,27 +40,19 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     this.navTitleUnderAnimation = false;
     this.navLineUnderAnimation = false;
 
+    this.currentRotateAngle = 0;
+
     this.title = title;
     this.selectedTitle = title;
     this.tooltip = null;
-    this.titleFont = wheelnav.titleFont;
-    if (wheelnav.titleSpreadScale === null) { this.titleSpreadScale = false; }
-    else { this.titleSpreadScale = wheelnav.titleSpreadScale; }
-    this.currentRotateAngle = 0;
-    this.minPercent = wheelnav.minPercent;
-    this.maxPercent = wheelnav.maxPercent;
-    this.hoverPercent = wheelnav.hoverPercent;
-    this.selectedPercent = wheelnav.selectedPercent;
-    this.clickablePercentMin = wheelnav.clickablePercentMin;
-    this.clickablePercentMax = wheelnav.clickablePercentMax;
-
-    if (wheelnav.sliceAngle === null) { this.sliceAngle = 360 / wheelnav.navItemCount; }
-    else { this.sliceAngle = wheelnav.sliceAngle;}
-
+    
+    //Default settings
     this.fillAttr = "#CCC";
-
+    this.titleFont = this.wheelnav.titleFont;
+    this.titleSpreadScale = false;
     this.animateeffect = "bounce";
     this.animatetime = 1500;
+    this.sliceAngle = 360 / wheelnav.navItemCount;
 
     if (!wheelnav.cssMode) {
         this.slicePathAttr = { fill: "#CCC", stroke: "#111", "stroke-width": 3, cursor: 'pointer' };
@@ -86,6 +84,9 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     this.sliceClickablePathAttr = { fill: "#FFF", stroke: "#FFF", "stroke-width": 0, cursor: 'pointer', "fill-opacity": 0.01 };
     this.sliceClickableHoverAttr = { stroke: "#FFF", "stroke-width": 0, cursor: 'pointer' };
     this.sliceClickableSelectedAttr = { stroke: "#FFF", "stroke-width": 0, cursor: 'default' };
+
+    //Wheelnav settings
+    this.setWheelSettings();
 
     return this;
 };
@@ -244,6 +245,8 @@ wheelnavItem.prototype.createNavItem = function () {
             thisNavItem.hoverEffect(thisItemIndex, false);
         });
     }
+
+    this.setCurrentTransform();
 };
 
 wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
@@ -509,7 +512,26 @@ wheelnavItem.prototype.refreshNavItem = function (withPathAndTransform) {
     this.wheelnav.spreader.setVisibility();
 };
 
-wheelnavItem.prototype.initPathsAndTransforms = function () {
+wheelnavItem.prototype.setWheelSettings = function () {
+
+    //Set slice from wheelnav
+    if (this.wheelnav.slicePathAttr !== null) { this.slicePathAttr = this.wheelnav.slicePathAttr; }
+    if (this.wheelnav.sliceHoverAttr !== null) { this.sliceHoverAttr = this.wheelnav.sliceHoverAttr; }
+    if (this.wheelnav.sliceSelectedAttr !== null) { this.sliceSelectedAttr = this.wheelnav.sliceSelectedAttr; }
+
+    //Set title from wheelnav
+    if (this.wheelnav.titleAttr !== null) { this.titleAttr = this.wheelnav.titleAttr; }
+    if (this.wheelnav.titleHoverAttr !== null) { this.titleHoverAttr = this.wheelnav.titleHoverAttr; }
+    if (this.wheelnav.titleSelectedAttr !== null) { this.titleSelectedAttr = this.wheelnav.titleSelectedAttr; }
+
+    //Set line from wheelnav
+    if (this.wheelnav.linePathAttr !== null) { this.linePathAttr = this.wheelnav.linePathAttr; }
+    if (this.wheelnav.lineHoverAttr !== null) { this.lineHoverAttr = this.wheelnav.lineHoverAttr; }
+    if (this.wheelnav.lineSelectedAttr !== null) { this.lineSelectedAttr = this.wheelnav.lineSelectedAttr; }
+
+    //Set animation from wheelnav
+    if (this.wheelnav.animateeffect !== null) { this.animateeffect = this.wheelnav.animateeffect; }
+    if (this.wheelnav.animatetime !== null) { this.animatetime = this.wheelnav.animatetime; }
 
     if (this.title !== null) {
         this.sliceClickablePathFunction = this.wheelnav.sliceClickablePathFunction;
@@ -540,9 +562,21 @@ wheelnavItem.prototype.initPathsAndTransforms = function () {
     this.sliceSelectedTransformCustom = this.wheelnav.sliceSelectedTransformCustom;
     this.sliceHoverTransformCustom = this.wheelnav.sliceHoverTransformCustom;
 
+    this.minPercent = this.wheelnav.minPercent;
+    this.maxPercent = this.wheelnav.maxPercent;
+    this.hoverPercent = this.wheelnav.hoverPercent;
+    this.selectedPercent = this.wheelnav.selectedPercent;
+    this.clickablePercentMin = this.wheelnav.clickablePercentMin;
+    this.clickablePercentMax = this.wheelnav.clickablePercentMax;
+
+    if (this.wheelnav.titleSpreadScale !== null) { this.titleSpreadScale = this.wheelnav.titleSpreadScale; }
+    if (this.wheelnav.sliceAngle !== null) { this.sliceAngle = this.wheelnav.sliceAngle; }
+};
+
+wheelnavItem.prototype.initPathsAndTransforms = function () {
     //Set min/max sliecePaths
     //Default - min
-     this.slicePathMin = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.minPercent, this.slicePathCustom);
+    this.slicePathMin = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.minPercent, this.slicePathCustom);
 
     //Default - max
     this.slicePathMax = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.maxPercent, this.slicePathCustom);
