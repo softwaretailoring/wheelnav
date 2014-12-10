@@ -137,9 +137,15 @@ wheelnav.prototype.initWheel = function (titles) {
 
     //Init slices and titles
     if (!this.cssMode) {
-        this.spreaderCircleAttr = { fill: "#777", "stroke-width": 3, cursor: 'pointer' };
-        this.spreaderOnAttr = { fill: "#FFF", cursor: 'pointer' };
-        this.spreaderOffAttr = { fill: "#FFF", cursor: 'pointer' };
+        if (this.spreaderCircleAttr === undefined || this.spreaderCircleAttr === null) {
+            this.spreaderCircleAttr = { fill: "#777", "stroke-width": 3, cursor: 'pointer' };
+        }
+        if (this.spreaderOnAttr === undefined || this.spreaderOnAttr === null) {
+            this.spreaderOnAttr = { fill: "#FFF", cursor: 'pointer' };
+        }
+        if (this.spreaderOffAttr === undefined || this.spreaderOffAttr === null) {
+            this.spreaderOffAttr = { fill: "#FFF", cursor: 'pointer' };
+        }
     }
     else {
         this.spreaderCircleAttr = { "class": this.getSpreaderId() };
