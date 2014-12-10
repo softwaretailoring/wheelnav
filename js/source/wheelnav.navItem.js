@@ -270,12 +270,12 @@ wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
         if (this.hoverPercent !== 1 ||
             this.sliceHoverPathFunction !== null ||
             this.sliceHoverTransformFunction !== null) {
-            this.setCurrentTransform(this.wheelnav.animateRepeatCount);
+            this.setCurrentTransform();
         }
     }
 };
 
-wheelnavItem.prototype.setCurrentTransform = function (animateRepeatCount, locked) {
+wheelnavItem.prototype.setCurrentTransform = function (locked) {
 
     if (!this.wheelnav.clickModeRotate ||
         (!this.navSliceUnderAnimation &&
@@ -430,6 +430,8 @@ wheelnavItem.prototype.setCurrentTransform = function (animateRepeatCount, locke
             this.animClickableSlice = Raphael.animation(sliceClickableTransformAttr, this.animatetime, this.animateeffect);
         }
 
+        var animateRepeatCount = this.wheelnav.animateRepeatCount;
+
         if (locked !== undefined &&
             locked === true) {
             if (this.wheelItemIndex === this.wheelnav.navItemCount - 1) {
@@ -450,7 +452,9 @@ wheelnavItem.prototype.setCurrentTransform = function (animateRepeatCount, locke
                 if (this.wheelnav.sliceClickablePathFunction !== null) {
                     for (i = 0; i < this.wheelnav.navItemCount; i++) {
                         var navItemClickableSlice = this.wheelnav.navItems[i];
-                        navItemClickableSlice.navClickableSlice.animate(navItemClickableSlice.animClickableSlice.repeat(animateRepeatCount));
+                        if (navItemClickableSlice.navClickableSlice !== null) {
+                            navItemClickableSlice.navClickableSlice.animate(navItemClickableSlice.animClickableSlice.repeat(animateRepeatCount));
+                        }
                     }
                 }
             }
@@ -506,7 +510,7 @@ wheelnavItem.prototype.refreshNavItem = function (withPathAndTransform) {
     if (withPathAndTransform !== undefined &&
         withPathAndTransform === true) {
         this.initPathsAndTransforms();
-        this.setCurrentTransform(this.wheelnav.animateRepeatCount);
+        this.setCurrentTransform();
     }
 
     this.wheelnav.spreader.setVisibility();

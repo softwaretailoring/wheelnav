@@ -206,6 +206,10 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
     }
 
     this.spreader = new spreader(this);
+
+    this.navItems[0].selected = true;
+    this.navItems[0].refreshNavItem();
+
     if (withSpread !== undefined) {
         this.spreadWheel();
     }
@@ -283,7 +287,7 @@ wheelnav.prototype.navigateWheel = function (clicked) {
 
     for (i = 0; i < this.navItemCount; i++) {
         navItem = this.navItems[i];
-        navItem.setCurrentTransform(this.animateRepeatCount, true);
+        navItem.setCurrentTransform(true);
         navItem.refreshNavItem();
     }
 
@@ -313,7 +317,7 @@ wheelnav.prototype.spreadWheel = function () {
     for (i = 0; i < this.navItemCount; i++) {
         var navItem = this.navItems[i];
         navItem.hovered = false;
-        navItem.setCurrentTransform(this.animateRepeatCount, true);
+        navItem.setCurrentTransform(true);
     }
 
     this.spreader.setVisibility();

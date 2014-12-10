@@ -443,16 +443,16 @@ var slicePath = function () {
         var innerRadiusPercent;
 
         if (sliceAngle < 120) {
-            helper.titleRadius = r * 0.6;
-            innerRadiusPercent = 0.97;
+            helper.titleRadius = r * 0.57;
+            innerRadiusPercent = 0.9;
         }
         else if (sliceAngle < 180) {
-            helper.titleRadius = r * 0.56;
-            innerRadiusPercent = 0.95;
+            helper.titleRadius = r * 0.52;
+            innerRadiusPercent = 0.91;
         }
         else {
-            helper.titleRadius = r * 0.5;
-            innerRadiusPercent = 0.905;
+            helper.titleRadius = r * 0.45;
+            innerRadiusPercent = 0.873;
         }
 
         slicePathString = [["M", (r * 0.07) * Math.cos(middleTheta) + x, (r * 0.07) * Math.sin(middleTheta) + y],
