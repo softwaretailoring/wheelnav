@@ -27,6 +27,7 @@ var slicePath = function () {
         custom.titleRadiusPercent = 0.6;
         custom.arcBaseRadiusPercent = 1;
         custom.arcRadiusPercent = 1;
+        custom.startRadiusPercent = 0;
         return custom;
     };
 
@@ -49,8 +50,10 @@ var slicePath = function () {
 
         var arcBaseRadius = r * custom.arcBaseRadiusPercent;
         var arcRadius = r * custom.arcRadiusPercent;
+        var startX = custom.startRadiusPercent * r * Math.cos(helper.middleTheta) + x;
+        var startY = custom.startRadiusPercent * r * Math.sin(helper.middleTheta) + y;
 
-        slicePathString = [["M", x, y],
+        slicePathString = [["M", startX, startY],
                      ["L", arcBaseRadius * Math.cos(startTheta) + x, arcBaseRadius * Math.sin(startTheta) + y],
                      ["A", arcRadius, arcRadius, 0, 0, 1, arcBaseRadius * Math.cos(endTheta) + x, arcBaseRadius * Math.sin(endTheta) + y],
                      ["z"]];
@@ -110,6 +113,7 @@ var slicePath = function () {
 
         var custom = new slicePathCustomization();
         custom.titleRadiusPercent = 0.44;
+        custom.minRadiusPercent = 0.5;
         custom.isBasePieSlice = false;
 
         return custom;
@@ -124,7 +128,7 @@ var slicePath = function () {
         helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom);
 
         r = helper.sliceRadius;
-        rbase = r * 0.5;
+        rbase = r * custom.minRadiusPercent;
 
         startTheta = helper.startTheta;
         middleTheta = helper.middleTheta;
@@ -297,6 +301,7 @@ var slicePath = function () {
         custom.menuRadius = 25;
         custom.titleRadiusPercent = 0.63;
         custom.isSelectedLine = false;
+        custom.lineBaseRadiusPercent = 0;
 
         return custom;
     };
@@ -329,15 +334,17 @@ var slicePath = function () {
                     ["A", 1, 1, 0, 0, 1, x + 1, y + 1]];
         }
         else {
+            lineStartX = custom.lineBaseRadiusPercent * r * Math.cos(middleTheta) + x;
+            lineStartY = custom.lineBaseRadiusPercent * r * Math.sin(middleTheta) + y;
             lineEndX = (helper.titleRadius - menuRadius) * Math.cos(middleTheta) + x;
             lineEndY = (helper.titleRadius - menuRadius) * Math.sin(middleTheta) + y;
 
             if (!custom.isSelectedLine) {
-                linePathString = [["M", x, y],
+                linePathString = [["M", lineStartX, lineStartY],
                             ["A", r / 2, r / 2, 0, 0, 1, lineEndX, lineEndY]];
             }
             else {
-                linePathString = [["M", x, y],
+                linePathString = [["M", lineStartX, lineStartY],
                             ["A", r / 3, r / 3, 0, 0, 1, lineEndX, lineEndY]];
             }
         }
@@ -384,11 +391,10 @@ var slicePath = function () {
 
         if (custom === null) {
             custom = PieSliceCustomization();
+            custom.titleRadiusPercent = 0.5;
+            custom.arcBaseRadiusPercent = 0.65;
+            custom.arcRadiusPercent = 0.14;
         }
-
-        custom.titleRadiusPercent = 0.5;
-        custom.arcBaseRadiusPercent = 0.65;
-        custom.arcRadiusPercent = 0.14;
 
         var slicePath = PieSlice(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom);
 
