@@ -42,8 +42,8 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
 
     this.currentRotateAngle = 0;
 
-    if (title === null) {
-        this.title = "";
+    if (title === undefined) {
+        this.title = null;
     }
     else {
         this.title = title;
@@ -60,9 +60,9 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     this.sliceAngle = 360 / wheelnav.navItemCount;
 
     if (!wheelnav.cssMode) {
-        this.slicePathAttr = { fill: "#CCC", stroke: "#111", "stroke-width": 3, cursor: 'pointer' };
-        this.sliceHoverAttr = { fill: "#CCC", stroke: "#111", "stroke-width": 4, cursor: 'pointer' };
-        this.sliceSelectedAttr = { fill: "#CCC", stroke: "#111", "stroke-width": 4, cursor: 'default' };
+        this.slicePathAttr = { stroke: "#111", "stroke-width": 3, cursor: 'pointer' };
+        this.sliceHoverAttr = { stroke: "#111", "stroke-width": 4, cursor: 'pointer' };
+        this.sliceSelectedAttr = { stroke: "#111", "stroke-width": 4, cursor: 'default' };
 
         this.titleAttr = { font: this.titleFont, fill: "#111", stroke: "none", cursor: 'pointer' };
         this.titleHoverAttr = { font: this.titleFont, fill: "#111", cursor: 'pointer', stroke: "none" };
@@ -188,16 +188,17 @@ wheelnavItem.prototype.createNavItem = function () {
     this.navLine.node.id = this.navLine.id;
 
     //Create title
+    var currentTitle;
     //Title defined by path
     if (this.isPathTitle()) {
-        this.titlePath = new wheelnavTitle(this.title, this.wheelnav.raphael.raphael);
-        var relativePath = this.getTitlePercentAttr(slicePath.titlePosX, slicePath.titlePosY, this.titlePath).path;
+        currentTitle = new wheelnavTitle(this.title, this.wheelnav.raphael.raphael);
+        var relativePath = this.getTitlePercentAttr(slicePath.titlePosX, slicePath.titlePosY, currentTitle).path;
         this.navTitle = this.wheelnav.raphael.path(relativePath);
     }
     //Title defined by text
     else {
-        this.titlePath = new wheelnavTitle(this.title);
-        this.navTitle = this.wheelnav.raphael.text(slicePath.titlePosX, slicePath.titlePosY, this.title);
+        currentTitle = new wheelnavTitle(this.title);
+        this.navTitle = this.wheelnav.raphael.text(slicePath.titlePosX, slicePath.titlePosY, currentTitle.title);
     }
 
     this.navTitle.attr(this.titleAttr);
@@ -389,17 +390,17 @@ wheelnavItem.prototype.setCurrentTransform = function (locked) {
         };
 
         //Set title
-        var currentTitle = this.title;
-        if (this.selected) { currentTitle = this.selectedTitle; }
-
+        var title = this.title;
+        if (this.selected) { title = this.selectedTitle; }
+        var currentTitle;
         if (this.navTitle.type === "path") {
-            titleCurrentPath = new wheelnavTitle(currentTitle, this.wheelnav.raphael.raphael);
+            currentTitle = new wheelnavTitle(title, this.wheelnav.raphael.raphael);
         }
         else {
-            titleCurrentPath = new wheelnavTitle(currentTitle);
+            currentTitle = new wheelnavTitle(title);
         }
 
-        var percentAttr = this.getTitlePercentAttr(slicePath.titlePosX, slicePath.titlePosY, titleCurrentPath);
+        var percentAttr = this.getTitlePercentAttr(slicePath.titlePosX, slicePath.titlePosY, currentTitle);
 
         var titleTransformAttr = {};
 
@@ -416,7 +417,9 @@ wheelnavItem.prototype.setCurrentTransform = function (locked) {
                 transform: this.navTitleCurrentTransformString
             };
 
-            this.navTitle.attr({ text: currentTitle });
+            if (title !== null) {
+                this.navTitle.attr({ text: title });
+            }
         }
 
         var thisNavItem = this;
@@ -547,7 +550,7 @@ wheelnavItem.prototype.setWheelSettings = function () {
     if (this.wheelnav.animateeffect !== null) { this.animateeffect = this.wheelnav.animateeffect; }
     if (this.wheelnav.animatetime !== null) { this.animatetime = this.wheelnav.animatetime; }
 
-    if (this.title !== "") {
+    if (this.title !== null) {
         this.sliceClickablePathFunction = this.wheelnav.sliceClickablePathFunction;
         this.slicePathFunction = this.wheelnav.slicePathFunction;
         this.sliceSelectedPathFunction = this.wheelnav.sliceSelectedPathFunction;
@@ -661,19 +664,19 @@ wheelnavItem.prototype.initPathsAndTransforms = function () {
     }
 };
 
-wheelnavItem.prototype.getTitlePercentAttr = function (currentX, currentY, thisPath) {
+wheelnavItem.prototype.getTitlePercentAttr = function (currentX, currentY, currentTitle) {
 
     var transformAttr = {};
 
-    if (thisPath.relativePath !== undefined) {
-        var pathCx = currentX + (thisPath.startX - thisPath.BBox.cx);
-        var pathCy = currentY + (thisPath.startY - thisPath.BBox.cy);
+    if (currentTitle.relativePath !== undefined) {
+        var pathCx = currentX + (currentTitle.startX - currentTitle.BBox.cx);
+        var pathCy = currentY + (currentTitle.startY - currentTitle.BBox.cy);
 
-        thisPath.relativePath[0][1] = pathCx;
-        thisPath.relativePath[0][2] = pathCy;
+        currentTitle.relativePath[0][1] = pathCx;
+        currentTitle.relativePath[0][2] = pathCy;
 
         transformAttr = {
-            path: thisPath.relativePath
+            path: currentTitle.relativePath
         };
     }
     else {
@@ -733,8 +736,9 @@ wheelnavItem.prototype.getCurrentClickablePath = function () {
 };
 
 wheelnavItem.prototype.isPathTitle = function () {
-    if (this.title.substr(0, 1) === "M" &&
-         this.title.substr(this.title.length - 1, 1) === "z") {
+    if (this.title !== null &&
+        this.title.substr(0, 1) === "M" &&
+        this.title.substr(this.title.length - 1, 1) === "z") {
         return true;
     }
     else {
@@ -767,11 +771,16 @@ wheelnavItem.prototype.getTitleRotateString = function () {
 wheelnavTitle = function (title, raphael) {
     this.title = title;
     //Calculate relative path
-    if (raphael !== undefined) {
-        this.relativePath = raphael.pathToRelative(title);
-        this.BBox = raphael.pathBBox(this.relativePath);
-        this.startX = this.relativePath[0][1];
-        this.startY = this.relativePath[0][2];
+    if (title !== null) {
+        if (raphael !== undefined) {
+            this.relativePath = raphael.pathToRelative(title);
+            this.BBox = raphael.pathBBox(this.relativePath);
+            this.startX = this.relativePath[0][1];
+            this.startY = this.relativePath[0][2];
+        }
+    }
+    else {
+        this.title = "";
     }
 
     return this;
