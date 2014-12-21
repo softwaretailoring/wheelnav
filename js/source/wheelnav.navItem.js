@@ -58,7 +58,7 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     this.animateeffect = "bounce";
     this.animatetime = 1500;
     this.sliceAngle = 360 / wheelnav.navItemCount;
-
+    
     if (!wheelnav.cssMode) {
         this.slicePathAttr = { stroke: "#111", "stroke-width": 3, cursor: 'pointer' };
         this.sliceHoverAttr = { stroke: "#111", "stroke-width": 4, cursor: 'pointer' };
@@ -532,19 +532,20 @@ wheelnavItem.prototype.refreshNavItem = function (withPathAndTransform) {
 wheelnavItem.prototype.setWheelSettings = function () {
 
     //Set slice from wheelnav
-    if (this.wheelnav.slicePathAttr !== null) { this.slicePathAttr = this.wheelnav.slicePathAttr; }
-    if (this.wheelnav.sliceHoverAttr !== null) { this.sliceHoverAttr = this.wheelnav.sliceHoverAttr; }
-    if (this.wheelnav.sliceSelectedAttr !== null) { this.sliceSelectedAttr = this.wheelnav.sliceSelectedAttr; }
+    if (this.wheelnav.slicePathAttr !== null) { this.slicePathAttr = JSON.parse(JSON.stringify(this.wheelnav.slicePathAttr)); }
+    if (this.wheelnav.sliceHoverAttr !== null) { this.sliceHoverAttr = JSON.parse(JSON.stringify(this.wheelnav.sliceHoverAttr)); }
+    if (this.wheelnav.sliceSelectedAttr !== null) { this.sliceSelectedAttr = JSON.parse(JSON.stringify(this.wheelnav.sliceSelectedAttr)); }
 
+    
     //Set title from wheelnav
-    if (this.wheelnav.titleAttr !== null) { this.titleAttr = this.wheelnav.titleAttr; }
-    if (this.wheelnav.titleHoverAttr !== null) { this.titleHoverAttr = this.wheelnav.titleHoverAttr; }
-    if (this.wheelnav.titleSelectedAttr !== null) { this.titleSelectedAttr = this.wheelnav.titleSelectedAttr; }
+    if (this.wheelnav.titleAttr !== null) { this.titleAttr = JSON.parse(JSON.stringify(this.wheelnav.titleAttr)); }
+    if (this.wheelnav.titleHoverAttr !== null) { this.titleHoverAttr = JSON.parse(JSON.stringify(this.wheelnav.titleHoverAttr)); }
+    if (this.wheelnav.titleSelectedAttr !== null) { this.titleSelectedAttr = JSON.parse(JSON.stringify(this.wheelnav.titleSelectedAttr)); }
 
     //Set line from wheelnav
-    if (this.wheelnav.linePathAttr !== null) { this.linePathAttr = this.wheelnav.linePathAttr; }
-    if (this.wheelnav.lineHoverAttr !== null) { this.lineHoverAttr = this.wheelnav.lineHoverAttr; }
-    if (this.wheelnav.lineSelectedAttr !== null) { this.lineSelectedAttr = this.wheelnav.lineSelectedAttr; }
+    if (this.wheelnav.linePathAttr !== null) { this.linePathAttr = JSON.parse(JSON.stringify(this.wheelnav.linePathAttr)); }
+    if (this.wheelnav.lineHoverAttr !== null) { this.lineHoverAttr = JSON.parse(JSON.stringify(this.wheelnav.lineHoverAttr)); }
+    if (this.wheelnav.lineSelectedAttr !== null) { this.lineSelectedAttr = JSON.parse(JSON.stringify(this.wheelnav.lineSelectedAttr)); }
 
     //Set animation from wheelnav
     if (this.wheelnav.animateeffect !== null) { this.animateeffect = this.wheelnav.animateeffect; }
