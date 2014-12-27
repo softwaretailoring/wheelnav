@@ -214,7 +214,7 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
     this.spreader = new spreader(this);
 
     this.navItems[0].selected = true;
-    this.navItems[0].refreshNavItem();
+    this.refreshWheel();
 
     if (withSpread !== undefined) {
         this.spreadWheel();

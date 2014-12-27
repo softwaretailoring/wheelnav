@@ -439,7 +439,7 @@ wheelnavItem.prototype.setCurrentTransform = function (locked) {
             thisWheelnav.animateUnlock();
         });
 
-        if (this.clickablePercentMax > 0) {
+        if (this.navClickableSlice !== null) {
             this.animClickableSlice = Raphael.animation(sliceClickableTransformAttr, this.animatetime, this.animateeffect);
         }
 
