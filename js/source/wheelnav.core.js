@@ -376,6 +376,9 @@ wheelnav.prototype.getItemId = function (index) {
 wheelnav.prototype.getSliceId = function (index) {
     return "wheelnav-" + this.holderId + "-slice-" + index;
 };
+wheelnav.prototype.getClickableSliceId = function (index) {
+    return "wheelnav-" + this.holderId + "-clickableslice-" + index;
+};
 wheelnav.prototype.getTitleId = function (index) {
     return "wheelnav-" + this.holderId + "-title-" + index;
 };

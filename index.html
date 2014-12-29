@@ -124,9 +124,12 @@
                 textWheel.sliceSelectedTransformFunction = sliceTransform().ScaleTransform;
                 textWheel.clickModeRotate = false;
                 textWheel.navAngle = 45;
-                textWheel.animatetime = 2000;
+                textWheel.animatetime = 1000;
                 textWheel.animateeffect = "elastic";
-                textWheel.createWheel(["0", "1", icon["?"], "3", icon["!"]]);
+                textWheel.initWheel(["0", "1", icon["?"], "3", icon["!"]]);
+                textWheel.navItems[2].titleHover = icon.talke;
+                textWheel.navItems[4].titleHover = icon.talkq;
+                textWheel.createWheel();
 
                 textWheel.navItems[2].navigateFunction = function () {
                     textWheel.slicePathFunction = slicePath().MenuSliceWithoutLine;
