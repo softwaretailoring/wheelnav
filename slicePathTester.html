@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -92,6 +92,16 @@
                 PieArrowSlice.slicePathFunction = slicePath().PieArrowBasePieSlice;
                 PieArrowSlice.sliceSelectedPathFunction = slicePath().PieArrowSlice;
                 PieArrowSlice.createWheel();
+
+                var WebSlice = new wheelnav("WebSlice");
+                WebSlice.slicePathFunction = slicePath().WebSlice;
+                WebSlice.titleSelectedAttr = { font: WebSlice.titleFont, fill: "#FFF", cursor: 'default', stroke: "#111" };
+                WebSlice.createWheel();
+
+                var WinterSlice = new wheelnav("WinterSlice");
+                WinterSlice.slicePathFunction = slicePath().WinterSlice;
+                WinterSlice.titleSelectedAttr = { font: WinterSlice.titleFont, fill: "#FFF", cursor: 'default', stroke: "#111" };
+                WinterSlice.createWheel();
             };
 
         </script>
@@ -136,6 +146,10 @@
         <div id="YinYangSlice" class="wheelNav"></div>
         <h2>PieArrowSlice</h2>
         <div id="PieArrowSlice" class="wheelNav"></div>
+        <h2>WebSlice</h2>
+        <div id="WebSlice" class="wheelNav"></div>
+        <h2>WinterSlice</h2>
+        <div id="WinterSlice" class="wheelNav"></div>
 
         <footer>
             <p>&copy; 2014 <a href="http://softwaretailoring.net" target="_blank">softwaretailoring.net</a></p>

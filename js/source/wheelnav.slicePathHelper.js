@@ -9,6 +9,7 @@ var slicePathHelper = function () {
 
     this.sliceRadius = 0;
     this.startAngle = 0;
+    this.sliceAngle = 0;
     this.startTheta = 0;
     this.middleTheta = 0;
     this.endTheta = 0;
@@ -17,8 +18,12 @@ var slicePathHelper = function () {
     this.titleRadius = 0;
     this.titleTheta = 0;
     this.custom = null;
+    this.centerX = 0;
+    this.centerY = 0;
+    this.wheelRadius = 0;
+    this.itemIndex = 0;
 
-    this.setBaseValue = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom) {
+    this.setBaseValue = function (percent, custom) {
 
         if (custom === null) {
             custom = new slicePathCustomization();
@@ -27,17 +32,16 @@ var slicePathHelper = function () {
             this.custom = custom;
         }
 
-        this.sliceRadius = rOriginal * percent;
-        this.startAngle = baseAngle;
+        this.sliceRadius = this.wheelRadius * percent;
         this.startTheta = this.getTheta(this.startAngle);
-        this.middleTheta = this.getTheta(this.startAngle + sliceAngle / 2);
-        this.endTheta = this.getTheta(this.startAngle + sliceAngle);
+        this.middleTheta = this.getTheta(this.startAngle + this.sliceAngle / 2);
+        this.endTheta = this.getTheta(this.startAngle + this.sliceAngle);
         if (custom !== null) {
             if (custom.titleRadiusPercent !== null) {
                 this.titleRadius = this.sliceRadius * custom.titleRadiusPercent;
             }
             if (custom.titleSliceAnglePercent !== null) {
-                this.titleTheta = this.getTheta(this.startAngle + sliceAngle * custom.titleSliceAnglePercent);
+                this.titleTheta = this.getTheta(this.startAngle + this.sliceAngle * custom.titleSliceAnglePercent);
             }
         }
         else {
@@ -45,7 +49,7 @@ var slicePathHelper = function () {
             this.titleTheta = this.middleTheta;
         }
 
-        this.setTitlePos(x, y);
+        this.setTitlePos(this.centerX, this.centerY);
     };
 
     this.setTitlePos = function (x, y) {

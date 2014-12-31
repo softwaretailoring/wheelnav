@@ -990,52 +990,61 @@ wheelnavItem.prototype.setWheelSettings = function () {
 };
 
 wheelnavItem.prototype.initPathsAndTransforms = function () {
+
+    this.sliceHelper = new slicePathHelper();
+    this.sliceHelper.centerX = this.wheelnav.centerX;
+    this.sliceHelper.centerY = this.wheelnav.centerY;
+    this.sliceHelper.wheelRadius = this.wheelnav.wheelRadius;
+    this.sliceHelper.startAngle = this.baseAngle;
+    this.sliceHelper.sliceAngle = this.sliceAngle;
+    this.sliceHelper.itemIndex = this.itemIndex;
+
     //Set min/max sliecePaths
     //Default - min
-    this.slicePathMin = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.minPercent, this.slicePathCustom);
+    this.slicePathMin = this.slicePathFunction(this.sliceHelper, this.minPercent, this.slicePathCustom);
 
     //Default - max
-    this.slicePathMax = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.maxPercent, this.slicePathCustom);
+    this.slicePathMax = this.slicePathFunction(this.sliceHelper, this.maxPercent, this.slicePathCustom);
 
     //Selected - min
     if (this.sliceSelectedPathFunction !== null) {
-        this.selectedSlicePathMin = this.sliceSelectedPathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.selectedPercent * this.minPercent, this.sliceSelectedPathCustom);
+        this.selectedSlicePathMin = this.sliceSelectedPathFunction(this.sliceHelper, this.selectedPercent * this.minPercent, this.sliceSelectedPathCustom);
     }
     else {
-        this.selectedSlicePathMin = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.selectedPercent * this.minPercent, this.sliceSelectedPathCustom);
+        this.selectedSlicePathMin = this.slicePathFunction(this.sliceHelper, this.selectedPercent * this.minPercent, this.sliceSelectedPathCustom);
     }
 
     //Selected - max
     if (this.sliceSelectedPathFunction !== null) {
-        this.selectedSlicePathMax = this.sliceSelectedPathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.selectedPercent * this.maxPercent, this.sliceSelectedPathCustom);
+        this.selectedSlicePathMax = this.sliceSelectedPathFunction(this.sliceHelper, this.selectedPercent * this.maxPercent, this.sliceSelectedPathCustom);
     }
     else {
-        this.selectedSlicePathMax = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.selectedPercent * this.maxPercent, this.sliceSelectedPathCustom);
+        this.selectedSlicePathMax = this.slicePathFunction(this.sliceHelper, this.selectedPercent * this.maxPercent, this.sliceSelectedPathCustom);
     }
 
     //Hovered - min
     if (this.sliceHoverPathFunction !== null) {
-        this.hoverSlicePathMin = this.sliceHoverPathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.hoverPercent * this.minPercent, this.sliceHoverPathCustom);
+        this.hoverSlicePathMin = this.sliceHoverPathFunction(this.sliceHelper, this.hoverPercent * this.minPercent, this.sliceHoverPathCustom);
     }
     else {
-        this.hoverSlicePathMin = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.hoverPercent * this.minPercent, this.sliceHoverPathCustom);
+        this.hoverSlicePathMin = this.slicePathFunction(this.sliceHelper, this.hoverPercent * this.minPercent, this.sliceHoverPathCustom);
     }
 
     //Hovered - max
     if (this.sliceHoverPathFunction !== null) {
-        this.hoverSlicePathMax = this.sliceHoverPathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.hoverPercent * this.maxPercent, this.sliceHoverPathCustom);
+        this.hoverSlicePathMax = this.sliceHoverPathFunction(this.sliceHelper, this.hoverPercent * this.maxPercent, this.sliceHoverPathCustom);
     }
     else {
-        this.hoverSlicePathMax = this.slicePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.hoverPercent * this.maxPercent, this.sliceHoverPathCustom);
+        this.hoverSlicePathMax = this.slicePathFunction(this.sliceHelper, this.hoverPercent * this.maxPercent, this.sliceHoverPathCustom);
     }
 
     //Set min/max sliececlickablePaths
     
     if (this.sliceClickablePathFunction !== null) {
         //Default - min
-        this.clickableSlicePathMin = this.sliceClickablePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.clickablePercentMin, this.slicePathCustom);
+        this.clickableSlicePathMin = this.sliceClickablePathFunction(this.sliceHelper, this.clickablePercentMin, this.slicePathCustom);
         //Default - max
-        this.clickableSlicePathMax = this.sliceClickablePathFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.itemIndex, this.clickablePercentMax, this.slicePathCustom);
+        this.clickableSlicePathMax = this.sliceClickablePathFunction(this.sliceHelper, this.clickablePercentMax, this.slicePathCustom);
     }
 
     //Set sliceTransforms
@@ -1260,6 +1269,7 @@ var slicePathHelper = function () {
 
     this.sliceRadius = 0;
     this.startAngle = 0;
+    this.sliceAngle = 0;
     this.startTheta = 0;
     this.middleTheta = 0;
     this.endTheta = 0;
@@ -1268,8 +1278,12 @@ var slicePathHelper = function () {
     this.titleRadius = 0;
     this.titleTheta = 0;
     this.custom = null;
+    this.centerX = 0;
+    this.centerY = 0;
+    this.wheelRadius = 0;
+    this.itemIndex = 0;
 
-    this.setBaseValue = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom) {
+    this.setBaseValue = function (percent, custom) {
 
         if (custom === null) {
             custom = new slicePathCustomization();
@@ -1278,17 +1292,16 @@ var slicePathHelper = function () {
             this.custom = custom;
         }
 
-        this.sliceRadius = rOriginal * percent;
-        this.startAngle = baseAngle;
+        this.sliceRadius = this.wheelRadius * percent;
         this.startTheta = this.getTheta(this.startAngle);
-        this.middleTheta = this.getTheta(this.startAngle + sliceAngle / 2);
-        this.endTheta = this.getTheta(this.startAngle + sliceAngle);
+        this.middleTheta = this.getTheta(this.startAngle + this.sliceAngle / 2);
+        this.endTheta = this.getTheta(this.startAngle + this.sliceAngle);
         if (custom !== null) {
             if (custom.titleRadiusPercent !== null) {
                 this.titleRadius = this.sliceRadius * custom.titleRadiusPercent;
             }
             if (custom.titleSliceAnglePercent !== null) {
-                this.titleTheta = this.getTheta(this.startAngle + sliceAngle * custom.titleSliceAnglePercent);
+                this.titleTheta = this.getTheta(this.startAngle + this.sliceAngle * custom.titleSliceAnglePercent);
             }
         }
         else {
@@ -1296,7 +1309,7 @@ var slicePathHelper = function () {
             this.titleTheta = this.middleTheta;
         }
 
-        this.setTitlePos(x, y);
+        this.setTitlePos(this.centerX, this.centerY);
     };
 
     this.setTitlePos = function (x, y) {
@@ -1328,20 +1341,19 @@ var slicePathCustomization = function () {
 
 
 ///#source 1 1 /js/source/wheelnav.slicePath.core.js
+///#source 1 1 /js/source/slicePaths/wheelnav.slicePathStart.js
 /* ======================================================================================= */
-/* Slice path definitions for core distribution. This stores only NullSlice and PieSlice.  */
+/* Slice path definitions.                                                                 */
 /* ======================================================================================= */
 /* ======================================================================================= */
 /* Documentation: http://wheelnavjs.softwaretailoring.net/documentation/slicePath.html     */
 /* ======================================================================================= */
 
-var slicePath = function () {
+slicePath = function () {
 
-    this.helper = new slicePathHelper();
+    this.NullSlice = function (helper, percent, custom) {
 
-    this.NullSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom) {
-
-        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom);
+        helper.setBaseValue(percent, custom);
 
         return {
             slicePathString: "",
@@ -1351,45 +1363,12 @@ var slicePath = function () {
         };
     };
 
-    this.PieSliceCustomization = function () {
 
-        var custom = new slicePathCustomization();
-        custom.titleRadiusPercent = 0.6;
-        return custom;
-    };
-
-    this.PieSlice = function (x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom) {
-
-        if (custom === null) {
-            custom = PieSliceCustomization();
-        }
-
-        helper.setBaseValue(x, y, rOriginal, baseAngle, sliceAngle, itemIndex, percent, custom);
-
-        r = helper.sliceRadius;
-        r = r * 0.9;
-        helper.titleRadius = r * custom.titleRadiusPercent;
-
-        helper.setTitlePos(x, y);
-
-        startTheta = helper.startTheta;
-        endTheta = helper.endTheta;
-
-        slicePathString = [["M", x, y],
-                     ["L", r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
-                     ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
-                     ["z"]];
-
-        return {
-            slicePathString: slicePathString,
-            linePathString: "",
-            titlePosX: helper.titlePosX,
-            titlePosY: helper.titlePosY
-        };
-    };
+///#source 1 1 /js/source/slicePaths/wheelnav.slicePathEnd.js
 
     return this;
 };
+
 
 
 
