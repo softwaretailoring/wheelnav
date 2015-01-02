@@ -16,28 +16,16 @@ this.PieSlice = function (helper, percent, custom) {
     }
 
     helper.setBaseValue(percent, custom);
-    x = helper.centerX;
-    y = helper.centerY;
 
-    r = helper.sliceRadius;
-    r = r * 0.9;
-    helper.titleRadius = r * custom.titleRadiusPercent;
+    var arcBaseRadius = helper.sliceRadius * custom.arcBaseRadiusPercent;
+    var arcRadius = helper.sliceRadius * custom.arcRadiusPercent;
 
-    helper.setTitlePos(x, y);
+    slicePathString = [helper.MoveTo(helper.middleAngle, custom.startRadiusPercent * helper.sliceRadius),
+                 helper.LineTo(helper.startAngle, arcBaseRadius),
+                 helper.ArcTo(arcRadius, helper.endAngle, arcBaseRadius),
+                 helper.Close()];
 
-    startTheta = helper.startTheta;
-    endTheta = helper.endTheta;
-
-    var arcBaseRadius = r * custom.arcBaseRadiusPercent;
-    var arcRadius = r * custom.arcRadiusPercent;
-    var startX = custom.startRadiusPercent * r * Math.cos(helper.middleTheta) + x;
-    var startY = custom.startRadiusPercent * r * Math.sin(helper.middleTheta) + y;
-
-    slicePathString = [["M", startX, startY],
-                 ["L", arcBaseRadius * Math.cos(startTheta) + x, arcBaseRadius * Math.sin(startTheta) + y],
-                 ["A", arcRadius, arcRadius, 0, 0, 1, arcBaseRadius * Math.cos(endTheta) + x, arcBaseRadius * Math.sin(endTheta) + y],
-                 ["z"]];
-
+    
     return {
         slicePathString: slicePathString,
         linePathString: "",

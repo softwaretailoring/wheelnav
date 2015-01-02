@@ -2,23 +2,17 @@
 this.YinYangSlice = function (helper, percent, custom) {
 
     helper.setBaseValue(percent, custom);
-    x = helper.centerX;
-    y = helper.centerY;
 
     r = helper.sliceRadius;
-    r = r * 0.9;
 
-    startTheta = helper.startTheta;
-    endTheta = helper.endTheta;
+    slicePathString = [helper.MoveToCenter(),
+                 helper.ArcTo(r / 2, helper.startAngle, r),
+                 helper.ArcTo(r, helper.endAngle, r),
+                 helper.ArcBackTo(r / 2, 0, 0),
+                 helper.Close()];
 
-    slicePathString = [["M", x, y],
-                 ["A", r / 2, r / 2, 0, 0, 1, r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
-                 ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
-                 ["A", r / 2, r / 2, 0, 0, 0, x, y],
-                 ["z"]];
-
-    titlePosX = r / 2 * Math.cos(startTheta) + x;
-    titlePosY = r / 2 * Math.sin(startTheta) + y;
+    titlePosX = helper.getX(helper.startAngle, r / 2);
+    titlePosY = helper.getY(helper.startAngle, r / 2);
 
     return {
         slicePathString: slicePathString,

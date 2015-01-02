@@ -1,32 +1,38 @@
 ﻿
+this.EyeSliceCustomization = function () {
+
+    var custom = new slicePathCustomization();
+    custom.titleRadiusPercent = 0.68;
+
+    return custom;
+};
+
 this.EyeSlice = function (helper, percent, custom) {
 
+    if (custom === null) {
+        custom = EyeSliceCustomization();
+    }
+
     helper.setBaseValue(percent, custom);
-    x = helper.centerX;
-    y = helper.centerY;
 
-    r = helper.sliceRadius;
-    r = r * 0.7;
-
-    helper.titleRadius = r * 0.87;
-    helper.setTitlePos(x, y);
+    r = helper.wheelRadius * percent * 0.7;
 
     if (percent === 0) {
         r = 0.01;
     }
 
-    startTheta = helper.startTheta;
-    endTheta = helper.endTheta;
+    startAngle = helper.startAngle;
+    endAngle = helper.endAngle;
 
     if (helper.sliceAngle === 180) {
-        startTheta = helper.getTheta(helper.startAngle + helper.sliceAngle / 4);
-        endTheta = helper.getTheta(helper.startAngle + helper.sliceAngle - helper.sliceAngle / 4);
+        startAngle = helper.startAngle + helper.sliceAngle / 4;
+        endAngle = helper.startAngle + helper.sliceAngle - helper.sliceAngle / 4;
     }
 
-    slicePathString = [["M", r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
-                ["A", r, r, 0, 0, 1, r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
-                ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
-                ["z"]];
+    slicePathString = [helper.MoveTo(endAngle, r),
+                 helper.ArcTo(r, startAngle, r),
+                 helper.ArcTo(r, endAngle, r),
+                 helper.Close()];
 
     return {
         slicePathString: slicePathString,

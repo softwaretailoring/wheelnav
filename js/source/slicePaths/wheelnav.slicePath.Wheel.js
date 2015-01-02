@@ -5,7 +5,7 @@ this.WheelSlice = function (helper, percent, custom) {
     x = helper.centerX;
     y = helper.centerY;
 
-    r = helper.sliceRadius * 0.9;
+    r = helper.sliceRadius;
 
     startTheta = helper.startTheta;
     middleTheta = helper.middleTheta;
@@ -26,16 +26,16 @@ this.WheelSlice = function (helper, percent, custom) {
         innerRadiusPercent = 0.873;
     }
 
-    slicePathString = [["M", (r * 0.07) * Math.cos(middleTheta) + x, (r * 0.07) * Math.sin(middleTheta) + y],
-         ["L", (r * 0.07) * Math.cos(middleTheta) + (r * 0.87) * Math.cos(startTheta) + x, (r * 0.07) * Math.sin(middleTheta) + (r * 0.87) * Math.sin(startTheta) + y],
-         ["A", (r * innerRadiusPercent), (r * innerRadiusPercent), 0, 0, 1, (r * 0.07) * Math.cos(middleTheta) + (r * 0.87) * Math.cos(endTheta) + x, (r * 0.07) * Math.sin(middleTheta) + (r * 0.87) * Math.sin(endTheta) + y],
-         ["z"]];
+    slicePathString = [helper.MoveTo(helper.middleAngle, r * 0.07),
+                 ["L", (r * 0.07) * Math.cos(middleTheta) + (r * 0.87) * Math.cos(startTheta) + x, (r * 0.07) * Math.sin(middleTheta) + (r * 0.87) * Math.sin(startTheta) + y],
+                 ["A", (r * innerRadiusPercent), (r * innerRadiusPercent), 0, 0, 1, (r * 0.07) * Math.cos(middleTheta) + (r * 0.87) * Math.cos(endTheta) + x, (r * 0.07) * Math.sin(middleTheta) + (r * 0.87) * Math.sin(endTheta) + y],
+                 helper.Close()];
 
-    linePathString = [["M", r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
-         ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
-         ["A", r, r, 0, 0, 0, r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y]];
+    linePathString = [helper.MoveTo(helper.startAngle, r),
+                 helper.ArcTo(r, helper.endAngle, r),
+                 helper.ArcBackTo(r, helper.startAngle, r)];
 
-    helper.setTitlePos(x, y);
+    helper.setTitlePos();
 
     return {
         slicePathString: slicePathString,

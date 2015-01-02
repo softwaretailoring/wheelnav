@@ -16,34 +16,25 @@ this.StarSlice = function (helper, percent, custom) {
     }
 
     helper.setBaseValue(percent, custom);
-    x = helper.centerX;
-    y = helper.centerY;
 
-    r = helper.sliceRadius;
+    r = helper.wheelRadius * percent;
     rbase = r * custom.minRadiusPercent;
 
-    startTheta = helper.startTheta;
-    middleTheta = helper.middleTheta;
-    endTheta = helper.endTheta;
-
     if (custom.isBasePieSlice) {
-        r = r * 0.9;
-        slicePathString = [["M", x, y],
-                 ["L", r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
-                 ["A", r, r, 0, 0, 1, r * Math.cos(middleTheta) + x, r * Math.sin(middleTheta) + y],
-                 ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
-                 ["z"]];
+        r = helper.sliceRadius;
+        slicePathString = [helper.MoveToCenter(),
+                 helper.LineTo(helper.startAngle, r),
+                 helper.ArcTo(r, helper.middleAngle, r),
+                 helper.ArcTo(r, helper.endAngle, r),
+                 helper.Close()];
     }
     else {
-        slicePathString = [["M", x, y],
-                     ["L", (rbase * Math.cos(startTheta)) + x, (rbase * Math.sin(startTheta)) + y],
-                     ["L", r * Math.cos(middleTheta) + x, r * Math.sin(middleTheta) + y],
-                     ["L", (rbase * Math.cos(endTheta)) + x, (rbase * Math.sin(endTheta)) + y],
-                     ["z"]];
+        slicePathString = [helper.MoveToCenter(),
+                     helper.LineTo(helper.startAngle, rbase),
+                     helper.LineTo(helper.middleAngle, r),
+                     helper.LineTo(helper.endAngle, rbase),
+                     helper.Close()];
     }
-
-    helper.titleRadius = r * custom.titleRadiusPercent;
-    helper.setTitlePos(x, y);
 
     return {
         slicePathString: slicePathString,

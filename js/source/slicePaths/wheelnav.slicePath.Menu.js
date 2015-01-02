@@ -20,9 +20,9 @@ this.MenuSlice = function (helper, percent, custom) {
     x = helper.centerX;
     y = helper.centerY;
 
-    var r = helper.sliceRadius;
+    var r = helper.wheelRadius * percent;
     helper.titleRadius = r * custom.titleRadiusPercent;
-    helper.setTitlePos(x, y);
+    helper.setTitlePos();
 
     var menuRadius = percent * custom.menuRadius;
 
@@ -40,18 +40,13 @@ this.MenuSlice = function (helper, percent, custom) {
                 ["A", 1, 1, 0, 0, 1, x + 1, y + 1]];
     }
     else {
-        lineStartX = custom.lineBaseRadiusPercent * r * Math.cos(middleTheta) + x;
-        lineStartY = custom.lineBaseRadiusPercent * r * Math.sin(middleTheta) + y;
-        lineEndX = (helper.titleRadius - menuRadius) * Math.cos(middleTheta) + x;
-        lineEndY = (helper.titleRadius - menuRadius) * Math.sin(middleTheta) + y;
-
         if (!custom.isSelectedLine) {
-            linePathString = [["M", lineStartX, lineStartY],
-                        ["A", r / 2, r / 2, 0, 0, 1, lineEndX, lineEndY]];
+            linePathString = [helper.MoveTo(helper.middleAngle, custom.lineBaseRadiusPercent * r),
+                              helper.ArcTo(r / 2, helper.middleAngle, helper.titleRadius - menuRadius)];
         }
         else {
-            linePathString = [["M", lineStartX, lineStartY],
-                        ["A", r / 3, r / 3, 0, 0, 1, lineEndX, lineEndY]];
+            linePathString = [helper.MoveTo(helper.middleAngle, custom.lineBaseRadiusPercent * r),
+                              helper.ArcTo(r / 3, helper.middleAngle, helper.titleRadius - menuRadius)];
         }
     }
 

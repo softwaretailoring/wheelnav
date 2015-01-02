@@ -24,6 +24,11 @@
 
             window.onload = function () {
 
+                var NullSlice = new wheelnav("NullSlice");
+                NullSlice.slicePathFunction = slicePath().NullSlice;
+                NullSlice.titleSelectedAttr = { font: NullSlice.titleFont, fill: "#FFF", cursor: 'default', stroke: "#111" };
+                NullSlice.createWheel();
+
                 var PieSlice = new wheelnav("PieSlice");
                 PieSlice.slicePathFunction = slicePath().PieSlice;
                 PieSlice.createWheel();
@@ -71,13 +76,13 @@
                 EyeSlice.slicePathFunction = slicePath().EyeSlice;
                 EyeSlice.createWheel(["1", "2", "3", "4", "5", "6"]);
 
-                var WheelSlice = new wheelnav("WheelSlice");
-                WheelSlice.slicePathFunction = slicePath().WheelSlice;
-                WheelSlice.createWheel();
-
                 var LineSlice = new wheelnav("LineSlice");
                 LineSlice.slicePathFunction = slicePath().LineSlice;
                 LineSlice.createWheel();
+
+                var WheelSlice = new wheelnav("WheelSlice");
+                WheelSlice.slicePathFunction = slicePath().WheelSlice;
+                WheelSlice.createWheel();
 
                 var TabSlice = new wheelnav("TabSlice");
                 TabSlice.slicePathFunction = slicePath().TabSlice;
@@ -106,53 +111,55 @@
 
         </script>
     </head>
-    <body>
-        <header>
-            <p>
-                This is a test page for available slicePaths in wheelnav.js library. 
-                For more information please visit the <a href="http://wheelnavjs.softwaretailoring.net" target="_blank">project page</a>
-            </p>
-        </header>
-        
-        <h2>PieSlice</h2>
-        <div id="PieSlice" class="wheelNav"></div>
-        <h2>DonutSlice</h2>
-        <div id="DonutSlice" class="wheelNav"></div>
-        <h2>StarSlice</h2>
-        <div id="StarSlice" class="wheelNav"></div>
-        <h2>StarBasePieSlice</h2>
-        <div id="StarBasePieSlice" class="wheelNav"></div>
-        <h2>CogSlice</h2>
-        <div id="CogSlice" class="wheelNav"></div>
-        <h2>CogBasePieSlice</h2>
-        <div id="CogBasePieSlice" class="wheelNav"></div>
-        <h2>MenuSlice</h2>
-        <div id="MenuSlice" class="wheelNav"></div>
-        <h2>MenuSliceSelectedLine</h2>
-        <div id="MenuSliceSelectedLine" class="wheelNav"></div>
-        <h2>MenuSliceWithoutLine</h2>
-        <div id="MenuSliceWithoutLine" class="wheelNav"></div>
-        <h2>FlowerSlice</h2>
-        <div id="FlowerSlice" class="wheelNav"></div>
-        <h2>EyeSlice</h2>
-        <div id="EyeSlice" class="wheelNav"></div>
-        <h2>WheelSlice</h2>
-        <div id="WheelSlice" class="wheelNav"></div>
-        <h2>LineSlice</h2>
-        <div id="LineSlice" class="wheelNav"></div>
-        <h2>TabSlice</h2>
-        <div id="TabSlice" class="wheelNav"></div>
-        <h2>YinYangSlice</h2>
-        <div id="YinYangSlice" class="wheelNav"></div>
-        <h2>PieArrowSlice</h2>
-        <div id="PieArrowSlice" class="wheelNav"></div>
-        <h2>WebSlice</h2>
-        <div id="WebSlice" class="wheelNav"></div>
-        <h2>WinterSlice</h2>
-        <div id="WinterSlice" class="wheelNav"></div>
+<body>
+    <header>
+        <p>
+            This is a test page for available slicePaths in wheelnav.js library.
+            For more information please visit the <a href="http://wheelnavjs.softwaretailoring.net" target="_blank">project page</a>
+        </p>
+    </header>
 
-        <footer>
-            <p>&copy; 2014 <a href="http://softwaretailoring.net" target="_blank">softwaretailoring.net</a></p>
-        </footer>
-    </body>
+    <h2>NullSlice</h2>
+    <div id="NullSlice" class="wheelNav"></div>
+    <h2>PieSlice</h2>
+    <div id="PieSlice" class="wheelNav"></div>
+    <h2>DonutSlice</h2>
+    <div id="DonutSlice" class="wheelNav"></div>
+    <h2>StarSlice</h2>
+    <div id="StarSlice" class="wheelNav"></div>
+    <h2>StarBasePieSlice</h2>
+    <div id="StarBasePieSlice" class="wheelNav"></div>
+    <h2>CogSlice</h2>
+    <div id="CogSlice" class="wheelNav"></div>
+    <h2>CogBasePieSlice</h2>
+    <div id="CogBasePieSlice" class="wheelNav"></div>
+    <h2>MenuSlice</h2>
+    <div id="MenuSlice" class="wheelNav"></div>
+    <h2>MenuSliceSelectedLine</h2>
+    <div id="MenuSliceSelectedLine" class="wheelNav"></div>
+    <h2>MenuSliceWithoutLine</h2>
+    <div id="MenuSliceWithoutLine" class="wheelNav"></div>
+    <h2>FlowerSlice</h2>
+    <div id="FlowerSlice" class="wheelNav"></div>
+    <h2>EyeSlice</h2>
+    <div id="EyeSlice" class="wheelNav"></div>
+    <h2>LineSlice</h2>
+    <div id="LineSlice" class="wheelNav"></div>
+    <h2>WheelSlice</h2>
+    <div id="WheelSlice" class="wheelNav"></div>
+    <h2>TabSlice</h2>
+    <div id="TabSlice" class="wheelNav"></div>
+    <h2>YinYangSlice</h2>
+    <div id="YinYangSlice" class="wheelNav"></div>
+    <h2>PieArrowSlice</h2>
+    <div id="PieArrowSlice" class="wheelNav"></div>
+    <h2>WebSlice</h2>
+    <div id="WebSlice" class="wheelNav"></div>
+    <h2>WinterSlice</h2>
+    <div id="WinterSlice" class="wheelNav"></div>
+
+    <footer>
+        <p>&copy; 2014 <a href="http://softwaretailoring.net" target="_blank">softwaretailoring.net</a></p>
+    </footer>
+</body>
 </html>

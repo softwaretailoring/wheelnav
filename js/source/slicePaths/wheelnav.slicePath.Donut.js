@@ -14,27 +14,20 @@ this.DonutSlice = function (helper, percent, custom) {
         custom = DonutSliceCustomization();
     }
 
+    maxRadius = helper.wheelRadius * percent * custom.maxRadiusPercent;
+    minRadius = helper.wheelRadius * percent * custom.minRadiusPercent;
+
     helper.setBaseValue(percent, custom);
-    x = helper.centerX;
-    y = helper.centerY;
 
-    r = helper.sliceRadius;
+    helper.titleRadius = (maxRadius + minRadius) / 2;
+    helper.setTitlePos();
 
-    r = helper.sliceRadius * custom.maxRadiusPercent;
-    rbase = helper.sliceRadius * custom.minRadiusPercent;
-
-    startTheta = helper.startTheta;
-    endTheta = helper.endTheta;
-
-    slicePathString = [["M", rbase * Math.cos(startTheta) + x, rbase * Math.sin(startTheta) + y],
-                 ["L", r * Math.cos(startTheta) + x, r * Math.sin(startTheta) + y],
-                 ["A", r, r, 0, 0, 1, r * Math.cos(endTheta) + x, r * Math.sin(endTheta) + y],
-                 ["L", rbase * Math.cos(endTheta) + x, rbase * Math.sin(endTheta) + y],
-                 ["A", rbase, rbase, 0, 0, 0, rbase * Math.cos(startTheta) + x, rbase * Math.sin(startTheta) + y],
-                 ["z"]];
-
-    helper.titleRadius = (r + rbase) / 2;
-    helper.setTitlePos(x, y);
+    slicePathString = [helper.MoveTo(helper.startAngle, minRadius),
+                 helper.LineTo(helper.startAngle, maxRadius),
+                 helper.ArcTo(maxRadius, helper.endAngle, maxRadius),
+                 helper.LineTo(helper.endAngle, minRadius),
+                 helper.ArcBackTo(minRadius, helper.startAngle, minRadius),
+                 helper.Close()];
 
     return {
         slicePathString: slicePathString,
