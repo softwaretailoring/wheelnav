@@ -1,4 +1,17 @@
-## 1.3.1
+## 1.4.0
+
+* Modify order of items: navSlice -> navLine -> navTitle
+* Remove MenuSquareSlice from slicePaths
+* New wheelnav method: setTooltips
+* New navItem method: refreshNavItem, initPathsAndTransforms
+* New navItem property: titleHover
+* New navItem function: navigateFunction
+* Refactor wheelnav.refreshWeel, navItem.navTitle transform
+* Fix IE bug with clickableSlice
+* Reorganize slicePath code
+* New slices: Web, Winter, Tutorial
+
+### 1.3.1
 
 * Fix spreader Attrs handling and visibility
 * Fix names of css classes for proper css selector using
