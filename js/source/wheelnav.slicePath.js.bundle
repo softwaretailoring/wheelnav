@@ -24,6 +24,7 @@
     <file>/js/source/slicePaths/wheelnav.slicePath.YinYang.js</file>
     <file>/js/source/slicePaths/wheelnav.slicePath.Web.js</file>
     <file>/js/source/slicePaths/wheelnav.slicePath.Winter.js</file>
+    <file>/js/source/slicePaths/wheelnav.slicePath.Tutorial.js</file>
     <file>/js/source/slicePaths/wheelnav.slicePathEnd.js</file>
   </files>
 </bundle>

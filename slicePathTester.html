@@ -107,6 +107,21 @@
                 WinterSlice.slicePathFunction = slicePath().WinterSlice;
                 WinterSlice.titleSelectedAttr = { font: WinterSlice.titleFont, fill: "#FFF", cursor: 'default', stroke: "#111" };
                 WinterSlice.createWheel();
+
+                var TutorialSlice = new wheelnav("TutorialSlice");
+                TutorialSlice.slicePathFunction = slicePath().TutorialSlice;
+                TutorialSlice.titleSelectedAttr = { font: TutorialSlice.titleFont, fill: "#FFF", cursor: 'default', stroke: "#111" };
+                TutorialSlice.slicePathCustom = slicePath().TutorialSliceCustomization();
+                TutorialSlice.sliceSelectedPathCustom = slicePath().TutorialSliceCustomization();
+                TutorialSlice.slicePathCustom.isMoveTo = true;
+                TutorialSlice.sliceSelectedPathCustom.isMoveTo = true;
+                TutorialSlice.slicePathCustom.isLineTo = true;
+                TutorialSlice.sliceSelectedPathCustom.isLineTo = true;
+                TutorialSlice.slicePathCustom.isArcTo = true;
+                TutorialSlice.sliceSelectedPathCustom.isArcTo = true;
+                TutorialSlice.slicePathCustom.isArcBackTo = true;
+                TutorialSlice.sliceSelectedPathCustom.isArcBackTo = true;
+                TutorialSlice.createWheel();
             };
 
         </script>
@@ -157,6 +172,8 @@
     <div id="WebSlice" class="wheelNav"></div>
     <h2>WinterSlice</h2>
     <div id="WinterSlice" class="wheelNav"></div>
+    <h2>TutorialSlice</h2>
+    <div id="TutorialSlice" class="wheelNav"></div>
 
     <footer>
         <p>&copy; 2014 <a href="http://softwaretailoring.net" target="_blank">softwaretailoring.net</a></p>

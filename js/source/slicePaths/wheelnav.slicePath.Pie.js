@@ -24,7 +24,6 @@ this.PieSlice = function (helper, percent, custom) {
                  helper.LineTo(helper.startAngle, arcBaseRadius),
                  helper.ArcTo(arcRadius, helper.endAngle, arcBaseRadius),
                  helper.Close()];
-
     
     return {
         slicePathString: slicePathString,
