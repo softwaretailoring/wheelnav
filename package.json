@@ -8,9 +8,6 @@
         "type": "git",
         "url": "https://github.com/softwaretailoring/wheelnav.git"
     },
-    "dependencies": {
-        "raphael": "^2.1.0"
-    },
     "author": {
         "name": "Gábor Berkesi",
         "email": "gabor.berkesi@softwaretailoring.net",
@@ -22,7 +19,13 @@
         "js/dist/wheelnav.min.js.map",
         "js/dist/core/wheelnav.js",
         "js/dist/core/wheelnav.min.js",
-        "js/dist/core/wheelnav.min.js.map"
+        "js/dist/core/wheelnav.min.js.map",
+        "js/required/raphael.js",
+        "js/required/raphael.min.js",
+        "js/required/raphael.min.js.map",
+        "js/required/raphael.icons.js",
+        "js/required/raphael.license.txt",
+        "LICENSE"
     ],    
     "keywords": [
         "animated",
