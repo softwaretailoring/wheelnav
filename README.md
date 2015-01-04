@@ -28,10 +28,18 @@ myWheelnav.createWheel([icon.github, icon.people, icon.smile]);
 
 The index.html of this repo (test page) is available [here][testpage].
 
-## Npm
+## Install
+
+wheelnav.js is available over npm
 
 ```sh
 $ npm install wheelnav
+```
+
+and bower
+
+```sh
+$ bower install wheelnav
 ```
 
 ## Author
