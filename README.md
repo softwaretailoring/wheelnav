@@ -8,6 +8,7 @@ It works on all major desktop and mobile browser.
 Possible uses:
 - tab navigation
 - pie menu (radial menu)
+- sub menu
 - option button
 - checkboxes
 - and more...
@@ -26,6 +27,12 @@ myWheelnav.createWheel([icon.github, icon.people, icon.smile]);
 ![sample image](http://wheelnavjs.softwaretailoring.net/test/wheelnav_sampleimage.png)
 
 The index.html of this repo (test page) is available [here][testpage].
+
+## Npm
+
+```sh
+$ npm install wheelnav
+```
 
 ## Author
 

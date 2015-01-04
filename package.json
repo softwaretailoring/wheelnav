@@ -1,0 +1,40 @@
+{
+    "name": "wheelnav",
+    "version": "1.4.0",
+    "description": "Animated javascript navigation component based on Raphaël.js (SVG/VML). It can be a pie menu (radial menu) and many more.",
+    "homepage": "http://wheelnavjs.softwaretailoring.net",
+    "main": "js/dist/wheelnav.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/softwaretailoring/wheelnav.git"
+    },
+    "dependencies": {
+        "raphael": "^2.1.0"
+    },
+    "author": {
+        "name": "Gábor Berkesi",
+        "email": "gabor.berkesi@softwaretailoring.net",
+        "url": "http://softwaretailoring.net"
+    },
+    "files": [
+        "js/dist/wheelnav.js",
+        "js/dist/wheelnav.min.js",
+        "js/dist/wheelnav.min.js.map",
+        "js/dist/core/wheelnav.js",
+        "js/dist/core/wheelnav.min.js",
+        "js/dist/core/wheelnav.min.js.map"
+    ],    
+    "keywords": [
+        "animated",
+        "navigation",
+        "pie-menu",
+        "radial-menu",
+        "SVG",
+        "Raphael",
+        "wheel"
+    ],
+    "bugs": {
+        "url": "https://github.com/softwaretailoring/wheelnav/issues"
+    },
+    "license": "MIT"
+}
