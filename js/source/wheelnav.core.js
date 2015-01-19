@@ -1,5 +1,5 @@
 ﻿/* ======================================================================================= */
-/*                                   wheelnav.js - v1.4.0                                  */
+/*                                   wheelnav.js - v1.4.1                                  */
 /* ======================================================================================= */
 /* This is a small javascript library for animated SVG based wheel navigation.             */
 /* Requires Raphaël JavaScript Vector Library (http://raphaeljs.com)                       */
@@ -7,7 +7,7 @@
 /* Check http://wheelnavjs.softwaretailoring.net for samples.                              */
 /* Fork https://github.com/softwaretailoring/wheelnav for contribution.                    */
 /* ======================================================================================= */
-/* Copyright © 2014 Gábor Berkesi (http://softwaretailoring.net)                           */
+/* Copyright © 2014-2015 Gábor Berkesi (http://softwaretailoring.net)                      */
 /* Licensed under MIT (https://github.com/softwaretailoring/wheelnav/blob/master/LICENSE)  */
 /* ======================================================================================= */
 
@@ -24,10 +24,11 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
         this.holderId = divId;
     }
 
-    var holderDiv = document.getElementById(divId);
+    var canvasWidth;
 
     if (raphael === undefined ||
         raphael === null) {
+        var holderDiv = document.getElementById(divId);
         holderDiv.innerText = "";
         holderDiv.innerHTML = "";
 
@@ -38,16 +39,18 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
                 divHeight = divWidth;
             }
             this.raphael = new Raphael(divId, divWidth, divHeight);
+            canvasWidth = divWidth;
         }
         else {
             this.raphael = new Raphael(divId);
+            canvasWidth = holderDiv.clientWidth;
         }
     }
     else {
+        //The divId parameter has to be the identifier of the wheelnav in this case.
         this.raphael = raphael;
+        canvasWidth = this.raphael.canvas.clientWidth;
     }
-
-    var canvasWidth = holderDiv.clientWidth;
 
     //Public properties
     this.centerX = canvasWidth / 2;

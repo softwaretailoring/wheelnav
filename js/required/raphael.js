@@ -6851,6 +6851,9 @@
             return this;
         }
         var parent = this.node.parentNode;
+        if (parent === null) {
+            return this;
+        }
         if (parent.tagName.toLowerCase() == "a") {
             parent.parentNode.insertBefore(this.node.parentNode, this.node.parentNode.parentNode.firstChild); 
         } else if (parent.firstChild != this.node) {
