@@ -30,13 +30,13 @@ The index.html of this repo (test page) is available [here][testpage].
 
 ## Install
 
-wheelnav.js is available over npm
+wheelnav.js is available over [npm][npm]
 
 ```sh
 $ npm install wheelnav
 ```
 
-and bower
+and [bower][bower]
 
 ```sh
 $ bower install wheelnav
@@ -54,4 +54,6 @@ Licensed under [MIT][mit]. Enjoy the spinning.
 [testpage]: http://wheelnavjs.softwaretailoring.net/test
 [mit]: http://www.opensource.org/licenses/mit-license.php
 [raphaeljs]: http://raphaeljs.com/
+[npm]: https://www.npmjs.com/package/wheelnav
+[bower]: http://bower.io/search/?q=wheelnav
 
