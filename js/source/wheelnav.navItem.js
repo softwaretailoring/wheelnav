@@ -174,35 +174,51 @@ wheelnavItem.prototype.createNavItem = function () {
 
     this.initPathsAndTransforms();
 
-    var slicePath = this.getCurrentPath();
+    var sliceInitPath = this.sliceInitPath;
 
     //Create slice
-    this.navSlice = this.wheelnav.raphael.path(slicePath.slicePathString);
+    this.navSlice = this.wheelnav.raphael.path(sliceInitPath.slicePathString);
     this.navSlice.attr(this.slicePathAttr);
     this.navSlice.id = this.wheelnav.getSliceId(this.wheelItemIndex);
     this.navSlice.node.id = this.navSlice.id;
 
     //Create linepath
-    this.navLine = this.wheelnav.raphael.path(slicePath.linePathString);
+    this.navLine = this.wheelnav.raphael.path(sliceInitPath.linePathString);
     this.navLine.attr(this.linePathAttr);
     this.navLine.id = this.wheelnav.getLineId(this.wheelItemIndex);
     this.navLine.node.id = this.navLine.id;
 
     //Create title
-    var currentTitle = this.getCurrentTitle();
+    var currentTitle = this.initNavTitle;
+
     //Title defined by path
     if (this.isPathTitle()) {
         this.navTitle = this.wheelnav.raphael.path(currentTitle.path);
     }
     //Title defined by text
     else {
-        this.navTitle = this.wheelnav.raphael.text(slicePath.titlePosX, slicePath.titlePosY, currentTitle.title);
+        this.navTitle = this.wheelnav.raphael.text(sliceInitPath.titlePosX, sliceInitPath.titlePosY, currentTitle.title);
     }
 
     this.navTitle.attr(this.titleAttr);
     this.navTitle.id = this.wheelnav.getTitleId(this.wheelItemIndex);
     this.navTitle.node.id = this.navTitle.id;
 
+    //Set transforms
+    this.navSliceCurrentTransformString = "";
+    if (this.initTransform.sliceTransformString !== "") { this.navSliceCurrentTransformString += this.initTransform.sliceTransformString; }
+
+    this.navLineCurrentTransformString = "";
+    if (this.initTransform.lineTransformString !== "") { this.navLineCurrentTransformString += this.initTransform.lineTransformString; }
+
+    this.navTitleCurrentTransformString = "";
+    if (this.wheelnav.initTitleRotate) { this.navTitleCurrentTransformString += this.getTitleRotateString(); }
+    if (this.initTransform.titleTransformString !== "") { this.navTitleCurrentTransformString += this.initTransform.titleTransformString; }
+
+    this.navSlice.attr({ transform: this.navSliceCurrentTransformString });
+    this.navLine.attr({ transform: this.navLineCurrentTransformString });
+    this.navTitle.attr({ transform: this.navTitleCurrentTransformString });
+    
     //Create item set
     this.navItem = this.wheelnav.raphael.set();
 
@@ -525,7 +541,6 @@ wheelnavItem.prototype.setWheelSettings = function () {
     if (this.wheelnav.slicePathAttr !== null) { this.slicePathAttr = JSON.parse(JSON.stringify(this.wheelnav.slicePathAttr)); }
     if (this.wheelnav.sliceHoverAttr !== null) { this.sliceHoverAttr = JSON.parse(JSON.stringify(this.wheelnav.sliceHoverAttr)); }
     if (this.wheelnav.sliceSelectedAttr !== null) { this.sliceSelectedAttr = JSON.parse(JSON.stringify(this.wheelnav.sliceSelectedAttr)); }
-
     
     //Set title from wheelnav
     if (this.wheelnav.titleAttr !== null) { this.titleAttr = JSON.parse(JSON.stringify(this.wheelnav.titleAttr)); }
@@ -542,6 +557,7 @@ wheelnavItem.prototype.setWheelSettings = function () {
     if (this.wheelnav.animatetime !== null) { this.animatetime = this.wheelnav.animatetime; }
 
     if (this.title !== null) {
+        this.sliceInitPathFunction = this.wheelnav.sliceInitPathFunction;
         this.sliceClickablePathFunction = this.wheelnav.sliceClickablePathFunction;
         this.slicePathFunction = this.wheelnav.slicePathFunction;
         this.sliceSelectedPathFunction = this.wheelnav.sliceSelectedPathFunction;
@@ -550,8 +566,10 @@ wheelnavItem.prototype.setWheelSettings = function () {
         this.sliceTransformFunction = this.wheelnav.sliceTransformFunction;
         this.sliceSelectedTransformFunction = this.wheelnav.sliceSelectedTransformFunction;
         this.sliceHoverTransformFunction = this.wheelnav.sliceHoverTransformFunction;
+        this.sliceInitTransformFunction = this.wheelnav.sliceInitTransformFunction;
     }
     else {
+        this.sliceInitPathFunction = slicePath().NullInitSlice;
         this.sliceClickablePathFunction = slicePath().NullSlice;
         this.slicePathFunction = slicePath().NullSlice;
         this.sliceSelectedPathFunction = null;
@@ -559,16 +577,20 @@ wheelnavItem.prototype.setWheelSettings = function () {
         this.sliceTransformFunction = null;
         this.sliceSelectedTransformFunction = null;
         this.sliceHoverTransformFunction = null;
+        this.sliceInitTransformFunction = null;
     }
 
     this.slicePathCustom = this.wheelnav.slicePathCustom;
     this.sliceSelectedPathCustom = this.wheelnav.sliceSelectedPathCustom;
     this.sliceHoverPathCustom = this.wheelnav.sliceHoverPathCustom;
+    this.sliceInitPathCustom = this.wheelnav.sliceInitPathCustom;
 
     this.sliceTransformCustom = this.wheelnav.sliceTransformCustom;
     this.sliceSelectedTransformCustom = this.wheelnav.sliceSelectedTransformCustom;
     this.sliceHoverTransformCustom = this.wheelnav.sliceHoverTransformCustom;
+    this.sliceInitTransformCustom = this.wheelnav.sliceInitTransformCustom;
 
+    this.initPercent = this.wheelnav.initPercent;
     this.minPercent = this.wheelnav.minPercent;
     this.maxPercent = this.wheelnav.maxPercent;
     this.hoverPercent = this.wheelnav.hoverPercent;
@@ -638,6 +660,14 @@ wheelnavItem.prototype.initPathsAndTransforms = function () {
         this.clickableSlicePathMax = this.sliceClickablePathFunction(this.sliceHelper, this.clickablePercentMax, this.slicePathCustom);
     }
 
+    //Initial path
+    if (this.sliceInitPathFunction !== null) {
+        this.sliceInitPath = this.sliceInitPathFunction(this.sliceHelper, this.initPercent, this.sliceInitPathCustom);
+    }
+    else {
+        this.sliceInitPath = this.slicePathFunction(this.sliceHelper, this.initPercent, this.sliceInitPathCustom);
+    }
+
     //Set sliceTransforms
     //Default
     if (this.sliceTransformFunction !== null) {
@@ -663,8 +693,17 @@ wheelnavItem.prototype.initPathsAndTransforms = function () {
         this.hoverTransform = sliceTransform().NullTransform;
     }
 
+    //Initial transform
+    if (this.sliceInitTransformFunction !== null) {
+        this.initTransform = this.sliceInitTransformFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.wheelnav.titleRotateAngle, this.itemIndex, this.sliceInitTransformCustom);
+    }
+    else {
+        this.initTransform = sliceTransform().NullTransform;
+    }
+
     //Set titles
     if (this.isPathTitle()) {
+        initNavTitle = new wheelnavTitle(this.title, this.wheelnav.raphael.raphael);
         basicNavTitleMin = new wheelnavTitle(this.title, this.wheelnav.raphael.raphael);
         basicNavTitleMax = new wheelnavTitle(this.title, this.wheelnav.raphael.raphael);
         hoverNavTitleMin = new wheelnavTitle(this.titleHover, this.wheelnav.raphael.raphael);
@@ -673,6 +712,7 @@ wheelnavItem.prototype.initPathsAndTransforms = function () {
         selectedNavTitleMax = new wheelnavTitle(this.titleSelected, this.wheelnav.raphael.raphael);
     }
     else {
+        initNavTitle = new wheelnavTitle(this.title);
         basicNavTitleMin = new wheelnavTitle(this.title);
         basicNavTitleMax = new wheelnavTitle(this.title);
         hoverNavTitleMin = new wheelnavTitle(this.titleHover);
@@ -681,6 +721,7 @@ wheelnavItem.prototype.initPathsAndTransforms = function () {
         selectedNavTitleMax = new wheelnavTitle(this.titleSelected);
     }
 
+    this.initNavTitle = this.getTitlePercentAttr(this.sliceInitPath.titlePosX, this.sliceInitPath.titlePosY, initNavTitle);
     this.basicNavTitleMin = this.getTitlePercentAttr(this.slicePathMin.titlePosX, this.slicePathMin.titlePosY, basicNavTitleMin);
     this.basicNavTitleMax = this.getTitlePercentAttr(this.slicePathMax.titlePosX, this.slicePathMax.titlePosY, basicNavTitleMax);
     this.hoverNavTitleMin = this.getTitlePercentAttr(this.hoverSlicePathMin.titlePosX, this.hoverSlicePathMin.titlePosY, hoverNavTitleMin);

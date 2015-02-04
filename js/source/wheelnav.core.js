@@ -1,5 +1,5 @@
 ﻿/* ======================================================================================= */
-/*                                   wheelnav.js - v1.4.1                                  */
+/*                                   wheelnav.js - v1.5.0                                  */
 /* ======================================================================================= */
 /* This is a small javascript library for animated SVG based wheel navigation.             */
 /* Requires Raphaël JavaScript Vector Library (http://raphaeljs.com)                       */
@@ -59,6 +59,7 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     this.navAngle = 0;
     this.sliceAngle = null;
     this.titleRotateAngle = null;
+    this.initTitleRotate = false;
     this.clickModeRotate = true;
     this.rotateRound = false;
     this.rotateRoundCount = 0;
@@ -94,6 +95,7 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     this.spreaderRadius = 15;
     this.minPercent = 0.01;
     this.maxPercent = 1;
+    this.initPercent = 1;
 
     //Private properties
     this.currentClick = 0;
@@ -117,10 +119,12 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     this.slicePathCustom = null;
     this.sliceSelectedPathCustom = null;
     this.sliceHoverPathCustom = null;
+    this.sliceInitPathCustom = null;
 
     this.sliceTransformCustom = null;
     this.sliceSelectedTransformCustom = null;
     this.sliceHoverTransformCustom = null;
+    this.sliceInitTransformCustom = null;
 
     this.animateeffect = null;
     this.animatetime = null;
@@ -131,6 +135,8 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     this.sliceSelectedTransformFunction = null;
     this.sliceHoverPathFunction = null;
     this.sliceHoverTransformFunction = null;
+    this.sliceInitPathFunction = null;
+    this.sliceInitTransformFunction = null;
 
     return this;
 };

@@ -19,3 +19,17 @@ slicePath = function () {
         };
     };
 
+    this.NullInitSlice = function (helper, percent, custom) {
+
+        helper.setBaseValue(percent, custom);
+
+        slicePathString = [helper.MoveToCenter(),
+                 helper.Close()];
+
+        return {
+            slicePathString: slicePathString,
+            linePathString: slicePathString,
+            titlePosX: helper.centerX,
+            titlePosY: helper.centerY
+        };
+    };
