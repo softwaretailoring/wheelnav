@@ -94,6 +94,10 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     //Spreader settings
     this.spreaderEnable = false;
     this.spreaderRadius = 15;
+    this.spreaderStartAngle = 0;
+    this.spreaderSliceAngle = 360;
+    this.spreaderPathFunction = spreaderPath().PieSpreader;
+    this.spreaderPathCustom = null;
     this.minPercent = 0.01;
     this.maxPercent = 1;
     this.initPercent = 1;
@@ -1022,7 +1026,7 @@ wheelnavItem.prototype.setWheelSettings = function () {
 
 wheelnavItem.prototype.initPathsAndTransforms = function () {
 
-    this.sliceHelper = new slicePathHelper();
+    this.sliceHelper = new pathHelper();
     this.sliceHelper.centerX = this.wheelnav.centerX;
     this.sliceHelper.centerY = this.wheelnav.centerY;
     this.sliceHelper.wheelRadius = this.wheelnav.wheelRadius;
@@ -1307,7 +1311,7 @@ wheelnavTitle = function (title, raphael) {
     return this;
 };
 
-///#source 1 1 /js/source/wheelnav.slicePathHelper.js
+///#source 1 1 /js/source/wheelnav.pathHelper.js
 /* ======================================================================================= */
 /* Slice path helper functions                                                                  */
 /* ======================================================================================= */
@@ -1315,7 +1319,7 @@ wheelnavTitle = function (title, raphael) {
 /* Documentation: http://wheelnavjs.softwaretailoring.net/documentation/slicePath.html     */
 /* ======================================================================================= */
 
-var slicePathHelper = function () {
+var pathHelper = function () {
 
     this.sliceRadius = 0;
     this.startAngle = 0;
@@ -1334,6 +1338,8 @@ var slicePathHelper = function () {
     this.centerY = 0;
     this.wheelRadius = 0;
     this.itemIndex = 0;
+    this.navItemCount = 0;
+    this.navAngle = 0;
 
     this.setBaseValue = function (percent, custom) {
 
@@ -1431,12 +1437,23 @@ var slicePathCustomization = function () {
     return this;
 };
 
+/* Custom properties
+    - titleRadiusPercent
+    - titleSliceAnglePercent
+*/
+var spreaderPathCustomization = function () {
+
+    this.titleRadiusPercent = 0;
+    this.titleSliceAnglePercent = 0.5;
+    this.spreaderPercent = 1;
+
+    return this;
+};
 
 
 
-
-///#source 1 1 /js/source/wheelnav.slicePath.js
-///#source 1 1 /js/source/slicePaths/wheelnav.slicePathStart.js
+///#source 1 1 /js/source/slicePath/wheelnav.slicePath.js
+///#source 1 1 /js/source/slicePath/wheelnav.slicePathStart.js
 /* ======================================================================================= */
 /* Slice path definitions.                                                                 */
 /* ======================================================================================= */
@@ -1473,7 +1490,7 @@ slicePath = function () {
         };
     };
 
-///#source 1 1 /js/source/slicePaths/wheelnav.slicePath.Pie.js
+///#source 1 1 /js/source/slicePath/wheelnav.slicePath.Pie.js
 
 this.PieSliceCustomization = function () {
 
@@ -1528,7 +1545,7 @@ this.FlowerSlice = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/slicePaths/wheelnav.slicePath.PieArrow.js
+///#source 1 1 /js/source/slicePath/wheelnav.slicePath.PieArrow.js
 
 this.PieArrowSliceCustomization = function () {
 
@@ -1587,7 +1604,7 @@ this.PieArrowBasePieSlice = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/slicePaths/wheelnav.slicePath.Donut.js
+///#source 1 1 /js/source/slicePath/wheelnav.slicePath.Donut.js
 
 this.DonutSliceCustomization = function () {
 
@@ -1627,7 +1644,7 @@ this.DonutSlice = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/slicePaths/wheelnav.slicePath.Cog.js
+///#source 1 1 /js/source/slicePath/wheelnav.slicePath.Cog.js
 
 this.CogSliceCustomization = function () {
 
@@ -1738,7 +1755,7 @@ this.CogBasePieSlice = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/slicePaths/wheelnav.slicePath.Star.js
+///#source 1 1 /js/source/slicePath/wheelnav.slicePath.Star.js
 
 this.StarSliceCustomization = function () {
 
@@ -1804,7 +1821,7 @@ this.StarBasePieSlice = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/slicePaths/wheelnav.slicePath.Menu.js
+///#source 1 1 /js/source/slicePath/wheelnav.slicePath.Menu.js
 
 this.MenuSliceCustomization = function () {
 
@@ -1895,7 +1912,7 @@ this.MenuSliceWithoutLine = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/slicePaths/wheelnav.slicePath.Line.js
+///#source 1 1 /js/source/slicePath/wheelnav.slicePath.Line.js
 
 this.LineSlice = function (helper, percent, custom) {
 
@@ -1936,7 +1953,7 @@ this.LineSlice = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/slicePaths/wheelnav.slicePath.Eye.js
+///#source 1 1 /js/source/slicePath/wheelnav.slicePath.Eye.js
 
 this.EyeSliceCustomization = function () {
 
@@ -1981,7 +1998,7 @@ this.EyeSlice = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/slicePaths/wheelnav.slicePath.Wheel.js
+///#source 1 1 /js/source/slicePath/wheelnav.slicePath.Wheel.js
 
 this.WheelSlice = function (helper, percent, custom) {
 
@@ -2029,7 +2046,7 @@ this.WheelSlice = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/slicePaths/wheelnav.slicePath.Tab.js
+///#source 1 1 /js/source/slicePath/wheelnav.slicePath.Tab.js
 
 this.TabSlice = function (helper, percent, custom) {
 
@@ -2058,7 +2075,7 @@ this.TabSlice = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/slicePaths/wheelnav.slicePath.YinYang.js
+///#source 1 1 /js/source/slicePath/wheelnav.slicePath.YinYang.js
 
 this.YinYangSlice = function (helper, percent, custom) {
 
@@ -2083,7 +2100,7 @@ this.YinYangSlice = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/slicePaths/wheelnav.slicePath.Web.js
+///#source 1 1 /js/source/slicePath/wheelnav.slicePath.Web.js
 
 this.WebSlice = function (helper, percent, custom) {
 
@@ -2118,7 +2135,7 @@ this.WebSlice = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/slicePaths/wheelnav.slicePath.Winter.js
+///#source 1 1 /js/source/slicePath/wheelnav.slicePath.Winter.js
 
 this.WinterSliceCustomization = function () {
 
@@ -2173,7 +2190,7 @@ this.WinterSlice = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/slicePaths/wheelnav.slicePath.Tutorial.js
+///#source 1 1 /js/source/slicePath/wheelnav.slicePath.Tutorial.js
 
 this.TutorialSliceCustomization = function () {
 
@@ -2224,7 +2241,7 @@ this.TutorialSlice = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/slicePaths/wheelnav.slicePathEnd.js
+///#source 1 1 /js/source/slicePath/wheelnav.slicePathEnd.js
 
     return this;
 };
@@ -2394,7 +2411,8 @@ var sliceTransformCustomization = function () {
 
 
 
-///#source 1 1 /js/source/wheelnav.spreader.js
+///#source 1 1 /js/source/spreader/wheelnav.spreader.js
+///#source 1 1 /js/source/spreader/wheelnav.spreader.core.js
 /* ======================================================================================= */
 /* Spreader of wheel                                                                       */
 /* ======================================================================================= */
@@ -2406,17 +2424,28 @@ spreader = function (wheelnav) {
 
     this.wheelnav = wheelnav;
     if (this.wheelnav.spreaderEnable) {
+
+        this.spreaderHelper = new pathHelper();
+        this.spreaderHelper.centerX = this.wheelnav.centerX;
+        this.spreaderHelper.centerY = this.wheelnav.centerY;
+        this.spreaderHelper.navItemCount = this.wheelnav.navItemCount;
+        this.spreaderHelper.navAngle = this.wheelnav.navAngle;
+        this.spreaderHelper.wheelRadius = this.wheelnav.spreaderRadius;
+        this.spreaderHelper.startAngle = this.wheelnav.spreaderStartAngle;
+        this.spreaderHelper.sliceAngle = this.wheelnav.spreaderSliceAngle;
+
         var thisWheelNav = this.wheelnav;
 
         var fontAttr = { font: '100 32px Impact, Charcoal, sans-serif' };
 
-        this.spreaderCircle = thisWheelNav.raphael.circle(thisWheelNav.centerX, thisWheelNav.centerY, thisWheelNav.spreaderRadius);
+        var spreaderPath = this.wheelnav.spreaderPathFunction(this.spreaderHelper, this.wheelnav.spreaderPathCustom);
+        this.spreaderCircle = this.wheelnav.raphael.path(spreaderPath.spreaderPathString);
         this.spreaderCircle.attr(thisWheelNav.spreaderCircleAttr);
         this.spreaderCircle.click(function () {
             thisWheelNav.spreadWheel();
         });
 
-        this.spreadOnTitle = thisWheelNav.raphael.text(thisWheelNav.centerX, thisWheelNav.centerY, "+");
+        this.spreadOnTitle = thisWheelNav.raphael.text(spreaderPath.titlePosX, spreaderPath.titlePosY, "+");
         this.spreadOnTitle.attr(fontAttr);
         this.spreadOnTitle.attr(thisWheelNav.spreaderOnAttr);
         this.spreadOnTitle.id = thisWheelNav.getSpreadOnId();
@@ -2424,7 +2453,7 @@ spreader = function (wheelnav) {
             thisWheelNav.spreadWheel();
         });
 
-        this.spreadOffTitle = thisWheelNav.raphael.text(thisWheelNav.centerX, thisWheelNav.centerY - 3, "–");
+        this.spreadOffTitle = thisWheelNav.raphael.text(spreaderPath.titlePosX, spreaderPath.titlePosY - 3, "–");
         this.spreadOffTitle.attr(fontAttr);
         this.spreadOffTitle.attr(thisWheelNav.spreaderOffAttr);
         this.spreadOffTitle.id = thisWheelNav.getSpreadOffId();
@@ -2452,6 +2481,120 @@ spreader.prototype.setVisibility = function () {
         }
     }
 };
+
+
+///#source 1 1 /js/source/spreader/wheelnav.spreaderPathStart.js
+/* ======================================================================================= */
+/* Spreader path definitions.                                                              */
+/* ======================================================================================= */
+
+spreaderPath = function () {
+
+    this.NullSpreader = function (helper, custom) {
+
+        helper.setBaseValue(custom);
+
+        return {
+            slicePathString: "",
+            titlePosX: helper.titlePosX,
+            titlePosY: helper.titlePosY
+        };
+    };
+
+
+
+///#source 1 1 /js/source/spreader/wheelnav.spreaderPath.Pie.js
+
+this.PieSpreaderCustomization = function () {
+
+    var custom = new spreaderPathCustomization();
+    custom.spreaderRadius = 25;
+    custom.arcBaseRadiusPercent = 1;
+    custom.arcRadiusPercent = 1;
+    custom.startRadiusPercent = 0;
+    return custom;
+};
+
+this.PieSpreader = function (helper, custom) {
+
+    if (custom === null) {
+        custom = PieSpreaderCustomization();
+    }
+
+    helper.setBaseValue(custom.spreaderPercent, custom);
+
+    var arcBaseRadius = helper.sliceRadius * custom.arcBaseRadiusPercent;
+    var arcRadius = helper.sliceRadius * custom.arcRadiusPercent;
+
+    spreaderPathString = [helper.MoveTo(helper.startAngle, arcBaseRadius),
+                 helper.ArcTo(arcRadius, helper.middleAngle, arcBaseRadius),
+                 helper.ArcTo(arcRadius, helper.endAngle, arcBaseRadius),
+                 helper.Close()];
+    
+    return {
+        spreaderPathString: spreaderPathString,
+        titlePosX: helper.titlePosX,
+        titlePosY: helper.titlePosY
+    };
+};
+
+///#source 1 1 /js/source/spreader/wheelnav.spreaderPath.Star.js
+
+this.StarSpreaderCustomization = function () {
+
+    var custom = new spreaderPathCustomization();
+    custom.minRadiusPercent = 0.5;
+
+    return custom;
+};
+
+this.StarSpreader = function (helper, custom) {
+
+    if (custom === null) {
+        custom = StarSpreaderCustomization();
+    }
+
+    helper.setBaseValue(custom.spreaderPercent, custom);
+
+    r = helper.wheelRadius * custom.spreaderPercent;
+    rbase = r * custom.minRadiusPercent;
+
+    r = helper.sliceRadius;
+
+    spreaderPathString = [];
+
+    sliceAngle = helper.sliceAngle / helper.navItemCount;
+
+    spreaderPathString.push(helper.MoveTo(helper.startAngle + (helper.navAngle + sliceAngle / 2), rbase));
+    
+    for (var i = 0; i < helper.navItemCount; i++) {
+        startAngle = i * sliceAngle + (helper.navAngle + sliceAngle / 2);
+        middleAngle = startAngle + (sliceAngle / 2);
+        endAngle = startAngle + sliceAngle;
+
+        spreaderPathString.push(helper.LineTo(startAngle, rbase));
+        spreaderPathString.push(helper.LineTo(middleAngle, r));
+        spreaderPathString.push(helper.LineTo(endAngle, rbase));
+    }
+
+    spreaderPathString.push(helper.Close());
+
+    return {
+        spreaderPathString: spreaderPathString,
+        titlePosX: helper.titlePosX,
+        titlePosY: helper.titlePosY
+    };
+};
+
+
+///#source 1 1 /js/source/spreader/wheelnav.spreaderPathEnd.js
+
+    return this;
+};
+
+
+
+
 ///#source 1 1 /js/source/wheelnav.colorPalettes.js
 /* ======================================================================================== */
 /* Color palettes for slices from http://www.colourlovers.com                               */

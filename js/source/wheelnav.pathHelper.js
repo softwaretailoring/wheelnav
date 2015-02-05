@@ -5,7 +5,7 @@
 /* Documentation: http://wheelnavjs.softwaretailoring.net/documentation/slicePath.html     */
 /* ======================================================================================= */
 
-var slicePathHelper = function () {
+var pathHelper = function () {
 
     this.sliceRadius = 0;
     this.startAngle = 0;
@@ -24,6 +24,8 @@ var slicePathHelper = function () {
     this.centerY = 0;
     this.wheelRadius = 0;
     this.itemIndex = 0;
+    this.navItemCount = 0;
+    this.navAngle = 0;
 
     this.setBaseValue = function (percent, custom) {
 
@@ -121,6 +123,17 @@ var slicePathCustomization = function () {
     return this;
 };
 
+/* Custom properties
+    - titleRadiusPercent
+    - titleSliceAnglePercent
+*/
+var spreaderPathCustomization = function () {
 
+    this.titleRadiusPercent = 0;
+    this.titleSliceAnglePercent = 0.5;
+    this.spreaderPercent = 1;
+
+    return this;
+};
 
 

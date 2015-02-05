@@ -1,4 +1,11 @@
-## 1.4.0
+## 1.5.0
+
+* New wheelnav, navItem property: initPathEnable, initTransformEnable, initTitleRotate
+* Fixed clientWidth bug in multiple wheelnav mode
+* New wheelnav properties: spreaderPathFunction, spreaderPathCustom, spreaderStartAngle, spreaderSliceAngle
+* Reorganize path related code, implement path for spreader
+
+### 1.4.0
 
 * Modify order of items: navSlice -> navLine -> navTitle
 * Remove MenuSquareSlice from slicePaths

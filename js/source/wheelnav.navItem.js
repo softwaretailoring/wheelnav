@@ -604,7 +604,7 @@ wheelnavItem.prototype.setWheelSettings = function () {
 
 wheelnavItem.prototype.initPathsAndTransforms = function () {
 
-    this.sliceHelper = new slicePathHelper();
+    this.sliceHelper = new pathHelper();
     this.sliceHelper.centerX = this.wheelnav.centerX;
     this.sliceHelper.centerY = this.wheelnav.centerY;
     this.sliceHelper.wheelRadius = this.wheelnav.wheelRadius;

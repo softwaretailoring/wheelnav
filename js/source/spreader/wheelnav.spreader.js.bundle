@@ -10,7 +10,10 @@
   </settings>
   <!--The order of the <file> elements determines the order of the files in the bundle.-->
   <files>
-    <file>/js/source/slicePaths/wheelnav.slicePathStart.js</file>
-    <file>/js/source/slicePaths/wheelnav.slicePathEnd.js</file>
+    <file>/js/source/spreader/wheelnav.spreader.core.js</file>
+    <file>/js/source/spreader/wheelnav.spreaderPathStart.js</file>
+    <file>/js/source/spreader/wheelnav.spreaderPath.Pie.js</file>
+    <file>/js/source/spreader/wheelnav.spreaderPath.Star.js</file>
+    <file>/js/source/spreader/wheelnav.spreaderPathEnd.js</file>
   </files>
 </bundle>

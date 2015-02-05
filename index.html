@@ -68,6 +68,9 @@
                 textWheelRotatedTitle.spreaderEnable = true;
                 textWheelRotatedTitle.titleSpreadScale = true;
                 textWheelRotatedTitle.multiSelect = true;
+                textWheelRotatedTitle.spreaderPathFunction = spreaderPath().StarSpreader;
+                textWheelRotatedTitle.spreaderPathCustom = new StarSpreaderCustomization();
+                textWheelRotatedTitle.spreaderPathCustom.spreaderPercent = 2;
                 textWheelRotatedTitle.initWheel([icon.cross, icon.cross, icon.cross, icon.cross, icon.cross, icon.cross]);
 
                 textWheelRotatedTitle.navItems[0].selectedTitle = icon.check;

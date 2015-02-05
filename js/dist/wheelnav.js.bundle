@@ -12,10 +12,10 @@
   <files>
     <file>/js/source/wheelnav.core.js</file>
     <file>/js/source/wheelnav.navItem.js</file>
-    <file>/js/source/wheelnav.slicePathHelper.js</file>
-    <file>/js/source/wheelnav.slicePath.js</file>
+    <file>/js/source/wheelnav.pathHelper.js</file>
+    <file>/js/source/slicePath/wheelnav.slicePath.js</file>
     <file>/js/source/wheelnav.sliceTransform.js</file>
-    <file>/js/source/wheelnav.spreader.js</file>
+    <file>/js/source/spreader/wheelnav.spreader.js</file>
     <file>/js/source/wheelnav.colorPalettes.js</file>
   </files>
 </bundle>

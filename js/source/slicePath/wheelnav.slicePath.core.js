@@ -1,4 +1,4 @@
-﻿///#source 1 1 /js/source/slicePaths/wheelnav.slicePathStart.js
+﻿///#source 1 1 /js/source/slicePath/wheelnav.slicePathStart.js
 /* ======================================================================================= */
 /* Slice path definitions.                                                                 */
 /* ======================================================================================= */
@@ -35,7 +35,7 @@ slicePath = function () {
         };
     };
 
-///#source 1 1 /js/source/slicePaths/wheelnav.slicePathEnd.js
+///#source 1 1 /js/source/slicePath/wheelnav.slicePathEnd.js
 
     return this;
 };
