@@ -6,10 +6,14 @@ spreaderPath = function () {
 
     this.NullSpreader = function (helper, custom) {
 
-        helper.setBaseValue(custom);
+        if (custom === null) {
+            custom = new spreaderPathCustomization();
+        }
+
+        helper.setBaseValue(custom.spreaderPercent, custom);
 
         return {
-            slicePathString: "",
+            spreaderPathString: "",
             titlePosX: helper.titlePosX,
             titlePosY: helper.titlePosY
         };

@@ -58,11 +58,15 @@ spreader.prototype.setVisibility = function () {
         this.spreaderCircle.toFront();
 
         if (this.wheelnav.currentPercent > this.wheelnav.minPercent) {
+            this.spreadOffTitle.attr({ opacity: 1 });
+            this.spreadOnTitle.attr({ opacity: 0 });
+
             this.spreadOffTitle.toFront();
-            this.spreadOnTitle.toBack();
         }
         else {
-            this.spreadOffTitle.toBack();
+            this.spreadOffTitle.attr({ opacity: 0 });
+            this.spreadOnTitle.attr({ opacity: 1 });
+
             this.spreadOnTitle.toFront();
         }
     }
@@ -78,10 +82,14 @@ spreaderPath = function () {
 
     this.NullSpreader = function (helper, custom) {
 
-        helper.setBaseValue(custom);
+        if (custom === null) {
+            custom = new spreaderPathCustomization();
+        }
+
+        helper.setBaseValue(custom.spreaderPercent, custom);
 
         return {
-            slicePathString: "",
+            spreaderPathString: "",
             titlePosX: helper.titlePosX,
             titlePosY: helper.titlePosY
         };

@@ -57,11 +57,15 @@ spreader.prototype.setVisibility = function () {
         this.spreaderCircle.toFront();
 
         if (this.wheelnav.currentPercent > this.wheelnav.minPercent) {
+            this.spreadOffTitle.attr({ opacity: 1 });
+            this.spreadOnTitle.attr({ opacity: 0 });
+
             this.spreadOffTitle.toFront();
-            this.spreadOnTitle.toBack();
         }
         else {
-            this.spreadOffTitle.toBack();
+            this.spreadOffTitle.attr({ opacity: 0 });
+            this.spreadOnTitle.attr({ opacity: 1 });
+
             this.spreadOnTitle.toFront();
         }
     }
