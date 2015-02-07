@@ -101,6 +101,12 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     this.maxPercent = 1;
     this.initPercent = 1;
 
+    //Marker settings
+    this.markerEnable = false;
+    this.markerPathFunction = markerPath().LineMarker;
+    this.markerPathCustom = null;
+    this.markerAttr = { fill: "#111", "stroke-width": 3 };
+
     //Private properties
     this.currentClick = 0;
     this.selectedNavItemIndex = 0;
@@ -226,6 +232,8 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
 
     this.spreader = new spreader(this);
 
+    this.marker = new marker(this);
+
     this.navItems[0].selected = true;
     this.refreshWheel();
 
@@ -253,6 +261,9 @@ wheelnav.prototype.navigateWheel = function (clicked) {
 
     if (this.clickModeRotate) {
         this.animateLocked = true;
+    }
+    else if (this.markerEnable) {
+        this.marker.setCurrentTransform(this.navItems[clicked].navAngle);
     }
 
     var navItem;

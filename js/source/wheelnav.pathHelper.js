@@ -126,6 +126,7 @@ var slicePathCustomization = function () {
 /* Custom properties
     - titleRadiusPercent
     - titleSliceAnglePercent
+    - spreaderPercent
 */
 var spreaderPathCustomization = function () {
 
@@ -136,4 +137,17 @@ var spreaderPathCustomization = function () {
     return this;
 };
 
+/* Custom properties
+    - titleRadiusPercent
+    - titleSliceAnglePercent
+    - markerPercent
+*/
+var markerPathCustomization = function () {
+
+    this.titleRadiusPercent = 1;
+    this.titleSliceAnglePercent = 0.5;
+    this.markerPercent = 1;
+
+    return this;
+};
 

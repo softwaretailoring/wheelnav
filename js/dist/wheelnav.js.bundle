@@ -16,6 +16,7 @@
     <file>/js/source/slicePath/wheelnav.slicePath.js</file>
     <file>/js/source/wheelnav.sliceTransform.js</file>
     <file>/js/source/spreader/wheelnav.spreader.js</file>
+    <file>/js/source/marker/wheelnav.marker.js</file>
     <file>/js/source/wheelnav.colorPalettes.js</file>
   </files>
 </bundle>

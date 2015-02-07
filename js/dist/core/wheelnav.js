@@ -102,6 +102,12 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     this.maxPercent = 1;
     this.initPercent = 1;
 
+    //Marker settings
+    this.markerEnable = false;
+    this.markerPathFunction = markerPath().LineMarker;
+    this.markerPathCustom = null;
+    this.markerAttr = { fill: "#111", "stroke-width": 3 };
+
     //Private properties
     this.currentClick = 0;
     this.selectedNavItemIndex = 0;
@@ -227,6 +233,8 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
 
     this.spreader = new spreader(this);
 
+    this.marker = new marker(this);
+
     this.navItems[0].selected = true;
     this.refreshWheel();
 
@@ -254,6 +262,9 @@ wheelnav.prototype.navigateWheel = function (clicked) {
 
     if (this.clickModeRotate) {
         this.animateLocked = true;
+    }
+    else if (this.markerEnable) {
+        this.marker.setCurrentTransform(this.navItems[clicked].navAngle);
     }
 
     var navItem;
@@ -1440,6 +1451,7 @@ var slicePathCustomization = function () {
 /* Custom properties
     - titleRadiusPercent
     - titleSliceAnglePercent
+    - spreaderPercent
 */
 var spreaderPathCustomization = function () {
 
@@ -1450,6 +1462,19 @@ var spreaderPathCustomization = function () {
     return this;
 };
 
+/* Custom properties
+    - titleRadiusPercent
+    - titleSliceAnglePercent
+    - markerPercent
+*/
+var markerPathCustomization = function () {
+
+    this.titleRadiusPercent = 1;
+    this.titleSliceAnglePercent = 0.5;
+    this.markerPercent = 1;
+
+    return this;
+};
 
 
 ///#source 1 1 /js/source/slicePath/wheelnav.slicePath.core.js
@@ -1721,11 +1746,15 @@ spreader.prototype.setVisibility = function () {
         this.spreaderCircle.toFront();
 
         if (this.wheelnav.currentPercent > this.wheelnav.minPercent) {
+            this.spreadOffTitle.attr({ opacity: 1 });
+            this.spreadOnTitle.attr({ opacity: 0 });
+
             this.spreadOffTitle.toFront();
-            this.spreadOnTitle.toBack();
         }
         else {
-            this.spreadOffTitle.toBack();
+            this.spreadOffTitle.attr({ opacity: 0 });
+            this.spreadOnTitle.attr({ opacity: 1 });
+
             this.spreadOnTitle.toFront();
         }
     }
@@ -1741,10 +1770,14 @@ spreaderPath = function () {
 
     this.NullSpreader = function (helper, custom) {
 
-        helper.setBaseValue(custom);
+        if (custom === null) {
+            custom = new spreaderPathCustomization();
+        }
+
+        helper.setBaseValue(custom.spreaderPercent, custom);
 
         return {
-            slicePathString: "",
+            spreaderPathString: "",
             titlePosX: helper.titlePosX,
             titlePosY: helper.titlePosY
         };
@@ -1837,6 +1870,120 @@ this.StarSpreader = function (helper, custom) {
 
 
 ///#source 1 1 /js/source/spreader/wheelnav.spreaderPathEnd.js
+
+    return this;
+};
+
+
+
+
+///#source 1 1 /js/source/marker/wheelnav.marker.js
+///#source 1 1 /js/source/marker/wheelnav.marker.core.js
+/* ======================================================================================= */
+/* Marker of wheel                                                                         */
+/* ======================================================================================= */
+/* ======================================================================================= */
+/* Documentation: http://wheelnavjs.softwaretailoring.net/documentation/marker.html        */ //Under construction!!!
+/* ======================================================================================= */
+
+marker = function (wheelnav) {
+
+    this.wheelnav = wheelnav;
+    if (this.wheelnav.markerEnable) {
+
+        this.markerHelper = new pathHelper();
+        this.markerHelper.centerX = this.wheelnav.centerX;
+        this.markerHelper.centerY = this.wheelnav.centerY;
+        this.markerHelper.navItemCount = this.wheelnav.navItemCount;
+        this.markerHelper.navAngle = this.wheelnav.navAngle;
+        this.markerHelper.wheelRadius = this.wheelnav.wheelRadius;
+
+        this.animateeffect = "bounce";
+        this.animatetime = 1500;
+        //Set animation from wheelnav
+        if (this.wheelnav.animateeffect !== null) { this.animateeffect = this.wheelnav.animateeffect; }
+        if (this.wheelnav.animatetime !== null) { this.animatetime = this.wheelnav.animatetime; }
+
+        var markerPath = this.wheelnav.markerPathFunction(this.markerHelper, this.wheelnav.markerPathCustom);
+        this.marker = this.wheelnav.raphael.path(markerPath.markerPathString);
+        this.marker.attr(this.wheelnav.markerAttr);
+    }
+
+    return this;
+};
+
+marker.prototype.setCurrentTransform = function (navAngle) {
+
+    var rotateAngle = navAngle - this.markerHelper.navAngle;
+
+    markerTransformAttr = {
+        transform: "r," + (rotateAngle).toString() + "," + this.wheelnav.centerX + "," + this.wheelnav.centerY
+    };
+    
+    //Animate marker
+    this.marker.animate(markerTransformAttr, this.animatetime, this.animateeffect);
+};
+
+
+
+///#source 1 1 /js/source/marker/wheelnav.markerPathStart.js
+/* ======================================================================================= */
+/* Spreader path definitions.                                                              */
+/* ======================================================================================= */
+
+markerPath = function () {
+
+    this.NullSpreader = function (helper, custom) {
+
+        if (custom === null) {
+            custom = new markerPathCustomization();
+        }
+
+        helper.setBaseValue(custom);
+
+        return {
+            markerPathString: "",
+            titlePosX: helper.titlePosX,
+            titlePosY: helper.titlePosY
+        };
+    };
+
+
+
+///#source 1 1 /js/source/marker/wheelnav.markerPath.Line.js
+
+this.LineMarkerCustomization = function () {
+
+    var custom = new markerPathCustomization();
+    custom.arcBaseRadiusPercent = 1;
+    custom.arcRadiusPercent = 1.1;
+    custom.startRadiusPercent = 0;
+    return custom;
+};
+
+this.LineMarker = function (helper, custom) {
+
+    if (custom === null) {
+        custom = LineMarkerCustomization();
+    }
+
+    helper.setBaseValue(custom.markerPercent, custom);
+
+    var arcBaseRadius = helper.sliceRadius * custom.arcBaseRadiusPercent;
+    var arcRadius = helper.sliceRadius * custom.arcRadiusPercent;
+
+    markerPathString = [helper.MoveTo(helper.navAngle, arcBaseRadius),
+                 helper.LineTo(helper.navAngle, arcRadius),
+                 helper.Close()];
+    
+    return {
+        markerPathString: markerPathString,
+        titlePosX: helper.titlePosX,
+        titlePosY: helper.titlePosY
+    };
+};
+
+///#source 1 1 /js/source/marker/wheelnav.markerPathEnd.js
 
     return this;
 };
