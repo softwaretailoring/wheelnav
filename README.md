@@ -19,12 +19,12 @@ For more insight please visit [http://wheelnavjs.softwaretailoring.net][projectp
 
 ```javascript
 var myWheelnav = new wheelnav("divWheelnav");
-myWheelnav.slicePathFunction = slicePath().DonutSlice;
-myWheelnav.colors = new Array("mediumorchid", "royalblue", "darkorange");
-myWheelnav.createWheel([icon.github, icon.people, icon.smile]);
+myWheelnav.slicePathFunction = slicePath().WheelSlice;
+myWheelnav.colors = colorpalette.parrot;
+myWheelnav.createWheel([icon.smile, icon.star, icon.fork, icon.$]);
 ```
 
-![sample image](media/demo.gif)
+![demo image](wheelnav_demo.gif)
 
 The index.html of this repo (test page) is available [here][testpage].
 
