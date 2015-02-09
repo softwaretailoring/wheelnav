@@ -24,7 +24,7 @@ myWheelnav.colors = new Array("mediumorchid", "royalblue", "darkorange");
 myWheelnav.createWheel([icon.github, icon.people, icon.smile]);
 ```
 
-![sample image](http://wheelnavjs.softwaretailoring.net/test/wheelnav_sampleimage.png)
+![sample image](media/demo.gif)
 
 The index.html of this repo (test page) is available [here][testpage].
 
