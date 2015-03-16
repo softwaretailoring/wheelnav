@@ -94,12 +94,20 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     //Wheelnav settings
     this.setWheelSettings();
 
+    this.navigateHref = null;
     this.navigateFunction = null;
 
     return this;
 };
 
 wheelnavItem.prototype.createNavItem = function () {
+
+    //Set href navigation
+    if (this.navigateHref !== null) {
+        this.navigateFunction = function () {
+            window.location.href = this.navigateHref;
+        };
+    }
 
     //Set colors
     if (!this.wheelnav.cssMode) {
@@ -253,10 +261,12 @@ wheelnavItem.prototype.createNavItem = function () {
 
     if (this.enabled) {
         this.navItem.mouseup(function () {
-            thisWheelNav.navigateWheel(thisItemIndex);
+            
             if (thisNavItem.navigateFunction !== null) {
                 thisNavItem.navigateFunction();
             }
+
+            thisWheelNav.navigateWheel(thisItemIndex);
         });
         this.navItem.mouseover(function () {
             if (thisNavItem.hovered !== true) {

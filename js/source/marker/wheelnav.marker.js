@@ -53,7 +53,7 @@ marker.prototype.setCurrentTransform = function (navAngle) {
 
 markerPath = function () {
 
-    this.NullSpreader = function (helper, custom) {
+    this.NullMarker = function (helper, custom) {
 
         if (custom === null) {
             custom = new markerPathCustomization();

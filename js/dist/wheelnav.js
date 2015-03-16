@@ -25,13 +25,19 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
         this.holderId = divId;
     }
 
+    var holderDiv = document.getElementById(divId);
+
+    if (holderDiv === null ||
+        holderDiv === undefined) {
+        return this;
+    }
+    
+    //Prepare raphael object and set the width
     var canvasWidth;
+    var clearContent = true;
 
     if (raphael === undefined ||
         raphael === null) {
-        var holderDiv = document.getElementById(divId);
-        holderDiv.innerText = "";
-        holderDiv.innerHTML = "";
 
         if (divWidth !== undefined &&
             divWidth !== null) {
@@ -51,6 +57,7 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
         //The divId parameter has to be the identifier of the wheelnav in this case.
         this.raphael = raphael;
         canvasWidth = this.raphael.canvas.clientWidth;
+        clearContent = false;
     }
 
     //Public properties
@@ -149,7 +156,108 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     this.sliceInitPathFunction = null;
     this.sliceInitTransformFunction = null;
 
+    this.parseWheel(holderDiv);
+
+    if (clearContent) {
+        var removeChildrens = [];
+        for (var i = 0; i < holderDiv.children.length; i++) {
+            if (holderDiv.children[i].localName !== "svg") {
+                removeChildrens.push(holderDiv.children[i]);
+            }
+        }
+
+        for (var i = 0; i < removeChildrens.length; i++) {
+            holderDiv.removeChild(removeChildrens[i]);
+        }
+    }
+
     return this;
+};
+
+wheelnav.prototype.parseWheel = function (holderDiv) {
+    //Parse html5 data- attributes, the onmouseup events and anchor links
+    var parsedNavItems = [];
+    var parsedNavItemsHref = [];
+    var parsedNavItemsOnmouseup = [];
+    var onlyInit = false;
+
+    //data-wheelnav-slicepath
+    if (holderDiv.dataset.wheelnavSlicepath !== undefined) {
+        if (slicePath()[holderDiv.dataset.wheelnavSlicepath] !== undefined) {
+            this.slicePathFunction = slicePath()[holderDiv.dataset.wheelnavSlicepath];
+        }
+    }
+    //data-wheelnav-colors
+    if (holderDiv.dataset.wheelnavColors !== undefined) {
+        this.colors = holderDiv.dataset.wheelnavColors.split(',');
+    }
+    //data-wheelnav-navangle
+    if (holderDiv.dataset.wheelnavNavangle !== undefined) {
+        this.navAngle = Number(holderDiv.dataset.wheelnavNavangle);
+    }
+    //data-wheelnav-cssmode
+    if (holderDiv.dataset.wheelnavCssmode !== undefined) {
+        this.cssMode = true;
+    }
+    //data-wheelnav-onlyinit
+    if (holderDiv.dataset.wheelnavOnlyinit !== undefined) {
+        onlyInit = true;
+    }
+
+    for (var i = 0; i < holderDiv.children.length; i++) {
+
+        if (holderDiv.children[i].dataset !== undefined) {
+            //data-wheelnav-navitemtext
+            if (holderDiv.children[i].dataset.wheelnavNavitemtext !== undefined) {
+                parsedNavItems.push(holderDiv.children[i].dataset.wheelnavNavitemtext);
+            }
+            //data-wheelnav-navitemicon
+            else if (holderDiv.children[i].dataset.wheelnavNavitemicon !== undefined) {
+                if (icon[holderDiv.children[i].dataset.wheelnavNavitemicon] !== undefined) {
+                    parsedNavItems.push(icon[holderDiv.children[i].dataset.wheelnavNavitemicon]);
+                }
+                else {
+                    parsedNavItems.push(holderDiv.children[i].dataset.wheelnavNavitemicon);
+                }
+            }
+            else {
+                //data-wheelnav-navitemtext or data-wheelnav-navitemicon is required
+                continue;
+            }
+
+            //onmouseup event of navitem element for call it in the navigateFunction
+            if (holderDiv.children[i].onmouseup !== undefined) {
+                parsedNavItemsOnmouseup.push(holderDiv.children[i].onmouseup);
+            }
+            else {
+                parsedNavItemsOnmouseup.push(null);
+            }
+
+            //parse inner <a> tag in navitem element for use href in navigateFunction
+            var foundHref = false;
+            for (var j = 0; j < holderDiv.children[i].children.length; j++) {
+                if (holderDiv.children[i].children[j].getAttribute('href') !== undefined) {
+                    parsedNavItemsHref.push(holderDiv.children[i].children[j].getAttribute('href'));
+                }
+            }
+            if (!foundHref) {
+                parsedNavItemsHref.push(null);
+            }
+        }
+    }
+
+    if (parsedNavItems.length > 0) {
+        this.initWheel(parsedNavItems);
+
+        for (var i = 0; i < parsedNavItemsOnmouseup.length; i++) {
+            this.navItems[i].navigateFunction = parsedNavItemsOnmouseup[i];
+            this.navItems[i].navigateHref = parsedNavItemsHref[i];
+        }
+
+        if (!onlyInit) {
+            this.createWheel();
+        }
+    }
 };
 
 wheelnav.prototype.initWheel = function (titles) {
@@ -527,12 +635,20 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     //Wheelnav settings
     this.setWheelSettings();
 
+    this.navigateHref = null;
     this.navigateFunction = null;
 
     return this;
 };
 
 wheelnavItem.prototype.createNavItem = function () {
+
+    //Set href navigation
+    if (this.navigateHref !== null) {
+        this.navigateFunction = function () {
+            window.location.href = this.navigateHref;
+        };
+    }
 
     //Set colors
     if (!this.wheelnav.cssMode) {
@@ -686,10 +802,12 @@ wheelnavItem.prototype.createNavItem = function () {
 
     if (this.enabled) {
         this.navItem.mouseup(function () {
-            thisWheelNav.navigateWheel(thisItemIndex);
+            
             if (thisNavItem.navigateFunction !== null) {
                 thisNavItem.navigateFunction();
             }
+
+            thisWheelNav.navigateWheel(thisItemIndex);
         });
         this.navItem.mouseover(function () {
             if (thisNavItem.hovered !== true) {
@@ -2684,7 +2802,7 @@ marker.prototype.setCurrentTransform = function (navAngle) {
 
 markerPath = function () {
 
-    this.NullSpreader = function (helper, custom) {
+    this.NullMarker = function (helper, custom) {
 
         if (custom === null) {
             custom = new markerPathCustomization();
