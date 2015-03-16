@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="wheelnav.js test page for html5 way">
+        <meta name="author" content="gabor.berkesi@softwaretailoring.net">
+        <link rel="shortcut icon" href="wheelnav_favicon.png">
+
+        <title>wheelnav.js - html5 test page</title>
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <link href="css/index.css" rel="stylesheet">
+
+        <script type="text/javascript" src="js/required/raphael.min.js"></script> 
+        <script type="text/javascript" src="js/required/raphael.icons.js"></script>
+        <script type="text/javascript" src="js/dist/wheelnav.js"></script>
+        <script type="text/javascript">
+
+            window.onload = function () {
+                new wheelnav("divWheelnav");
+            };
+                 
+        </script>
+    </head>
+<body>
+    <header>
+        <p>
+            This is a html5 test page for wheelnav.js library.
+            For more information please visit the <a href="http://wheelnavjs.softwaretailoring.net" target="_blank">project page</a>
+        </p>
+    </header>
+
+    <div id="divWheelnav" class="wheelNav" data-wheelnav-slicepath="PieArrowSlice" data-wheelnav-colors="#D80351,#F5D908,#00A3EE" data-wheelnav-navangle="90">
+        <label data-wheelnav-navitemtext="data-">data-</label><br />
+        <button data-wheelnav-navitemtext="onmouseup" onmouseup="alert('This is an onmouseup event of a data-wheelnav-navitemtext element');">onmouseup</button>
+        <div data-wheelnav-navitemicon="github"><a href="https://github.com/softwaretailoring/wheelnav">href</a></div>
+    </div>
+
+    <footer>
+        <br />
+        <p>
+            For pure javascript samples visit the <a href="index.html">test page</a>.
+        </p>
+        <p>&copy; 2014-2015 <a href="http://softwaretailoring.net" target="_blank">softwaretailoring.net</a></p>
+    </footer>
+</body>
+</html>
