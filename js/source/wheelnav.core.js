@@ -276,16 +276,16 @@ wheelnav.prototype.initWheel = function (titles) {
     //Init slices and titles
     if (!this.cssMode) {
         if (this.spreaderPathAttr === undefined || this.spreaderPathAttr === null) {
-            this.spreaderPathAttr = { fill: "#777", "stroke-width": 3, cursor: 'pointer' };
+            this.spreaderPathAttr = { fill: "#444", stroke: "#444", "stroke-width": 2, cursor: 'pointer' };
         }
         if (this.spreaderOnAttr === undefined || this.spreaderOnAttr === null) {
-            this.spreaderOnAttr = { fill: "#FFF", cursor: 'pointer' };
+            this.spreaderOnAttr = { fill: "#eee", cursor: 'pointer' };
         }
         if (this.spreaderOffAttr === undefined || this.spreaderOffAttr === null) {
-            this.spreaderOffAttr = { fill: "#FFF", cursor: 'pointer' };
+            this.spreaderOffAttr = { fill: "#eee", cursor: 'pointer' };
         }
         if (this.markerAttr === undefined || this.markerAttr === null) {
-            this.markerAttr = { stroke: "#111", "stroke-width": 3 };
+            this.markerAttr = { stroke: "#444", "stroke-width": 2 };
         }
     }
     else {

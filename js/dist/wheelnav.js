@@ -277,16 +277,16 @@ wheelnav.prototype.initWheel = function (titles) {
     //Init slices and titles
     if (!this.cssMode) {
         if (this.spreaderPathAttr === undefined || this.spreaderPathAttr === null) {
-            this.spreaderPathAttr = { fill: "#777", "stroke-width": 3, cursor: 'pointer' };
+            this.spreaderPathAttr = { fill: "#444", stroke: "#444", "stroke-width": 2, cursor: 'pointer' };
         }
         if (this.spreaderOnAttr === undefined || this.spreaderOnAttr === null) {
-            this.spreaderOnAttr = { fill: "#FFF", cursor: 'pointer' };
+            this.spreaderOnAttr = { fill: "#eee", cursor: 'pointer' };
         }
         if (this.spreaderOffAttr === undefined || this.spreaderOffAttr === null) {
-            this.spreaderOffAttr = { fill: "#FFF", cursor: 'pointer' };
+            this.spreaderOffAttr = { fill: "#eee", cursor: 'pointer' };
         }
         if (this.markerAttr === undefined || this.markerAttr === null) {
-            this.markerAttr = { stroke: "#111", "stroke-width": 3 };
+            this.markerAttr = { stroke: "#444", "stroke-width": 2 };
         }
     }
     else {
@@ -624,17 +624,17 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     this.sliceAngle = 360 / wheelnav.navItemCount;
     
     if (!wheelnav.cssMode) {
-        this.slicePathAttr = { stroke: "#111", "stroke-width": 3, cursor: 'pointer' };
-        this.sliceHoverAttr = { stroke: "#111", "stroke-width": 4, cursor: 'pointer' };
-        this.sliceSelectedAttr = { stroke: "#111", "stroke-width": 4, cursor: 'default' };
+        this.slicePathAttr = { stroke: "#333", "stroke-width": 0, cursor: 'pointer', "fill-opacity": 1 };
+        this.sliceHoverAttr = { stroke: "#222", "stroke-width": 0, cursor: 'pointer', "fill-opacity": 0.77 };
+        this.sliceSelectedAttr = { stroke: "#111", "stroke-width": 0, cursor: 'default', "fill-opacity": 1 };
 
-        this.titleAttr = { font: this.titleFont, fill: "#111", stroke: "none", cursor: 'pointer' };
-        this.titleHoverAttr = { font: this.titleFont, fill: "#111", cursor: 'pointer', stroke: "none" };
-        this.titleSelectedAttr = { font: this.titleFont, fill: "#FFF", cursor: 'default' };
+        this.titleAttr = { font: this.titleFont, fill: "#333", stroke: "none", cursor: 'pointer' };
+        this.titleHoverAttr = { font: this.titleFont, fill: "#222", cursor: 'pointer', stroke: "none" };
+        this.titleSelectedAttr = { font: this.titleFont, fill: "#fff", cursor: 'default' };
 
-        this.linePathAttr = { stroke: "#111", "stroke-width": 2, cursor: 'pointer' };
-        this.lineHoverAttr = { stroke: "#111", "stroke-width": 3, cursor: 'pointer' };
-        this.lineSelectedAttr = { stroke: "#111", "stroke-width": 4, cursor: 'default' };
+        this.linePathAttr = { stroke: "#444", "stroke-width": 1, cursor: 'pointer' };
+        this.lineHoverAttr = { stroke: "#222", "stroke-width": 2, cursor: 'pointer' };
+        this.lineSelectedAttr = { stroke: "#444", "stroke-width": 1, cursor: 'default' };
     }
     else {
         this.slicePathAttr = { "class": this.wheelnav.getSliceCssClass(this.wheelItemIndex, "basic") };
