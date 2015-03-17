@@ -146,7 +146,7 @@ var markerPathCustomization = function () {
 
     this.titleRadiusPercent = 1;
     this.titleSliceAnglePercent = 0.5;
-    this.markerPercent = 1;
+    this.markerPercent = 1.05;
 
     return this;
 };

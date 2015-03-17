@@ -38,6 +38,17 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     if (raphael === undefined ||
         raphael === null) {
 
+        var removeChildrens = [];
+        for (var i = 0; i < holderDiv.children.length; i++) {
+            if (holderDiv.children[i].localName === "svg") {
+                removeChildrens.push(holderDiv.children[i]);
+            }
+        }
+
+        for (var i = 0; i < removeChildrens.length; i++) {
+            holderDiv.removeChild(removeChildrens[i]);
+        }
+
         if (divWidth !== undefined &&
             divWidth !== null) {
             if (divHeight === undefined ||
@@ -110,9 +121,9 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
 
     //Marker settings
     this.markerEnable = false;
-    this.markerPathFunction = markerPath().LineMarker;
+    this.markerPathFunction = markerPath().TriangleMarker;
     this.markerPathCustom = null;
-    this.markerAttr = { fill: "#111", "stroke-width": 3 };
+    this.markerAttr = { stroke: "#111", "stroke-width": 3 };
 
     //Private properties
     this.currentClick = 0;
@@ -156,19 +167,6 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     this.sliceInitTransformFunction = null;
 
     this.parseWheel(holderDiv);
-
-    if (clearContent) {
-        var removeChildrens = [];
-        for (var i = 0; i < holderDiv.children.length; i++) {
-            if (holderDiv.children[i].localName !== "svg") {
-                removeChildrens.push(holderDiv.children[i]);
-            }
-        }
-
-        for (var i = 0; i < removeChildrens.length; i++) {
-            holderDiv.removeChild(removeChildrens[i]);
-        }
-    }
 
     return this;
 };
@@ -256,6 +254,17 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
         if (!onlyInit) {
             this.createWheel();
         }
+    }
+
+    var removeChildrens = [];
+    for (var i = 0; i < holderDiv.children.length; i++) {
+        if (holderDiv.children[i].localName !== "svg") {
+            removeChildrens.push(holderDiv.children[i]);
+        }
+    }
+
+    for (var i = 0; i < removeChildrens.length; i++) {
+        holderDiv.removeChild(removeChildrens[i]);
     }
 };
 
@@ -456,6 +465,10 @@ wheelnav.prototype.spreadWheel = function () {
         var navItem = this.navItems[i];
         navItem.hovered = false;
         navItem.setCurrentTransform(true);
+    }
+
+    if (this.markerEnable) {
+        this.marker.setCurrentTransform();
     }
 
     this.spreader.setVisibility();

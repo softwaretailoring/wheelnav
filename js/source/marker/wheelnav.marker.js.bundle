@@ -12,7 +12,11 @@
   <files>
     <file>/js/source/marker/wheelnav.marker.core.js</file>
     <file>/js/source/marker/wheelnav.markerPathStart.js</file>
+    <file>/js/source/marker/wheelnav.markerPath.Triangle.js</file>
+    <file>/js/source/marker/wheelnav.markerPath.PieLine.js</file>
+    <file>/js/source/marker/wheelnav.markerPath.Menu.js</file>
     <file>/js/source/marker/wheelnav.markerPath.Line.js</file>
+    <file>/js/source/marker/wheelnav.markerPath.Drop.js</file>
     <file>/js/source/marker/wheelnav.markerPathEnd.js</file>
   </files>
 </bundle>

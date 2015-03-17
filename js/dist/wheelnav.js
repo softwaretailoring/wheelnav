@@ -39,6 +39,17 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     if (raphael === undefined ||
         raphael === null) {
 
+        var removeChildrens = [];
+        for (var i = 0; i < holderDiv.children.length; i++) {
+            if (holderDiv.children[i].localName === "svg") {
+                removeChildrens.push(holderDiv.children[i]);
+            }
+        }
+
+        for (var i = 0; i < removeChildrens.length; i++) {
+            holderDiv.removeChild(removeChildrens[i]);
+        }
+
         if (divWidth !== undefined &&
             divWidth !== null) {
             if (divHeight === undefined ||
@@ -111,9 +122,9 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
 
     //Marker settings
     this.markerEnable = false;
-    this.markerPathFunction = markerPath().LineMarker;
+    this.markerPathFunction = markerPath().TriangleMarker;
     this.markerPathCustom = null;
-    this.markerAttr = { fill: "#111", "stroke-width": 3 };
+    this.markerAttr = { stroke: "#111", "stroke-width": 3 };
 
     //Private properties
     this.currentClick = 0;
@@ -157,19 +168,6 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     this.sliceInitTransformFunction = null;
 
     this.parseWheel(holderDiv);
-
-    if (clearContent) {
-        var removeChildrens = [];
-        for (var i = 0; i < holderDiv.children.length; i++) {
-            if (holderDiv.children[i].localName !== "svg") {
-                removeChildrens.push(holderDiv.children[i]);
-            }
-        }
-
-        for (var i = 0; i < removeChildrens.length; i++) {
-            holderDiv.removeChild(removeChildrens[i]);
-        }
-    }
 
     return this;
 };
@@ -257,6 +255,17 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
         if (!onlyInit) {
             this.createWheel();
         }
+    }
+
+    var removeChildrens = [];
+    for (var i = 0; i < holderDiv.children.length; i++) {
+        if (holderDiv.children[i].localName !== "svg") {
+            removeChildrens.push(holderDiv.children[i]);
+        }
+    }
+
+    for (var i = 0; i < removeChildrens.length; i++) {
+        holderDiv.removeChild(removeChildrens[i]);
     }
 };
 
@@ -457,6 +466,10 @@ wheelnav.prototype.spreadWheel = function () {
         var navItem = this.navItems[i];
         navItem.hovered = false;
         navItem.setCurrentTransform(true);
+    }
+
+    if (this.markerEnable) {
+        this.marker.setCurrentTransform();
     }
 
     this.spreader.setVisibility();
@@ -1589,7 +1602,7 @@ var markerPathCustomization = function () {
 
     this.titleRadiusPercent = 1;
     this.titleSliceAnglePercent = 0.5;
-    this.markerPercent = 1;
+    this.markerPercent = 1.05;
 
     return this;
 };
@@ -2765,7 +2778,9 @@ marker = function (wheelnav) {
         this.markerHelper.centerY = this.wheelnav.centerY;
         this.markerHelper.navItemCount = this.wheelnav.navItemCount;
         this.markerHelper.navAngle = this.wheelnav.navAngle;
-        this.markerHelper.wheelRadius = this.wheelnav.wheelRadius;
+        this.markerHelper.wheelRadius = this.wheelnav.wheelRadius * this.wheelnav.maxPercent;
+        this.markerHelper.sliceAngle = this.wheelnav.navItems[0].sliceAngle;
+        this.markerHelper.startAngle = this.markerHelper.navAngle - (this.markerHelper.sliceAngle / 2);
 
         this.animateeffect = "bounce";
         this.animatetime = 1500;
@@ -2773,8 +2788,9 @@ marker = function (wheelnav) {
         if (this.wheelnav.animateeffect !== null) { this.animateeffect = this.wheelnav.animateeffect; }
         if (this.wheelnav.animatetime !== null) { this.animatetime = this.wheelnav.animatetime; }
 
-        var markerPath = this.wheelnav.markerPathFunction(this.markerHelper, this.wheelnav.markerPathCustom);
-        this.marker = this.wheelnav.raphael.path(markerPath.markerPathString);
+        this.markerPathMin = this.wheelnav.markerPathFunction(this.markerHelper, this.wheelnav.minPercent, this.wheelnav.markerPathCustom);
+        this.markerPathMax = this.wheelnav.markerPathFunction(this.markerHelper, this.wheelnav.maxPercent, this.wheelnav.markerPathCustom);
+        this.marker = this.wheelnav.raphael.path(this.markerPathMax.markerPathString);
         this.marker.attr(this.wheelnav.markerAttr);
     }
 
@@ -2783,14 +2799,32 @@ marker = function (wheelnav) {
 
 marker.prototype.setCurrentTransform = function (navAngle) {
 
-    var rotateAngle = navAngle - this.markerHelper.navAngle;
+    var currentPath = "";
 
-    markerTransformAttr = {
-        transform: "r," + (rotateAngle).toString() + "," + this.wheelnav.centerX + "," + this.wheelnav.centerY
-    };
+    if (this.wheelnav.currentPercent === this.wheelnav.maxPercent) {
+        currentPath = this.markerPathMax.markerPathString;
+    }
+    else {
+        currentPath = this.markerPathMin.markerPathString;
+    }
+
+    if (navAngle !== undefined) {
+        var rotateAngle = navAngle - this.markerHelper.navAngle;
+
+        markerTransformAttr = {
+            transform: "r," + (rotateAngle).toString() + "," + this.wheelnav.centerX + "," + this.wheelnav.centerY,
+            path: currentPath
+        };
+    }
+    else {
+        markerTransformAttr = {
+            path: currentPath
+        };
+    }
     
     //Animate marker
     this.marker.animate(markerTransformAttr, this.animatetime, this.animateeffect);
+    this.marker.toFront();
 };
 
 
@@ -2819,24 +2853,147 @@ markerPath = function () {
 
 
 
+///#source 1 1 /js/source/marker/wheelnav.markerPath.Triangle.js
+
+this.TriangleMarkerCustomization = function () {
+
+    var custom = new markerPathCustomization();
+    custom.arcBaseRadiusPercent = 1.1;
+    custom.arcRadiusPercent = 1.2;
+    custom.startRadiusPercent = 0;
+    return custom;
+};
+
+this.TriangleMarker = function (helper, percent, custom) {
+
+    if (custom === null) {
+        custom = TriangleMarkerCustomization();
+    }
+
+    helper.setBaseValue(custom.markerPercent * percent, custom);
+
+    var arcBaseRadius = helper.sliceRadius * custom.arcBaseRadiusPercent;
+    var arcRadius = helper.sliceRadius * custom.arcRadiusPercent;
+    var startAngle = helper.startAngle + helper.sliceAngle * 0.45;
+    var endAngle = helper.startAngle + helper.sliceAngle * 0.55;
+
+    markerPathString = [helper.MoveTo(helper.navAngle, arcBaseRadius),
+                 helper.LineTo(startAngle, arcRadius),
+                 helper.LineTo(endAngle, arcRadius),
+                 helper.Close()];
+    
+    return {
+        markerPathString: markerPathString,
+        titlePosX: helper.titlePosX,
+        titlePosY: helper.titlePosY
+    };
+};
+
+
+///#source 1 1 /js/source/marker/wheelnav.markerPath.PieLine.js
+
+this.PieLineMarkerCustomization = function () {
+
+    var custom = new markerPathCustomization();
+    custom.arcBaseRadiusPercent = 1;
+    custom.arcRadiusPercent = 1;
+    custom.startRadiusPercent = 0;
+    custom.sliceAngle = null;
+    return custom;
+};
+
+this.PieLineMarker = function (helper, percent, custom) {
+
+    if (custom === null) {
+        custom = PieLineMarkerCustomization();
+    }
+
+    helper.setBaseValue(custom.markerPercent * percent, custom);
+
+    var arcBaseRadius = helper.sliceRadius * custom.arcBaseRadiusPercent;
+    var arcRadius = helper.sliceRadius * custom.arcRadiusPercent;
+
+    if (custom.sliceAngle !== null) {
+        helper.startAngle = helper.navAngle - (custom.sliceAngle / 2);
+        helper.endAngle = helper.navAngle + (custom.sliceAngle / 2);
+    }
+
+    markerPathString = [helper.MoveTo(helper.startAngle, arcBaseRadius),
+                 helper.ArcTo(arcRadius, helper.endAngle, arcBaseRadius),
+                 helper.ArcBackTo(arcRadius, helper.startAngle, arcBaseRadius),
+                 helper.Close()];
+
+    return {
+        markerPathString: markerPathString,
+        titlePosX: helper.titlePosX,
+        titlePosY: helper.titlePosY
+    };
+};
+
+
+
+
+///#source 1 1 /js/source/marker/wheelnav.markerPath.Menu.js
+
+this.MenuMarkerCustomization = function () {
+
+    var custom = new markerPathCustomization();
+    custom.menuRadius = 30;
+    custom.titleRadiusPercent = 0.63;
+    custom.lineBaseRadiusPercent = 0;
+    return custom;
+};
+
+this.MenuMarker = function (helper, percent, custom) {
+
+    if (custom === null) {
+        custom = MenuMarkerCustomization();
+    }
+
+    helper.setBaseValue(custom.markerPercent * percent, custom);
+
+    x = helper.centerX;
+    y = helper.centerY;
+
+    helper.titleRadius = helper.wheelRadius * custom.titleRadiusPercent * percent;
+    helper.setTitlePos();
+
+    var menuRadius = custom.menuRadius * percent;
+    if (percent <= 0.05) { menuRadius = 11; }
+
+    middleTheta = helper.middleTheta;
+
+    markerPathString = [["M", helper.titlePosX - (menuRadius * Math.cos(middleTheta)), helper.titlePosY - (menuRadius * Math.sin(middleTheta))],
+                ["A", menuRadius, menuRadius, 0, 0, 1, helper.titlePosX + (menuRadius * Math.cos(middleTheta)), helper.titlePosY + (menuRadius * Math.sin(middleTheta))],
+                ["A", menuRadius, menuRadius, 0, 0, 1, helper.titlePosX - (menuRadius * Math.cos(middleTheta)), helper.titlePosY - (menuRadius * Math.sin(middleTheta))],
+                ["z"]];
+    
+    return {
+        markerPathString: markerPathString,
+        titlePosX: helper.titlePosX,
+        titlePosY: helper.titlePosY
+    };
+};
+
+
 ///#source 1 1 /js/source/marker/wheelnav.markerPath.Line.js
 
 this.LineMarkerCustomization = function () {
 
     var custom = new markerPathCustomization();
-    custom.arcBaseRadiusPercent = 1;
-    custom.arcRadiusPercent = 1.1;
+    custom.arcBaseRadiusPercent = 1.05;
+    custom.arcRadiusPercent = 1.2;
     custom.startRadiusPercent = 0;
     return custom;
 };
 
-this.LineMarker = function (helper, custom) {
+this.LineMarker = function (helper, percent, custom) {
 
     if (custom === null) {
         custom = LineMarkerCustomization();
     }
 
-    helper.setBaseValue(custom.markerPercent, custom);
+    helper.setBaseValue(custom.markerPercent * percent, custom);
 
     var arcBaseRadius = helper.sliceRadius * custom.arcBaseRadiusPercent;
     var arcRadius = helper.sliceRadius * custom.arcRadiusPercent;
@@ -2851,6 +3008,44 @@ this.LineMarker = function (helper, custom) {
         titlePosY: helper.titlePosY
     };
 };
+
+
+///#source 1 1 /js/source/marker/wheelnav.markerPath.Drop.js
+
+this.DropMarkerCustomization = function () {
+
+    var custom = new markerPathCustomization();
+    custom.arcBaseRadiusPercent = 1.05;
+    custom.arcRadiusPercent = 1.15;
+    custom.startRadiusPercent = 0;
+    return custom;
+};
+
+this.DropMarker = function (helper, percent, custom) {
+
+    if (custom === null) {
+        custom = DropMarkerCustomization();
+    }
+
+    helper.setBaseValue(custom.markerPercent * percent, custom);
+
+    var arcBaseRadius = helper.sliceRadius * custom.arcBaseRadiusPercent;
+    var arcRadius = helper.sliceRadius * custom.arcRadiusPercent;
+    var startAngle = helper.startAngle + helper.sliceAngle * 0.47;
+    var endAngle = helper.startAngle + helper.sliceAngle * 0.53;
+    var dropRadius = helper.sliceRadius * 0.02;
+
+    markerPathString = [helper.MoveTo(helper.navAngle, arcBaseRadius),
+                 helper.LineTo(startAngle, arcRadius),
+                 helper.ArcTo(dropRadius, endAngle, arcRadius),
+                 helper.Close()];
+    return {
+        markerPathString: markerPathString,
+        titlePosX: helper.titlePosX,
+        titlePosY: helper.titlePosY
+    };
+};
+
 
 ///#source 1 1 /js/source/marker/wheelnav.markerPathEnd.js
 

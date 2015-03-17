@@ -15,7 +15,9 @@ marker = function (wheelnav) {
         this.markerHelper.centerY = this.wheelnav.centerY;
         this.markerHelper.navItemCount = this.wheelnav.navItemCount;
         this.markerHelper.navAngle = this.wheelnav.navAngle;
-        this.markerHelper.wheelRadius = this.wheelnav.wheelRadius;
+        this.markerHelper.wheelRadius = this.wheelnav.wheelRadius * this.wheelnav.maxPercent;
+        this.markerHelper.sliceAngle = this.wheelnav.navItems[0].sliceAngle;
+        this.markerHelper.startAngle = this.markerHelper.navAngle - (this.markerHelper.sliceAngle / 2);
 
         this.animateeffect = "bounce";
         this.animatetime = 1500;
@@ -23,8 +25,9 @@ marker = function (wheelnav) {
         if (this.wheelnav.animateeffect !== null) { this.animateeffect = this.wheelnav.animateeffect; }
         if (this.wheelnav.animatetime !== null) { this.animatetime = this.wheelnav.animatetime; }
 
-        var markerPath = this.wheelnav.markerPathFunction(this.markerHelper, this.wheelnav.markerPathCustom);
-        this.marker = this.wheelnav.raphael.path(markerPath.markerPathString);
+        this.markerPathMin = this.wheelnav.markerPathFunction(this.markerHelper, this.wheelnav.minPercent, this.wheelnav.markerPathCustom);
+        this.markerPathMax = this.wheelnav.markerPathFunction(this.markerHelper, this.wheelnav.maxPercent, this.wheelnav.markerPathCustom);
+        this.marker = this.wheelnav.raphael.path(this.markerPathMax.markerPathString);
         this.marker.attr(this.wheelnav.markerAttr);
     }
 
@@ -33,14 +36,32 @@ marker = function (wheelnav) {
 
 marker.prototype.setCurrentTransform = function (navAngle) {
 
-    var rotateAngle = navAngle - this.markerHelper.navAngle;
+    var currentPath = "";
 
-    markerTransformAttr = {
-        transform: "r," + (rotateAngle).toString() + "," + this.wheelnav.centerX + "," + this.wheelnav.centerY
-    };
+    if (this.wheelnav.currentPercent === this.wheelnav.maxPercent) {
+        currentPath = this.markerPathMax.markerPathString;
+    }
+    else {
+        currentPath = this.markerPathMin.markerPathString;
+    }
+
+    if (navAngle !== undefined) {
+        var rotateAngle = navAngle - this.markerHelper.navAngle;
+
+        markerTransformAttr = {
+            transform: "r," + (rotateAngle).toString() + "," + this.wheelnav.centerX + "," + this.wheelnav.centerY,
+            path: currentPath
+        };
+    }
+    else {
+        markerTransformAttr = {
+            path: currentPath
+        };
+    }
     
     //Animate marker
     this.marker.animate(markerTransformAttr, this.animatetime, this.animateeffect);
+    this.marker.toFront();
 };
 
 

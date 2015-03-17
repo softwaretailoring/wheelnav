@@ -32,11 +32,11 @@
 
                 var radialWheel = new wheelnav("radialWheel");
                 radialWheel.slicePathFunction = slicePath().MenuSliceWithoutLine;
-                radialWheel.sliceSelectedTransformFunction = sliceTransform().ScaleTransform;
                 radialWheel.spreaderEnable = true;
                 radialWheel.clickModeRotate = false;
                 radialWheel.cssMode = true;
                 radialWheel.markerEnable = true;
+                radialWheel.markerPathFunction = markerPath().MenuMarker;
                 radialWheel.createWheel([icon.merge, icon.filter, icon.charging, icon.biohazard, icon.book, "6"]);
                 radialWheel.setTooltips(["merge", "filter", "charging", "biohazard", "book", "six"]);
 

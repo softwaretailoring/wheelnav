@@ -1,26 +1,29 @@
 ﻿
-this.LineMarkerCustomization = function () {
+this.TriangleMarkerCustomization = function () {
 
     var custom = new markerPathCustomization();
-    custom.arcBaseRadiusPercent = 1.05;
+    custom.arcBaseRadiusPercent = 1.1;
     custom.arcRadiusPercent = 1.2;
     custom.startRadiusPercent = 0;
     return custom;
 };
 
-this.LineMarker = function (helper, percent, custom) {
+this.TriangleMarker = function (helper, percent, custom) {
 
     if (custom === null) {
-        custom = LineMarkerCustomization();
+        custom = TriangleMarkerCustomization();
     }
 
     helper.setBaseValue(custom.markerPercent * percent, custom);
 
     var arcBaseRadius = helper.sliceRadius * custom.arcBaseRadiusPercent;
     var arcRadius = helper.sliceRadius * custom.arcRadiusPercent;
+    var startAngle = helper.startAngle + helper.sliceAngle * 0.45;
+    var endAngle = helper.startAngle + helper.sliceAngle * 0.55;
 
     markerPathString = [helper.MoveTo(helper.navAngle, arcBaseRadius),
-                 helper.LineTo(helper.navAngle, arcRadius),
+                 helper.LineTo(startAngle, arcRadius),
+                 helper.LineTo(endAngle, arcRadius),
                  helper.Close()];
     
     return {
