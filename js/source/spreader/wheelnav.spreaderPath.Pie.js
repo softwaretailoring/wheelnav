@@ -9,13 +9,13 @@ this.PieSpreaderCustomization = function () {
     return custom;
 };
 
-this.PieSpreader = function (helper, custom) {
+this.PieSpreader = function (helper, percent, custom) {
 
     if (custom === null) {
         custom = PieSpreaderCustomization();
     }
 
-    helper.setBaseValue(custom.spreaderPercent, custom);
+    helper.setBaseValue(custom.spreaderPercent * percent, custom);
 
     var arcBaseRadius = helper.sliceRadius * custom.arcBaseRadiusPercent;
     var arcRadius = helper.sliceRadius * custom.arcRadiusPercent;

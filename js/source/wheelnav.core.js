@@ -110,11 +110,15 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
 
     //Spreader settings
     this.spreaderEnable = false;
-    this.spreaderRadius = 15;
+    this.spreaderRadius = 20;
     this.spreaderStartAngle = 0;
     this.spreaderSliceAngle = 360;
     this.spreaderPathFunction = spreaderPath().PieSpreader;
     this.spreaderPathCustom = null;
+    this.spreaderOnPercent = 1;
+    this.spreaderOffPercent = 1;
+    this.spreaderOnTitle = "+";
+    this.spreaderOffTitle = "-";
     this.minPercent = 0.01;
     this.maxPercent = 1;
     this.initPercent = 1;
@@ -123,7 +127,6 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     this.markerEnable = false;
     this.markerPathFunction = markerPath().TriangleMarker;
     this.markerPathCustom = null;
-    this.markerAttr = { stroke: "#111", "stroke-width": 3 };
 
     //Private properties
     this.currentClick = 0;
@@ -272,8 +275,8 @@ wheelnav.prototype.initWheel = function (titles) {
 
     //Init slices and titles
     if (!this.cssMode) {
-        if (this.spreaderCircleAttr === undefined || this.spreaderCircleAttr === null) {
-            this.spreaderCircleAttr = { fill: "#777", "stroke-width": 3, cursor: 'pointer' };
+        if (this.spreaderPathAttr === undefined || this.spreaderPathAttr === null) {
+            this.spreaderPathAttr = { fill: "#777", "stroke-width": 3, cursor: 'pointer' };
         }
         if (this.spreaderOnAttr === undefined || this.spreaderOnAttr === null) {
             this.spreaderOnAttr = { fill: "#FFF", cursor: 'pointer' };
@@ -281,11 +284,15 @@ wheelnav.prototype.initWheel = function (titles) {
         if (this.spreaderOffAttr === undefined || this.spreaderOffAttr === null) {
             this.spreaderOffAttr = { fill: "#FFF", cursor: 'pointer' };
         }
+        if (this.markerAttr === undefined || this.markerAttr === null) {
+            this.markerAttr = { stroke: "#111", "stroke-width": 3 };
+        }
     }
     else {
-        this.spreaderCircleAttr = { "class": this.getSpreaderId() };
+        this.spreaderPathAttr = { "class": this.getSpreaderId() };
         this.spreaderOnAttr = { "class": this.getSpreadOnId() };
         this.spreaderOffAttr = { "class": this.getSpreadOffId() };
+        this.markerAttr = { "class": this.getMarkerId() };
     }
 
     var navItem;
@@ -548,4 +555,6 @@ wheelnav.prototype.getSpreadOnId = function () {
 wheelnav.prototype.getSpreadOffId = function () {
     return "wheelnav-" + this.holderId + "-spreadoff";
 };
-
+wheelnav.prototype.getMarkerId = function () {
+    return "wheelnav-" + this.holderId + "-marker";
+};

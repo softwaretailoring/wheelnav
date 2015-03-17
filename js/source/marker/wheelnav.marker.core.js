@@ -29,6 +29,8 @@ marker = function (wheelnav) {
         this.markerPathMax = this.wheelnav.markerPathFunction(this.markerHelper, this.wheelnav.maxPercent, this.wheelnav.markerPathCustom);
         this.marker = this.wheelnav.raphael.path(this.markerPathMax.markerPathString);
         this.marker.attr(this.wheelnav.markerAttr);
+        this.marker.id = this.wheelnav.getMarkerId();
+        this.marker.node.id = this.marker.id;
     }
 
     return this;

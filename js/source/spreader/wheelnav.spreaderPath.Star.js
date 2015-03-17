@@ -7,16 +7,16 @@ this.StarSpreaderCustomization = function () {
     return custom;
 };
 
-this.StarSpreader = function (helper, custom) {
+this.StarSpreader = function (helper, percent, custom) {
 
     if (custom === null) {
         custom = StarSpreaderCustomization();
     }
 
-    helper.setBaseValue(custom.spreaderPercent, custom);
+    helper.setBaseValue(custom.spreaderPercent * percent, custom);
 
     r = helper.wheelRadius * custom.spreaderPercent;
-    rbase = r * custom.minRadiusPercent;
+    rbase = r * custom.minRadiusPercent * percent;
 
     r = helper.sliceRadius;
 
