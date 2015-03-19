@@ -20,11 +20,12 @@ this.PieSpreader = function (helper, percent, custom) {
     var arcBaseRadius = helper.sliceRadius * custom.arcBaseRadiusPercent;
     var arcRadius = helper.sliceRadius * custom.arcRadiusPercent;
 
-    spreaderPathString = [helper.MoveTo(helper.startAngle, arcBaseRadius),
-                 helper.ArcTo(arcRadius, helper.middleAngle, arcBaseRadius),
-                 helper.ArcTo(arcRadius, helper.endAngle, arcBaseRadius),
-                 helper.Close()];
-    
+    spreaderPathString = [];
+    helper.StartSpreader(spreaderPathString, helper.startAngle, arcBaseRadius);
+    spreaderPathString.push(helper.ArcTo(arcRadius, helper.middleAngle, arcBaseRadius));
+    spreaderPathString.push(helper.ArcTo(arcRadius, helper.endAngle, arcBaseRadius));
+    spreaderPathString.push(helper.Close());
+
     return {
         spreaderPathString: spreaderPathString,
         titlePosX: helper.titlePosX,

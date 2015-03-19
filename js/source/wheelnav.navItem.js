@@ -346,7 +346,7 @@ wheelnavItem.prototype.setCurrentTransform = function (locked) {
         if (this.sliceTransform.lineTransformString !== undefined) { this.navLineCurrentTransformString += this.sliceTransform.lineTransformString; }
 
         this.navTitleCurrentTransformString = "";
-        if (this.wheelnav.clickModeRotate) { this.navTitleCurrentTransformString += this.getTitleRotateString(); }
+        this.navTitleCurrentTransformString += this.getTitleRotateString();
 
         if (this.selected) {
             if (this.selectTransform.titleTransformString === "" ||

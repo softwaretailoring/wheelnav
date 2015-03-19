@@ -16,7 +16,7 @@ this.YinYangSlice = function (helper, percent, custom) {
 
     return {
         slicePathString: slicePathString,
-        linePathString: "",
+        linePathString: slicePathString,
         titlePosX: titlePosX,
         titlePosY: titlePosY
     };

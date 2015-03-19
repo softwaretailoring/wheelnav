@@ -14,6 +14,9 @@
     <file>/js/source/spreader/wheelnav.spreaderPathStart.js</file>
     <file>/js/source/spreader/wheelnav.spreaderPath.Pie.js</file>
     <file>/js/source/spreader/wheelnav.spreaderPath.Star.js</file>
+    <file>/js/source/spreader/wheelnav.spreaderPath.AntiStar.js</file>
+    <file>/js/source/spreader/wheelnav.spreaderPath.Flower.js</file>
+    <file>/js/source/spreader/wheelnav.spreaderPath.Holder.js</file>
     <file>/js/source/spreader/wheelnav.spreaderPathEnd.js</file>
   </files>
 </bundle>

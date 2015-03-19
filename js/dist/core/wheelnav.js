@@ -120,6 +120,7 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     this.spreaderOffPercent = 1;
     this.spreaderOnTitle = "+";
     this.spreaderOffTitle = "-";
+    this.spreaderTitleFont = null;
     this.minPercent = 0.01;
     this.maxPercent = 1;
     this.initPercent = 1;
@@ -909,7 +910,7 @@ wheelnavItem.prototype.setCurrentTransform = function (locked) {
         if (this.sliceTransform.lineTransformString !== undefined) { this.navLineCurrentTransformString += this.sliceTransform.lineTransformString; }
 
         this.navTitleCurrentTransformString = "";
-        if (this.wheelnav.clickModeRotate) { this.navTitleCurrentTransformString += this.getTitleRotateString(); }
+        this.navTitleCurrentTransformString += this.getTitleRotateString();
 
         if (this.selected) {
             if (this.selectTransform.titleTransformString === "" ||
@@ -1567,6 +1568,16 @@ var pathHelper = function () {
         return ["A", arcRadius, arcRadius, 0, 0, 0, this.getX(angle, length), this.getY(angle, length)]
     };
 
+    this.StartSpreader = function (spreaderPathString, angle, length) {
+        if (this.endAngle - this.startAngle === 360) {
+            spreaderPathString.push(this.MoveTo(angle, length));
+        }
+        else {
+            spreaderPathString.push(this.MoveToCenter());
+            spreaderPathString.push(this.LineTo(angle, length));
+        }
+    };
+
     this.Close = function () {
         return ["z"];
     };
@@ -1857,12 +1868,17 @@ spreader = function (wheelnav) {
         if (this.wheelnav.animateeffect !== null) { this.animateeffect = this.wheelnav.animateeffect; }
         if (this.wheelnav.animatetime !== null) { this.animatetime = this.wheelnav.animatetime; }
 
-        var fontAttr = { font: '100 32px Impact, Charcoal, sans-serif' };
+        if (this.wheelnav.spreaderTitleFont !== null) { this.fontAttr = { font: this.wheelnav.spreaderTitleFont }; }
+        else { this.fontAttr = { font: '100 32px Impact, Charcoal, sans-serif' }; }
 
         this.spreaderPathOn = this.wheelnav.spreaderPathFunction(this.spreaderHelper, this.wheelnav.spreaderOnPercent, this.wheelnav.spreaderPathCustom);
         this.spreaderPathOff = this.wheelnav.spreaderPathFunction(this.spreaderHelper, this.wheelnav.spreaderOffPercent, this.wheelnav.spreaderPathCustom);
-
-        this.spreaderPath = this.wheelnav.raphael.path(this.spreaderPathOn.spreaderPathString);
+        if (thisWheelNav.initPercent === thisWheelNav.maxPercent) {
+            this.spreaderPath = this.wheelnav.raphael.path(this.spreaderPathOn.spreaderPathString);
+        }
+        else {
+            this.spreaderPath = this.wheelnav.raphael.path(this.spreaderPathOff.spreaderPathString);
+        }
         this.spreaderPath.attr(thisWheelNav.spreaderPathAttr);
         this.spreaderPath.id = thisWheelNav.getSpreaderId();
         this.spreaderPath.node.id = this.spreaderPath.id;
@@ -1873,14 +1889,14 @@ spreader = function (wheelnav) {
         //Set titles
         if (wheelnavTitle().isPathTitle(this.wheelnav.spreaderOnTitle)) {
             onTitle = new wheelnavTitle(this.wheelnav.spreaderOnTitle, this.wheelnav.raphael.raphael);
-            this.spreadOnTitle = this.wheelnav.raphael.path(onTitle.getTitlePercentAttr(this.spreaderPathOn.titlePosX, this.spreaderPathOn.titlePosY).path);
+            this.spreadOnTitle = this.wheelnav.raphael.path(onTitle.getTitlePercentAttr(this.spreaderPathOff.titlePosX, this.spreaderPathOff.titlePosY).path);
         }
         else {
             onTitle = new wheelnavTitle(this.wheelnav.spreaderOnTitle);
-            this.spreadOnTitle = thisWheelNav.raphael.text(this.spreaderPathOn.titlePosX, this.spreaderPathOn.titlePosY, onTitle.title);
+            this.spreadOnTitle = thisWheelNav.raphael.text(this.spreaderPathOff.titlePosX, this.spreaderPathOff.titlePosY, onTitle.title);
         }
 
-        this.spreadOnTitle.attr(fontAttr);
+        this.spreadOnTitle.attr(this.fontAttr);
         this.spreadOnTitle.attr(thisWheelNav.spreaderOnAttr);
         this.spreadOnTitle.id = thisWheelNav.getSpreadOnId();
         this.spreadOnTitle.node.id = this.spreadOnTitle.id;
@@ -1890,14 +1906,18 @@ spreader = function (wheelnav) {
 
         if (wheelnavTitle().isPathTitle(this.wheelnav.spreaderOffTitle)) {
             offTitle = new wheelnavTitle(this.wheelnav.spreaderOffTitle, this.wheelnav.raphael.raphael);
-            this.spreadOffTitle = this.wheelnav.raphael.path(offTitle.getTitlePercentAttr(this.spreaderPathOff.titlePosX, this.spreaderPathOff.titlePosY).path);
+            this.spreadOffTitle = this.wheelnav.raphael.path(offTitle.getTitlePercentAttr(this.spreaderPathOn.titlePosX, this.spreaderPathOn.titlePosY).path);
         }
         else {
             offTitle = new wheelnavTitle(this.wheelnav.spreaderOffTitle);
-            this.spreadOffTitle = thisWheelNav.raphael.text(this.spreaderPathOff.titlePosX, this.spreaderPathOff.titlePosY - 3, offTitle.title);
+
+            //Little hack for proper appearance of "-" sign
+            offYOffset = 0;
+            if (this.wheelnav.spreaderOffTitle === "-") { offYOffset = 3; }
+            this.spreadOffTitle = thisWheelNav.raphael.text(this.spreaderPathOn.titlePosX, this.spreaderPathOn.titlePosY - offYOffset, offTitle.title);
         }
 
-        this.spreadOffTitle.attr(fontAttr);
+        this.spreadOffTitle.attr(this.fontAttr);
         this.spreadOffTitle.attr(thisWheelNav.spreaderOffAttr);
         this.spreadOffTitle.id = thisWheelNav.getSpreadOffId();
         this.spreadOffTitle.node.id = this.spreadOffTitle.id;
@@ -1987,11 +2007,12 @@ this.PieSpreader = function (helper, percent, custom) {
     var arcBaseRadius = helper.sliceRadius * custom.arcBaseRadiusPercent;
     var arcRadius = helper.sliceRadius * custom.arcRadiusPercent;
 
-    spreaderPathString = [helper.MoveTo(helper.startAngle, arcBaseRadius),
-                 helper.ArcTo(arcRadius, helper.middleAngle, arcBaseRadius),
-                 helper.ArcTo(arcRadius, helper.endAngle, arcBaseRadius),
-                 helper.Close()];
-    
+    spreaderPathString = [];
+    helper.StartSpreader(spreaderPathString, helper.startAngle, arcBaseRadius);
+    spreaderPathString.push(helper.ArcTo(arcRadius, helper.middleAngle, arcBaseRadius));
+    spreaderPathString.push(helper.ArcTo(arcRadius, helper.endAngle, arcBaseRadius));
+    spreaderPathString.push(helper.Close());
+
     return {
         spreaderPathString: spreaderPathString,
         titlePosX: helper.titlePosX,
@@ -2016,26 +2037,202 @@ this.StarSpreader = function (helper, percent, custom) {
     }
 
     helper.setBaseValue(custom.spreaderPercent * percent, custom);
-
-    r = helper.wheelRadius * custom.spreaderPercent;
-    rbase = r * custom.minRadiusPercent * percent;
-
+    rbase = helper.wheelRadius * custom.spreaderPercent * custom.minRadiusPercent * percent;
     r = helper.sliceRadius;
 
     spreaderPathString = [];
 
     sliceAngle = helper.sliceAngle / helper.navItemCount;
+    baseAngle = helper.navAngle;
+    if (helper.endAngle - helper.startAngle < 360) { baseAngle = helper.startAngle; }
 
-    spreaderPathString.push(helper.MoveTo(helper.startAngle + (helper.navAngle + sliceAngle / 2), rbase));
-    
+    helper.StartSpreader(spreaderPathString, baseAngle, r);
+
     for (var i = 0; i < helper.navItemCount; i++) {
-        startAngle = i * sliceAngle + (helper.navAngle + sliceAngle / 2);
+        startAngle = i * sliceAngle + (baseAngle + sliceAngle / 2);
         middleAngle = startAngle + (sliceAngle / 2);
         endAngle = startAngle + sliceAngle;
-
+        if (helper.endAngle - helper.startAngle < 360) {
+            if (i === helper.navItemCount - 1) { endAngle = middleAngle; }
+        }
         spreaderPathString.push(helper.LineTo(startAngle, rbase));
         spreaderPathString.push(helper.LineTo(middleAngle, r));
         spreaderPathString.push(helper.LineTo(endAngle, rbase));
+    }
+
+    spreaderPathString.push(helper.Close());
+
+    return {
+        spreaderPathString: spreaderPathString,
+        titlePosX: helper.titlePosX,
+        titlePosY: helper.titlePosY
+    };
+};
+
+
+///#source 1 1 /js/source/spreader/wheelnav.spreaderPath.AntiStar.js
+
+this.AntiStarSpreaderCustomization = function () {
+
+    var custom = new spreaderPathCustomization();
+    custom.minRadiusPercent = 0.21;
+
+    return custom;
+};
+
+this.AntiStarSpreader = function (helper, percent, custom) {
+
+    if (custom === null) {
+        custom = AntiStarSpreaderCustomization();
+    }
+
+    helper.setBaseValue(custom.spreaderPercent * percent, custom);
+    rbase = helper.wheelRadius * custom.spreaderPercent * custom.minRadiusPercent * percent;
+    r = helper.sliceRadius;
+
+    spreaderPathString = [];
+
+    sliceAngle = helper.sliceAngle / helper.navItemCount;
+    baseAngle = helper.navAngle;
+    if (helper.endAngle - helper.startAngle < 360) {
+        baseAngle = helper.startAngle;
+        helper.StartSpreader(spreaderPathString, baseAngle, rbase);
+    }
+    else {
+        spreaderPathString.push(helper.MoveTo(helper.startAngle + (helper.navAngle + sliceAngle / 2), rbase));
+    }
+
+    for (var i = 0; i < helper.navItemCount; i++) {
+        startAngle = i * sliceAngle + (baseAngle + sliceAngle / 2);
+        middleAngle = startAngle + (sliceAngle / 2);
+        endAngle = startAngle + sliceAngle;
+
+        if (helper.endAngle - helper.startAngle < 360) {
+            if (i === helper.navItemCount - 1) { endAngle = middleAngle; }
+        }
+
+        spreaderPathString.push(helper.LineTo(startAngle, r));
+        spreaderPathString.push(helper.LineTo(middleAngle, rbase));
+        spreaderPathString.push(helper.LineTo(endAngle, r));
+    }
+
+    spreaderPathString.push(helper.Close());
+
+    return {
+        spreaderPathString: spreaderPathString,
+        titlePosX: helper.titlePosX,
+        titlePosY: helper.titlePosY
+    };
+};
+
+
+///#source 1 1 /js/source/spreader/wheelnav.spreaderPath.Flower.js
+
+this.FlowerSpreaderCustomization = function () {
+
+    var custom = new spreaderPathCustomization();
+    custom.minRadiusPercent = 0.63
+    custom.menuRadius = 7;;
+
+    return custom;
+};
+
+this.FlowerSpreader = function (helper, percent, custom) {
+
+    if (custom === null) {
+        custom = FlowerSpreaderCustomization();
+    }
+
+    helper.setBaseValue(custom.spreaderPercent * percent, custom);
+    rbase = helper.wheelRadius * custom.spreaderPercent * custom.minRadiusPercent * percent;
+    r = helper.sliceRadius;
+
+    spreaderPathString = [];
+
+    sliceAngle = helper.sliceAngle / helper.navItemCount;
+    baseAngle = helper.navAngle;
+    if (helper.endAngle - helper.startAngle < 360) {
+        baseAngle = helper.startAngle;
+        helper.StartSpreader(spreaderPathString, baseAngle, rbase);
+    }
+    else {
+        spreaderPathString.push(helper.MoveTo(helper.startAngle + (helper.navAngle + sliceAngle / 2), rbase));
+    }
+    
+    for (var i = 0; i < helper.navItemCount; i++) {
+        startAngle = i * sliceAngle + (baseAngle + sliceAngle / 2);
+        middleAngle = startAngle + (sliceAngle / 2);
+        endAngle = startAngle + sliceAngle;
+
+        if (helper.endAngle - helper.startAngle < 360) {
+            if (i === 0) { spreaderPathString.push(helper.ArcTo(custom.menuRadius, startAngle, rbase)); }
+            if (i === helper.navItemCount - 1) { endAngle = middleAngle; }
+        }
+        else {
+            spreaderPathString.push(helper.LineTo(startAngle, rbase));
+        }
+
+        spreaderPathString.push(helper.ArcTo(custom.menuRadius, endAngle, rbase));
+    }
+
+    spreaderPathString.push(helper.Close());
+
+    return {
+        spreaderPathString: spreaderPathString,
+        titlePosX: helper.titlePosX,
+        titlePosY: helper.titlePosY
+    };
+};
+
+
+///#source 1 1 /js/source/spreader/wheelnav.spreaderPath.Holder.js
+
+this.HolderSpreaderCustomization = function () {
+
+    var custom = new spreaderPathCustomization();
+    custom.minRadiusPercent = 0.5;
+    custom.menuRadius = 37;
+
+    return custom;
+};
+
+this.HolderSpreader = function (helper, percent, custom) {
+
+    if (custom === null) {
+        custom = HolderSpreaderCustomization();
+    }
+
+    helper.setBaseValue(custom.spreaderPercent * percent, custom);
+    rbase = helper.wheelRadius * custom.spreaderPercent * custom.minRadiusPercent * percent;
+    r = helper.sliceRadius;
+
+    spreaderPathString = [];
+
+    sliceAngle = helper.sliceAngle / helper.navItemCount;
+    baseAngle = helper.navAngle;
+    if (helper.endAngle - helper.startAngle < 360) {
+        baseAngle = helper.startAngle;
+        helper.StartSpreader(spreaderPathString, baseAngle, rbase);
+    }
+    else {
+        spreaderPathString.push(helper.MoveTo(helper.startAngle + (helper.navAngle + sliceAngle / 2), rbase));
+    }
+
+    for (var i = 0; i < helper.navItemCount; i++) {
+        startAngle = i * sliceAngle + (baseAngle + sliceAngle / 2);
+        middleAngle = startAngle + (sliceAngle / 4);
+        endAngle = startAngle + sliceAngle;
+
+        if (helper.endAngle - helper.startAngle < 360) {
+            if (i === helper.navItemCount - 1) { endAngle = middleAngle; }
+        }
+        else {
+            spreaderPathString.push(helper.LineTo(startAngle, rbase));
+        }
+
+        spreaderPathString.push(helper.LineTo(startAngle, r));
+        spreaderPathString.push(helper.ArcBackTo(custom.menuRadius, middleAngle, rbase));
+        spreaderPathString.push(helper.ArcTo(custom.menuRadius, endAngle, r));
     }
 
     spreaderPathString.push(helper.Close());
@@ -2157,7 +2354,7 @@ markerPath = function () {
 this.TriangleMarkerCustomization = function () {
 
     var custom = new markerPathCustomization();
-    custom.arcBaseRadiusPercent = 1.1;
+    custom.arcBaseRadiusPercent = 1.09;
     custom.arcRadiusPercent = 1.2;
     custom.startRadiusPercent = 0;
     return custom;
@@ -2173,8 +2370,8 @@ this.TriangleMarker = function (helper, percent, custom) {
 
     var arcBaseRadius = helper.sliceRadius * custom.arcBaseRadiusPercent;
     var arcRadius = helper.sliceRadius * custom.arcRadiusPercent;
-    var startAngle = helper.startAngle + helper.sliceAngle * 0.45;
-    var endAngle = helper.startAngle + helper.sliceAngle * 0.55;
+    var startAngle = helper.startAngle + helper.sliceAngle * 0.46;
+    var endAngle = helper.startAngle + helper.sliceAngle * 0.54;
 
     markerPathString = [helper.MoveTo(helper.navAngle, arcBaseRadius),
                  helper.LineTo(startAngle, arcRadius),

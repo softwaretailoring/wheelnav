@@ -1,16 +1,17 @@
 ﻿
-this.StarSpreaderCustomization = function () {
+this.FlowerSpreaderCustomization = function () {
 
     var custom = new spreaderPathCustomization();
-    custom.minRadiusPercent = 0.5;
+    custom.minRadiusPercent = 0.63
+    custom.menuRadius = 7;;
 
     return custom;
 };
 
-this.StarSpreader = function (helper, percent, custom) {
+this.FlowerSpreader = function (helper, percent, custom) {
 
     if (custom === null) {
-        custom = StarSpreaderCustomization();
+        custom = FlowerSpreaderCustomization();
     }
 
     helper.setBaseValue(custom.spreaderPercent * percent, custom);
@@ -21,20 +22,28 @@ this.StarSpreader = function (helper, percent, custom) {
 
     sliceAngle = helper.sliceAngle / helper.navItemCount;
     baseAngle = helper.navAngle;
-    if (helper.endAngle - helper.startAngle < 360) { baseAngle = helper.startAngle; }
-
-    helper.StartSpreader(spreaderPathString, baseAngle, r);
-
+    if (helper.endAngle - helper.startAngle < 360) {
+        baseAngle = helper.startAngle;
+        helper.StartSpreader(spreaderPathString, baseAngle, rbase);
+    }
+    else {
+        spreaderPathString.push(helper.MoveTo(helper.startAngle + (helper.navAngle + sliceAngle / 2), rbase));
+    }
+    
     for (var i = 0; i < helper.navItemCount; i++) {
         startAngle = i * sliceAngle + (baseAngle + sliceAngle / 2);
         middleAngle = startAngle + (sliceAngle / 2);
         endAngle = startAngle + sliceAngle;
+
         if (helper.endAngle - helper.startAngle < 360) {
+            if (i === 0) { spreaderPathString.push(helper.ArcTo(custom.menuRadius, startAngle, rbase)); }
             if (i === helper.navItemCount - 1) { endAngle = middleAngle; }
         }
-        spreaderPathString.push(helper.LineTo(startAngle, rbase));
-        spreaderPathString.push(helper.LineTo(middleAngle, r));
-        spreaderPathString.push(helper.LineTo(endAngle, rbase));
+        else {
+            spreaderPathString.push(helper.LineTo(startAngle, rbase));
+        }
+
+        spreaderPathString.push(helper.ArcTo(custom.menuRadius, endAngle, rbase));
     }
 
     spreaderPathString.push(helper.Close());

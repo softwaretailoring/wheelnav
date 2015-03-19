@@ -639,7 +639,7 @@ this.YinYangSlice = function (helper, percent, custom) {
 
     return {
         slicePathString: slicePathString,
-        linePathString: "",
+        linePathString: slicePathString,
         titlePosX: titlePosX,
         titlePosY: titlePosY
     };
@@ -656,7 +656,7 @@ this.WebSlice = function (helper, percent, custom) {
     helper.titleRadius = r * 0.55;
     helper.setTitlePos();
 
-    slicePathString = [helper.MoveToCenter(),
+    linePathString = [helper.MoveToCenter(),
                  helper.LineTo(helper.startAngle, r * 1.1),
                  helper.MoveToCenter(),
                  helper.LineTo(helper.endAngle, r * 1.1),
@@ -673,8 +673,8 @@ this.WebSlice = function (helper, percent, custom) {
                  helper.Close()];
 
     return {
-        slicePathString: slicePathString,
-        linePathString: "",
+        slicePathString: "",
+        linePathString: linePathString,
         titlePosX: helper.titlePosX,
         titlePosY: helper.titlePosY
     };

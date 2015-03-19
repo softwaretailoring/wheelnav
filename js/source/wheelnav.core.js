@@ -119,6 +119,7 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     this.spreaderOffPercent = 1;
     this.spreaderOnTitle = "+";
     this.spreaderOffTitle = "-";
+    this.spreaderTitleFont = null;
     this.minPercent = 0.01;
     this.maxPercent = 1;
     this.initPercent = 1;

@@ -100,6 +100,16 @@ var pathHelper = function () {
         return ["A", arcRadius, arcRadius, 0, 0, 0, this.getX(angle, length), this.getY(angle, length)]
     };
 
+    this.StartSpreader = function (spreaderPathString, angle, length) {
+        if (this.endAngle - this.startAngle === 360) {
+            spreaderPathString.push(this.MoveTo(angle, length));
+        }
+        else {
+            spreaderPathString.push(this.MoveToCenter());
+            spreaderPathString.push(this.LineTo(angle, length));
+        }
+    };
+
     this.Close = function () {
         return ["z"];
     };

@@ -26,12 +26,17 @@ spreader = function (wheelnav) {
         if (this.wheelnav.animateeffect !== null) { this.animateeffect = this.wheelnav.animateeffect; }
         if (this.wheelnav.animatetime !== null) { this.animatetime = this.wheelnav.animatetime; }
 
-        var fontAttr = { font: '100 32px Impact, Charcoal, sans-serif' };
+        if (this.wheelnav.spreaderTitleFont !== null) { this.fontAttr = { font: this.wheelnav.spreaderTitleFont }; }
+        else { this.fontAttr = { font: '100 32px Impact, Charcoal, sans-serif' }; }
 
         this.spreaderPathOn = this.wheelnav.spreaderPathFunction(this.spreaderHelper, this.wheelnav.spreaderOnPercent, this.wheelnav.spreaderPathCustom);
         this.spreaderPathOff = this.wheelnav.spreaderPathFunction(this.spreaderHelper, this.wheelnav.spreaderOffPercent, this.wheelnav.spreaderPathCustom);
-
-        this.spreaderPath = this.wheelnav.raphael.path(this.spreaderPathOn.spreaderPathString);
+        if (thisWheelNav.initPercent === thisWheelNav.maxPercent) {
+            this.spreaderPath = this.wheelnav.raphael.path(this.spreaderPathOn.spreaderPathString);
+        }
+        else {
+            this.spreaderPath = this.wheelnav.raphael.path(this.spreaderPathOff.spreaderPathString);
+        }
         this.spreaderPath.attr(thisWheelNav.spreaderPathAttr);
         this.spreaderPath.id = thisWheelNav.getSpreaderId();
         this.spreaderPath.node.id = this.spreaderPath.id;
@@ -42,14 +47,14 @@ spreader = function (wheelnav) {
         //Set titles
         if (wheelnavTitle().isPathTitle(this.wheelnav.spreaderOnTitle)) {
             onTitle = new wheelnavTitle(this.wheelnav.spreaderOnTitle, this.wheelnav.raphael.raphael);
-            this.spreadOnTitle = this.wheelnav.raphael.path(onTitle.getTitlePercentAttr(this.spreaderPathOn.titlePosX, this.spreaderPathOn.titlePosY).path);
+            this.spreadOnTitle = this.wheelnav.raphael.path(onTitle.getTitlePercentAttr(this.spreaderPathOff.titlePosX, this.spreaderPathOff.titlePosY).path);
         }
         else {
             onTitle = new wheelnavTitle(this.wheelnav.spreaderOnTitle);
-            this.spreadOnTitle = thisWheelNav.raphael.text(this.spreaderPathOn.titlePosX, this.spreaderPathOn.titlePosY, onTitle.title);
+            this.spreadOnTitle = thisWheelNav.raphael.text(this.spreaderPathOff.titlePosX, this.spreaderPathOff.titlePosY, onTitle.title);
         }
 
-        this.spreadOnTitle.attr(fontAttr);
+        this.spreadOnTitle.attr(this.fontAttr);
         this.spreadOnTitle.attr(thisWheelNav.spreaderOnAttr);
         this.spreadOnTitle.id = thisWheelNav.getSpreadOnId();
         this.spreadOnTitle.node.id = this.spreadOnTitle.id;
@@ -59,14 +64,18 @@ spreader = function (wheelnav) {
 
         if (wheelnavTitle().isPathTitle(this.wheelnav.spreaderOffTitle)) {
             offTitle = new wheelnavTitle(this.wheelnav.spreaderOffTitle, this.wheelnav.raphael.raphael);
-            this.spreadOffTitle = this.wheelnav.raphael.path(offTitle.getTitlePercentAttr(this.spreaderPathOff.titlePosX, this.spreaderPathOff.titlePosY).path);
+            this.spreadOffTitle = this.wheelnav.raphael.path(offTitle.getTitlePercentAttr(this.spreaderPathOn.titlePosX, this.spreaderPathOn.titlePosY).path);
         }
         else {
             offTitle = new wheelnavTitle(this.wheelnav.spreaderOffTitle);
-            this.spreadOffTitle = thisWheelNav.raphael.text(this.spreaderPathOff.titlePosX, this.spreaderPathOff.titlePosY - 3, offTitle.title);
+
+            //Little hack for proper appearance of "-" sign
+            offYOffset = 0;
+            if (this.wheelnav.spreaderOffTitle === "-") { offYOffset = 3; }
+            this.spreadOffTitle = thisWheelNav.raphael.text(this.spreaderPathOn.titlePosX, this.spreaderPathOn.titlePosY - offYOffset, offTitle.title);
         }
 
-        this.spreadOffTitle.attr(fontAttr);
+        this.spreadOffTitle.attr(this.fontAttr);
         this.spreadOffTitle.attr(thisWheelNav.spreaderOffAttr);
         this.spreadOffTitle.id = thisWheelNav.getSpreadOffId();
         this.spreadOffTitle.node.id = this.spreadOffTitle.id;
