@@ -291,8 +291,8 @@ wheelnav.prototype.initWheel = function (titles) {
     }
     else {
         this.spreaderPathAttr = { "class": this.getSpreaderId() };
-        this.spreaderOnAttr = { "class": this.getSpreadOnId() };
-        this.spreaderOffAttr = { "class": this.getSpreadOffId() };
+        this.spreaderOnAttr = { "class": this.getSpreaderTitleCssClass("in") };
+        this.spreaderOffAttr = { "class": this.getSpreaderTitleCssClass("out") };
         this.markerAttr = { "class": this.getMarkerId() };
     }
 
@@ -340,15 +340,15 @@ wheelnav.prototype.initWheel = function (titles) {
 
 wheelnav.prototype.createWheel = function (titles, withSpread) {
 
-    if (this.navItems.length === 0) {
-        this.initWheel(titles);
-    }
-
     if (withSpread) {
         this.currentPercent = this.minPercent;
     }
     else {
         this.currentPercent = this.maxPercent;
+    }
+
+    if (this.navItems.length === 0) {
+        this.initWheel(titles);
     }
 
     for (i = 0; i < this.navItemCount; i++) {
@@ -550,11 +550,11 @@ wheelnav.prototype.getLineCssClass = function (index, subclass) {
 wheelnav.prototype.getSpreaderId = function () {
     return "wheelnav-" + this.holderId + "-spreader";
 };
-wheelnav.prototype.getSpreadOnId = function () {
-    return "wheelnav-" + this.holderId + "-spreadon";
+wheelnav.prototype.getSpreaderTitleId = function () {
+    return "wheelnav-" + this.holderId + "-spreadertitle";
 };
-wheelnav.prototype.getSpreadOffId = function () {
-    return "wheelnav-" + this.holderId + "-spreadoff";
+wheelnav.prototype.getSpreaderTitleCssClass = function (state) {
+    return "wheelnav-" + this.holderId + "-spreadertitle-" + state;
 };
 wheelnav.prototype.getMarkerId = function () {
     return "wheelnav-" + this.holderId + "-marker";

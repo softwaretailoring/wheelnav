@@ -676,7 +676,12 @@ wheelnavItem.prototype.initPathsAndTransforms = function () {
         this.sliceInitPath = this.sliceInitPathFunction(this.sliceHelper, this.initPercent, this.sliceInitPathCustom);
     }
     else {
-        this.sliceInitPath = this.slicePathFunction(this.sliceHelper, this.initPercent, this.sliceInitPathCustom);
+        if (this.wheelnav.currentPercent === this.wheelnav.maxPercent) {
+            this.sliceInitPath = this.slicePathFunction(this.sliceHelper, this.maxPercent, this.sliceInitPathCustom);
+        }
+        else {
+            this.sliceInitPath = this.slicePathFunction(this.sliceHelper, this.minPercent, this.sliceInitPathCustom);
+        }
     }
 
     //Set sliceTransforms
