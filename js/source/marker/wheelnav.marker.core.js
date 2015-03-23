@@ -38,32 +38,34 @@ marker = function (wheelnav) {
 
 marker.prototype.setCurrentTransform = function (navAngle) {
 
-    var currentPath = "";
+    if (this.wheelnav.markerEnable) {
+        var currentPath = "";
 
-    if (this.wheelnav.currentPercent === this.wheelnav.maxPercent) {
-        currentPath = this.markerPathMax.markerPathString;
-    }
-    else {
-        currentPath = this.markerPathMin.markerPathString;
-    }
+        if (this.wheelnav.currentPercent === this.wheelnav.maxPercent) {
+            currentPath = this.markerPathMax.markerPathString;
+        }
+        else {
+            currentPath = this.markerPathMin.markerPathString;
+        }
 
-    if (navAngle !== undefined) {
-        var rotateAngle = navAngle - this.markerHelper.navAngle;
+        if (navAngle !== undefined) {
+            var rotateAngle = navAngle - this.markerHelper.navAngle;
 
-        markerTransformAttr = {
-            transform: "r," + (rotateAngle).toString() + "," + this.wheelnav.centerX + "," + this.wheelnav.centerY,
-            path: currentPath
-        };
+            markerTransformAttr = {
+                transform: "r," + (rotateAngle).toString() + "," + this.wheelnav.centerX + "," + this.wheelnav.centerY,
+                path: currentPath
+            };
+        }
+        else {
+            markerTransformAttr = {
+                path: currentPath
+            };
+        }
+
+        //Animate marker
+        this.marker.animate(markerTransformAttr, this.animatetime, this.animateeffect);
+        this.marker.toFront();
     }
-    else {
-        markerTransformAttr = {
-            path: currentPath
-        };
-    }
-    
-    //Animate marker
-    this.marker.animate(markerTransformAttr, this.animatetime, this.animateeffect);
-    this.marker.toFront();
 };
 
 

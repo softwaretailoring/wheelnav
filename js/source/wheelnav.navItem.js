@@ -294,8 +294,6 @@ wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
                 this.navLine.attr(this.lineHoverAttr).toFront();
                 this.navTitle.attr(this.titleHoverAttr).toFront();
                 if (this.navClickableSlice !== null) { this.navClickableSlice.attr(this.sliceClickableHoverAttr).toFront(); }
-
-                this.wheelnav.spreader.setVisibility();
             }
         }
         else {
@@ -307,6 +305,9 @@ wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
             this.titleHover !== this.title) {
             this.setCurrentTransform();
         }
+
+        this.wheelnav.marker.setCurrentTransform();
+        this.wheelnav.spreader.setCurrentTransform();
     }
 };
 
@@ -536,14 +537,12 @@ wheelnavItem.prototype.refreshNavItem = function (withPathAndTransform) {
         this.navLine.toBack();
         this.navSlice.toBack();
     }
-
+    
     if (withPathAndTransform !== undefined &&
         withPathAndTransform === true) {
         this.initPathsAndTransforms();
         this.setCurrentTransform();
     }
-
-    this.wheelnav.spreader.setVisibility();
 };
 
 wheelnavItem.prototype.setWheelSettings = function () {

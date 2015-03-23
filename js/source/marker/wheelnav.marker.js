@@ -39,32 +39,34 @@ marker = function (wheelnav) {
 
 marker.prototype.setCurrentTransform = function (navAngle) {
 
-    var currentPath = "";
+    if (this.wheelnav.markerEnable) {
+        var currentPath = "";
 
-    if (this.wheelnav.currentPercent === this.wheelnav.maxPercent) {
-        currentPath = this.markerPathMax.markerPathString;
-    }
-    else {
-        currentPath = this.markerPathMin.markerPathString;
-    }
+        if (this.wheelnav.currentPercent === this.wheelnav.maxPercent) {
+            currentPath = this.markerPathMax.markerPathString;
+        }
+        else {
+            currentPath = this.markerPathMin.markerPathString;
+        }
 
-    if (navAngle !== undefined) {
-        var rotateAngle = navAngle - this.markerHelper.navAngle;
+        if (navAngle !== undefined) {
+            var rotateAngle = navAngle - this.markerHelper.navAngle;
 
-        markerTransformAttr = {
-            transform: "r," + (rotateAngle).toString() + "," + this.wheelnav.centerX + "," + this.wheelnav.centerY,
-            path: currentPath
-        };
+            markerTransformAttr = {
+                transform: "r," + (rotateAngle).toString() + "," + this.wheelnav.centerX + "," + this.wheelnav.centerY,
+                path: currentPath
+            };
+        }
+        else {
+            markerTransformAttr = {
+                path: currentPath
+            };
+        }
+
+        //Animate marker
+        this.marker.animate(markerTransformAttr, this.animatetime, this.animateeffect);
+        this.marker.toFront();
     }
-    else {
-        markerTransformAttr = {
-            path: currentPath
-        };
-    }
-    
-    //Animate marker
-    this.marker.animate(markerTransformAttr, this.animatetime, this.animateeffect);
-    this.marker.toFront();
 };
 
 
@@ -119,7 +121,7 @@ this.TriangleMarker = function (helper, percent, custom) {
 
     markerPathString = [helper.MoveTo(helper.navAngle, arcBaseRadius),
                  helper.LineTo(startAngle, arcRadius),
-                 helper.LineTo(endAngle, arcRadius),
+                 helper.ArcTo(arcRadius - arcBaseRadius, endAngle, arcRadius),
                  helper.Close()];
     
     return {
@@ -255,8 +257,8 @@ this.LineMarker = function (helper, percent, custom) {
 this.DropMarkerCustomization = function () {
 
     var custom = new markerPathCustomization();
-    custom.arcBaseRadiusPercent = 1.05;
-    custom.arcRadiusPercent = 1.15;
+    custom.arcBaseRadiusPercent = 0;
+    custom.arcRadiusPercent = 0.1;
     custom.startRadiusPercent = 0;
     return custom;
 };
@@ -271,13 +273,21 @@ this.DropMarker = function (helper, percent, custom) {
 
     var arcBaseRadius = helper.sliceRadius * custom.arcBaseRadiusPercent;
     var arcRadius = helper.sliceRadius * custom.arcRadiusPercent;
-    var startAngle = helper.startAngle + helper.sliceAngle * 0.47;
-    var endAngle = helper.startAngle + helper.sliceAngle * 0.53;
-    var dropRadius = helper.sliceRadius * 0.02;
+    var startAngle = helper.startAngle + helper.sliceAngle * 0.2;
+    var startAngle2 = helper.startAngle;
+    var endAngle = helper.startAngle + helper.sliceAngle * 0.8;
+    var endAngle2 = helper.startAngle + helper.sliceAngle;
+    var dropRadius = helper.sliceRadius * 0.1;
 
-    markerPathString = [helper.MoveTo(helper.navAngle, arcBaseRadius),
-                 helper.LineTo(startAngle, arcRadius),
-                 helper.ArcTo(dropRadius, endAngle, arcRadius),
+    markerPathString = [helper.MoveTo(0, dropRadius),
+        helper.ArcTo(dropRadius, 180, dropRadius),
+        helper.ArcTo(dropRadius, 360, dropRadius),
+        helper.MoveTo(helper.navAngle, arcBaseRadius),
+                helper.LineTo(startAngle, arcRadius),
+                 helper.LineTo(startAngle2, arcRadius),
+                 helper.LineTo(helper.navAngle, arcRadius * 1.6),
+                helper.LineTo(endAngle2, arcRadius),
+                 helper.LineTo(endAngle, arcRadius),
                  helper.Close()];
     return {
         markerPathString: markerPathString,

@@ -23,7 +23,7 @@ this.TriangleMarker = function (helper, percent, custom) {
 
     markerPathString = [helper.MoveTo(helper.navAngle, arcBaseRadius),
                  helper.LineTo(startAngle, arcRadius),
-                 helper.LineTo(endAngle, arcRadius),
+                 helper.ArcTo(arcRadius - arcBaseRadius, endAngle, arcRadius),
                  helper.Close()];
     
     return {

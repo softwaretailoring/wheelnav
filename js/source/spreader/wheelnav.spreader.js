@@ -82,14 +82,13 @@ spreader = function (wheelnav) {
             thisWheelNav.spreadWheel();
         });
 
-
-        this.setVisibility();
+        this.setCurrentTransform();
     }
 
     return this;
 };
 
-spreader.prototype.setVisibility = function () {
+spreader.prototype.setCurrentTransform = function () {
     if (this.wheelnav.spreaderEnable) {
         this.spreaderPath.toFront();
         

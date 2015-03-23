@@ -26,8 +26,10 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
 
     var holderDiv = document.getElementById(divId);
 
-    if (holderDiv === null ||
-        holderDiv === undefined) {
+    if ((holderDiv === null ||
+        holderDiv === undefined) &&
+        (raphael === undefined ||
+        raphael === null)) {
         return this;
     }
     
@@ -177,98 +179,127 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
 
 wheelnav.prototype.parseWheel = function (holderDiv) {
     //Parse html5 data- attributes, the onmouseup events and anchor links
-    var parsedNavItems = [];
-    var parsedNavItemsHref = [];
-    var parsedNavItemsOnmouseup = [];
-    var onlyInit = false;
+    if (holderDiv !== undefined &&
+        holderDiv !== null) {
+        if (holderDiv.dataset !== undefined &&
+        holderDiv.dataset !== null) {
+            var parsedNavItems = [];
+            var parsedNavItemsHref = [];
+            var parsedNavItemsOnmouseup = [];
+            var onlyInit = false;
+            var dataAttrExist = false;
 
-    //data-wheelnav-slicepath
-    if (holderDiv.dataset.wheelnavSlicepath !== undefined) {
-        if (slicePath()[holderDiv.dataset.wheelnavSlicepath] !== undefined) {
-            this.slicePathFunction = slicePath()[holderDiv.dataset.wheelnavSlicepath];
-        }
-    }
-    //data-wheelnav-colors
-    if (holderDiv.dataset.wheelnavColors !== undefined) {
-        this.colors = holderDiv.dataset.wheelnavColors.split(',');
-    }
-    //data-wheelnav-navangle
-    if (holderDiv.dataset.wheelnavNavangle !== undefined) {
-        this.navAngle = Number(holderDiv.dataset.wheelnavNavangle);
-    }
-    //data-wheelnav-cssmode
-    if (holderDiv.dataset.wheelnavCssmode !== undefined) {
-        this.cssMode = true;
-    }
-    //data-wheelnav-onlyinit
-    if (holderDiv.dataset.wheelnavOnlyinit !== undefined) {
-        onlyInit = true;
-    }
-
-    for (var i = 0; i < holderDiv.children.length; i++) {
-
-        if (holderDiv.children[i].dataset !== undefined) {
-            //data-wheelnav-navitemtext
-            if (holderDiv.children[i].dataset.wheelnavNavitemtext !== undefined) {
-                parsedNavItems.push(holderDiv.children[i].dataset.wheelnavNavitemtext);
-            }
-            //data-wheelnav-navitemicon
-            else if (holderDiv.children[i].dataset.wheelnavNavitemicon !== undefined) {
-                if (icon[holderDiv.children[i].dataset.wheelnavNavitemicon] !== undefined) {
-                    parsedNavItems.push(icon[holderDiv.children[i].dataset.wheelnavNavitemicon]);
-                }
-                else {
-                    parsedNavItems.push(holderDiv.children[i].dataset.wheelnavNavitemicon);
+            //data-wheelnav-slicepath
+            if (holderDiv.dataset.wheelnavSlicepath !== undefined) {
+                dataAttrExist = true;
+                if (slicePath()[holderDiv.dataset.wheelnavSlicepath] !== undefined) {
+                    this.slicePathFunction = slicePath()[holderDiv.dataset.wheelnavSlicepath];
                 }
             }
-            else {
-                //data-wheelnav-navitemtext or data-wheelnav-navitemicon is required
-                continue;
+            //data-wheelnav-wheelradius
+            if (holderDiv.dataset.wheelnavWheelradius !== undefined) {
+                dataAttrExist = true;
+                this.wheelRadius = Number(holderDiv.dataset.wheelnavWheelradius);
+            }
+            //data-wheelnav-colors
+            if (holderDiv.dataset.wheelnavColors !== undefined) {
+                dataAttrExist = true;
+                this.colors = holderDiv.dataset.wheelnavColors.split(',');
+            }
+            //data-wheelnav-navangle
+            if (holderDiv.dataset.wheelnavNavangle !== undefined) {
+                dataAttrExist = true;
+                this.navAngle = Number(holderDiv.dataset.wheelnavNavangle);
+            }
+            //data-wheelnav-cssmode
+            if (holderDiv.dataset.wheelnavCssmode !== undefined) {
+                dataAttrExist = true;
+                this.cssMode = true;
+            }
+            //data-wheelnav-spreader
+            if (holderDiv.dataset.wheelnavSpreader !== undefined) {
+                dataAttrExist = true;
+                this.spreaderEnable = true;
+            }
+            //data-wheelnav-marker
+            if (holderDiv.dataset.wheelnavMarker !== undefined) {
+                dataAttrExist = true;
+                this.markerEnable = true;
+            }
+            //data-wheelnav-onlyinit
+            if (holderDiv.dataset.wheelnavOnlyinit !== undefined) {
+                dataAttrExist = true;
+                onlyInit = true;
             }
 
-            //onmouseup event of navitem element for call it in the navigateFunction
-            if (holderDiv.children[i].onmouseup !== undefined) {
-                parsedNavItemsOnmouseup.push(holderDiv.children[i].onmouseup);
-            }
-            else {
-                parsedNavItemsOnmouseup.push(null);
-            }
+            for (var i = 0; i < holderDiv.children.length; i++) {
 
-            //parse inner <a> tag in navitem element for use href in navigateFunction
-            var foundHref = false;
-            for (var j = 0; j < holderDiv.children[i].children.length; j++) {
-                if (holderDiv.children[i].children[j].getAttribute('href') !== undefined) {
-                    parsedNavItemsHref.push(holderDiv.children[i].children[j].getAttribute('href'));
+                if (holderDiv.children[i].dataset !== undefined) {
+                    //data-wheelnav-navitemtext
+                    if (holderDiv.children[i].dataset.wheelnavNavitemtext !== undefined) {
+                        parsedNavItems.push(holderDiv.children[i].dataset.wheelnavNavitemtext);
+                    }
+                        //data-wheelnav-navitemicon
+                    else if (holderDiv.children[i].dataset.wheelnavNavitemicon !== undefined) {
+                        if (icon[holderDiv.children[i].dataset.wheelnavNavitemicon] !== undefined) {
+                            parsedNavItems.push(icon[holderDiv.children[i].dataset.wheelnavNavitemicon]);
+                        }
+                        else {
+                            parsedNavItems.push(holderDiv.children[i].dataset.wheelnavNavitemicon);
+                        }
+                    }
+                    else {
+                        //data-wheelnav-navitemtext or data-wheelnav-navitemicon is required
+                        continue;
+                    }
+
+                    dataAttrExist = true;
+
+                    //onmouseup event of navitem element for call it in the navigateFunction
+                    if (holderDiv.children[i].onmouseup !== undefined) {
+                        parsedNavItemsOnmouseup.push(holderDiv.children[i].onmouseup);
+                    }
+                    else {
+                        parsedNavItemsOnmouseup.push(null);
+                    }
+
+                    //parse inner <a> tag in navitem element for use href in navigateFunction
+                    var foundHref = false;
+                    for (var j = 0; j < holderDiv.children[i].children.length; j++) {
+                        if (holderDiv.children[i].children[j].getAttribute('href') !== undefined) {
+                            parsedNavItemsHref.push(holderDiv.children[i].children[j].getAttribute('href'));
+                        }
+                    }
+                    if (!foundHref) {
+                        parsedNavItemsHref.push(null);
+                    }
                 }
             }
-            if (!foundHref) {
-                parsedNavItemsHref.push(null);
+
+            if (parsedNavItems.length > 0) {
+                this.initWheel(parsedNavItems);
+
+                for (var i = 0; i < parsedNavItemsOnmouseup.length; i++) {
+                    this.navItems[i].navigateFunction = parsedNavItemsOnmouseup[i];
+                    this.navItems[i].navigateHref = parsedNavItemsHref[i];
+                }
+            }
+
+            if (dataAttrExist && !onlyInit) {
+                this.createWheel();
             }
         }
-    }
 
-    if (parsedNavItems.length > 0) {
-        this.initWheel(parsedNavItems);
-
-        for (var i = 0; i < parsedNavItemsOnmouseup.length; i++) {
-            this.navItems[i].navigateFunction = parsedNavItemsOnmouseup[i];
-            this.navItems[i].navigateHref = parsedNavItemsHref[i];
+        var removeChildrens = [];
+        for (var i = 0; i < holderDiv.children.length; i++) {
+            if (holderDiv.children[i].localName !== "svg") {
+                removeChildrens.push(holderDiv.children[i]);
+            }
         }
 
-        if (!onlyInit) {
-            this.createWheel();
+        for (var i = 0; i < removeChildrens.length; i++) {
+            holderDiv.removeChild(removeChildrens[i]);
         }
-    }
-
-    var removeChildrens = [];
-    for (var i = 0; i < holderDiv.children.length; i++) {
-        if (holderDiv.children[i].localName !== "svg") {
-            removeChildrens.push(holderDiv.children[i]);
-        }
-    }
-
-    for (var i = 0; i < removeChildrens.length; i++) {
-        holderDiv.removeChild(removeChildrens[i]);
     }
 };
 
@@ -377,7 +408,8 @@ wheelnav.prototype.refreshWheel = function (withPathAndTransform) {
         navItem.refreshNavItem(withPathAndTransform);
     }
 
-    this.spreader.setVisibility();
+    this.marker.setCurrentTransform();
+    this.spreader.setCurrentTransform();
 };
 
 wheelnav.prototype.navigateWheel = function (clicked) {
@@ -386,9 +418,6 @@ wheelnav.prototype.navigateWheel = function (clicked) {
 
     if (this.clickModeRotate) {
         this.animateLocked = true;
-    }
-    else if (this.markerEnable) {
-        this.marker.setCurrentTransform(this.navItems[clicked].navAngle);
     }
 
     var navItem;
@@ -451,6 +480,16 @@ wheelnav.prototype.navigateWheel = function (clicked) {
     if (this.clickModeSpreadOff) {
         this.spreadWheel();
     }
+    else {
+        if (clicked !== null &&
+            !this.clickModeRotate) {
+            this.marker.setCurrentTransform(this.navItems[this.currentClick].navAngle);
+        }
+        else {
+            this.marker.setCurrentTransform();
+        }
+        this.spreader.setCurrentTransform();
+    }
 };
 
 wheelnav.prototype.spreadWheel = function () {
@@ -475,11 +514,8 @@ wheelnav.prototype.spreadWheel = function () {
         navItem.setCurrentTransform(true);
     }
 
-    if (this.markerEnable) {
-        this.marker.setCurrentTransform();
-    }
-
-    this.spreader.setVisibility();
+    this.marker.setCurrentTransform();
+    this.spreader.setCurrentTransform();
 
     return this;
 };
