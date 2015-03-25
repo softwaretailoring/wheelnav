@@ -181,8 +181,9 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
     //Parse html5 data- attributes, the onmouseup events and anchor links
     if (holderDiv !== undefined &&
         holderDiv !== null) {
-        if (holderDiv.dataset !== undefined &&
-        holderDiv.dataset !== null) {
+        //data-wheelnav attribute is required
+        var wheelnavData = holderDiv.hasAttribute("data-wheelnav");
+        if (wheelnavData) {
             var parsedNavItems = [];
             var parsedNavItemsHref = [];
             var parsedNavItemsOnmouseup = [];
@@ -190,62 +191,73 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
             var dataAttrExist = false;
 
             //data-wheelnav-slicepath
-            if (holderDiv.dataset.wheelnavSlicepath !== undefined) {
+            var wheelnavSlicepath = holderDiv.getAttribute("data-wheelnav-slicepath");
+            if (wheelnavSlicepath !== null) {
                 dataAttrExist = true;
-                if (slicePath()[holderDiv.dataset.wheelnavSlicepath] !== undefined) {
-                    this.slicePathFunction = slicePath()[holderDiv.dataset.wheelnavSlicepath];
+                if (slicePath()[wheelnavSlicepath] !== undefined) {
+                    this.slicePathFunction = slicePath()[wheelnavSlicepath];
                 }
             }
             //data-wheelnav-wheelradius
-            if (holderDiv.dataset.wheelnavWheelradius !== undefined) {
+            var wheelnavWheelradius = holderDiv.getAttribute("data-wheelnav-wheelradius");
+            if (wheelnavWheelradius !== null) {
                 dataAttrExist = true;
-                this.wheelRadius = Number(holderDiv.dataset.wheelnavWheelradius);
+                this.wheelRadius = Number(wheelnavWheelradius);
             }
             //data-wheelnav-colors
-            if (holderDiv.dataset.wheelnavColors !== undefined) {
+            var wheelnavColors = holderDiv.getAttribute("data-wheelnav-colors");
+            if (wheelnavColors !== null) {
                 dataAttrExist = true;
-                this.colors = holderDiv.dataset.wheelnavColors.split(',');
+                this.colors = wheelnavColors.split(',');
             }
             //data-wheelnav-navangle
-            if (holderDiv.dataset.wheelnavNavangle !== undefined) {
+            var wheelnavNavangle = holderDiv.getAttribute("data-wheelnav-navangle");
+            if (wheelnavNavangle !== null) {
                 dataAttrExist = true;
-                this.navAngle = Number(holderDiv.dataset.wheelnavNavangle);
+                this.navAngle = Number(wheelnavNavangle);
             }
             //data-wheelnav-cssmode
-            if (holderDiv.dataset.wheelnavCssmode !== undefined) {
+            var wheelnavCssmode = holderDiv.getAttribute("data-wheelnav-cssmode");
+            if (wheelnavCssmode !== null) {
                 dataAttrExist = true;
                 this.cssMode = true;
             }
             //data-wheelnav-spreader
-            if (holderDiv.dataset.wheelnavSpreader !== undefined) {
+            var wheelnavSpreader = holderDiv.getAttribute("data-wheelnav-spreader");
+            if (wheelnavSpreader !== null) {
                 dataAttrExist = true;
                 this.spreaderEnable = true;
             }
             //data-wheelnav-marker
-            if (holderDiv.dataset.wheelnavMarker !== undefined) {
+            var wheelnavMarker = holderDiv.getAttribute("data-wheelnav-marker");
+            if (wheelnavMarker !== null) {
                 dataAttrExist = true;
                 this.markerEnable = true;
             }
             //data-wheelnav-onlyinit
-            if (holderDiv.dataset.wheelnavOnlyinit !== undefined) {
+            var wheelnavOnlyinit = holderDiv.getAttribute("data-wheelnav-onlyinit");
+            if (wheelnavOnlyinit !== null) {
                 dataAttrExist = true;
                 onlyInit = true;
             }
 
             for (var i = 0; i < holderDiv.children.length; i++) {
 
-                if (holderDiv.children[i].dataset !== undefined) {
+                var wheelnavNavitemtext = holderDiv.children[i].getAttribute("data-wheelnav-navitemtext");
+                var wheelnavNavitemicon = holderDiv.children[i].getAttribute("data-wheelnav-navitemicon");
+                if (wheelnavNavitemtext !== null ||
+                    wheelnavNavitemicon !== null) {
                     //data-wheelnav-navitemtext
-                    if (holderDiv.children[i].dataset.wheelnavNavitemtext !== undefined) {
-                        parsedNavItems.push(holderDiv.children[i].dataset.wheelnavNavitemtext);
+                    if (wheelnavNavitemtext !== null) {
+                        parsedNavItems.push(wheelnavNavitemtext);
                     }
-                        //data-wheelnav-navitemicon
-                    else if (holderDiv.children[i].dataset.wheelnavNavitemicon !== undefined) {
-                        if (icon[holderDiv.children[i].dataset.wheelnavNavitemicon] !== undefined) {
-                            parsedNavItems.push(icon[holderDiv.children[i].dataset.wheelnavNavitemicon]);
+                    //data-wheelnav-navitemicon
+                    else if (wheelnavNavitemicon !== null) {
+                        if (icon[wheelnavNavitemicon] !== undefined) {
+                            parsedNavItems.push(icon[wheelnavNavitemicon]);
                         }
                         else {
-                            parsedNavItems.push(holderDiv.children[i].dataset.wheelnavNavitemicon);
+                            parsedNavItems.push(wheelnavNavitemicon);
                         }
                     }
                     else {
@@ -454,17 +466,24 @@ wheelnav.prototype.navigateWheel = function (clicked) {
             }
 
             navItem.currentRotateAngle -= rotationAngle;
+            var currentAnimateTime;
+            if (this.animatetime != null) {
+                currentAnimateTime = this.animatetime;
+            }
+            else {
+                currentAnimateTime = 1500;
+            }
 
             if (this.animatetimeCalculated &&
                 clicked !== this.currentClick) {
-                navItem.animatetime = this.animatetime * (Math.abs(rotationAngle) / 360);
+                navItem.animatetime = currentAnimateTime * (Math.abs(rotationAngle) / 360);
             }
 
             if (this.rotateRoundCount > 0) {
                 if (this.clockwise) { navItem.currentRotateAngle -= this.rotateRoundCount * 360; }
                 else { navItem.currentRotateAngle += this.rotateRoundCount * 360; }
 
-                navItem.animatetime = this.animatetime * (this.rotateRoundCount + 1);
+                navItem.animatetime = currentAnimateTime * (this.rotateRoundCount + 1);
             }
         }
     }
@@ -495,10 +514,7 @@ wheelnav.prototype.navigateWheel = function (clicked) {
 wheelnav.prototype.spreadWheel = function () {
 
     this.animateUnlock(true);
-
-    if (this.clickModeRotate) {
-        this.animateLocked = true;
-    }
+    this.animateLocked = true;
 
     if (this.currentPercent === this.maxPercent ||
         this.currentPercent === null) {

@@ -286,8 +286,7 @@ wheelnavItem.prototype.createNavItem = function () {
 
 wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
 
-    if (this.wheelnav.clickModeRotate === false ||
-        this.wheelnav.animateLocked === false) {
+    if (this.wheelnav.animateLocked === false) {
         if (isEnter) {
             if (hovered !== this.wheelnav.currentClick) {
                 this.navSlice.attr(this.sliceHoverAttr).toFront();

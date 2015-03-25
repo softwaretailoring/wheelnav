@@ -50,10 +50,10 @@ marker.prototype.setCurrentTransform = function (navAngle) {
         }
 
         if (navAngle !== undefined) {
-            var rotateAngle = navAngle - this.markerHelper.navAngle;
+            var rotationAngle = navAngle - this.markerHelper.navAngle;
 
             markerTransformAttr = {
-                transform: "r," + (rotateAngle).toString() + "," + this.wheelnav.centerX + "," + this.wheelnav.centerY,
+                transform: "r," + (rotationAngle).toString() + "," + this.wheelnav.centerX + "," + this.wheelnav.centerY,
                 path: currentPath
             };
         }
@@ -121,7 +121,7 @@ this.TriangleMarker = function (helper, percent, custom) {
 
     markerPathString = [helper.MoveTo(helper.navAngle, arcBaseRadius),
                  helper.LineTo(startAngle, arcRadius),
-                 helper.ArcTo(arcRadius - arcBaseRadius, endAngle, arcRadius),
+                 helper.LineTo(endAngle, arcRadius),
                  helper.Close()];
     
     return {

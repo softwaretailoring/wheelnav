@@ -182,8 +182,9 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
     //Parse html5 data- attributes, the onmouseup events and anchor links
     if (holderDiv !== undefined &&
         holderDiv !== null) {
-        if (holderDiv.dataset !== undefined &&
-        holderDiv.dataset !== null) {
+        //data-wheelnav attribute is required
+        var wheelnavData = holderDiv.hasAttribute("data-wheelnav");
+        if (wheelnavData) {
             var parsedNavItems = [];
             var parsedNavItemsHref = [];
             var parsedNavItemsOnmouseup = [];
@@ -191,62 +192,73 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
             var dataAttrExist = false;
 
             //data-wheelnav-slicepath
-            if (holderDiv.dataset.wheelnavSlicepath !== undefined) {
+            var wheelnavSlicepath = holderDiv.getAttribute("data-wheelnav-slicepath");
+            if (wheelnavSlicepath !== null) {
                 dataAttrExist = true;
-                if (slicePath()[holderDiv.dataset.wheelnavSlicepath] !== undefined) {
-                    this.slicePathFunction = slicePath()[holderDiv.dataset.wheelnavSlicepath];
+                if (slicePath()[wheelnavSlicepath] !== undefined) {
+                    this.slicePathFunction = slicePath()[wheelnavSlicepath];
                 }
             }
             //data-wheelnav-wheelradius
-            if (holderDiv.dataset.wheelnavWheelradius !== undefined) {
+            var wheelnavWheelradius = holderDiv.getAttribute("data-wheelnav-wheelradius");
+            if (wheelnavWheelradius !== null) {
                 dataAttrExist = true;
-                this.wheelRadius = Number(holderDiv.dataset.wheelnavWheelradius);
+                this.wheelRadius = Number(wheelnavWheelradius);
             }
             //data-wheelnav-colors
-            if (holderDiv.dataset.wheelnavColors !== undefined) {
+            var wheelnavColors = holderDiv.getAttribute("data-wheelnav-colors");
+            if (wheelnavColors !== null) {
                 dataAttrExist = true;
-                this.colors = holderDiv.dataset.wheelnavColors.split(',');
+                this.colors = wheelnavColors.split(',');
             }
             //data-wheelnav-navangle
-            if (holderDiv.dataset.wheelnavNavangle !== undefined) {
+            var wheelnavNavangle = holderDiv.getAttribute("data-wheelnav-navangle");
+            if (wheelnavNavangle !== null) {
                 dataAttrExist = true;
-                this.navAngle = Number(holderDiv.dataset.wheelnavNavangle);
+                this.navAngle = Number(wheelnavNavangle);
             }
             //data-wheelnav-cssmode
-            if (holderDiv.dataset.wheelnavCssmode !== undefined) {
+            var wheelnavCssmode = holderDiv.getAttribute("data-wheelnav-cssmode");
+            if (wheelnavCssmode !== null) {
                 dataAttrExist = true;
                 this.cssMode = true;
             }
             //data-wheelnav-spreader
-            if (holderDiv.dataset.wheelnavSpreader !== undefined) {
+            var wheelnavSpreader = holderDiv.getAttribute("data-wheelnav-spreader");
+            if (wheelnavSpreader !== null) {
                 dataAttrExist = true;
                 this.spreaderEnable = true;
             }
             //data-wheelnav-marker
-            if (holderDiv.dataset.wheelnavMarker !== undefined) {
+            var wheelnavMarker = holderDiv.getAttribute("data-wheelnav-marker");
+            if (wheelnavMarker !== null) {
                 dataAttrExist = true;
                 this.markerEnable = true;
             }
             //data-wheelnav-onlyinit
-            if (holderDiv.dataset.wheelnavOnlyinit !== undefined) {
+            var wheelnavOnlyinit = holderDiv.getAttribute("data-wheelnav-onlyinit");
+            if (wheelnavOnlyinit !== null) {
                 dataAttrExist = true;
                 onlyInit = true;
             }
 
             for (var i = 0; i < holderDiv.children.length; i++) {
 
-                if (holderDiv.children[i].dataset !== undefined) {
+                var wheelnavNavitemtext = holderDiv.children[i].getAttribute("data-wheelnav-navitemtext");
+                var wheelnavNavitemicon = holderDiv.children[i].getAttribute("data-wheelnav-navitemicon");
+                if (wheelnavNavitemtext !== null ||
+                    wheelnavNavitemicon !== null) {
                     //data-wheelnav-navitemtext
-                    if (holderDiv.children[i].dataset.wheelnavNavitemtext !== undefined) {
-                        parsedNavItems.push(holderDiv.children[i].dataset.wheelnavNavitemtext);
+                    if (wheelnavNavitemtext !== null) {
+                        parsedNavItems.push(wheelnavNavitemtext);
                     }
-                        //data-wheelnav-navitemicon
-                    else if (holderDiv.children[i].dataset.wheelnavNavitemicon !== undefined) {
-                        if (icon[holderDiv.children[i].dataset.wheelnavNavitemicon] !== undefined) {
-                            parsedNavItems.push(icon[holderDiv.children[i].dataset.wheelnavNavitemicon]);
+                    //data-wheelnav-navitemicon
+                    else if (wheelnavNavitemicon !== null) {
+                        if (icon[wheelnavNavitemicon] !== undefined) {
+                            parsedNavItems.push(icon[wheelnavNavitemicon]);
                         }
                         else {
-                            parsedNavItems.push(holderDiv.children[i].dataset.wheelnavNavitemicon);
+                            parsedNavItems.push(wheelnavNavitemicon);
                         }
                     }
                     else {
@@ -455,17 +467,24 @@ wheelnav.prototype.navigateWheel = function (clicked) {
             }
 
             navItem.currentRotateAngle -= rotationAngle;
+            var currentAnimateTime;
+            if (this.animatetime != null) {
+                currentAnimateTime = this.animatetime;
+            }
+            else {
+                currentAnimateTime = 1500;
+            }
 
             if (this.animatetimeCalculated &&
                 clicked !== this.currentClick) {
-                navItem.animatetime = this.animatetime * (Math.abs(rotationAngle) / 360);
+                navItem.animatetime = currentAnimateTime * (Math.abs(rotationAngle) / 360);
             }
 
             if (this.rotateRoundCount > 0) {
                 if (this.clockwise) { navItem.currentRotateAngle -= this.rotateRoundCount * 360; }
                 else { navItem.currentRotateAngle += this.rotateRoundCount * 360; }
 
-                navItem.animatetime = this.animatetime * (this.rotateRoundCount + 1);
+                navItem.animatetime = currentAnimateTime * (this.rotateRoundCount + 1);
             }
         }
     }
@@ -496,10 +515,7 @@ wheelnav.prototype.navigateWheel = function (clicked) {
 wheelnav.prototype.spreadWheel = function () {
 
     this.animateUnlock(true);
-
-    if (this.clickModeRotate) {
-        this.animateLocked = true;
-    }
+    this.animateLocked = true;
 
     if (this.currentPercent === this.maxPercent ||
         this.currentPercent === null) {
@@ -886,8 +902,7 @@ wheelnavItem.prototype.createNavItem = function () {
 
 wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
 
-    if (this.wheelnav.clickModeRotate === false ||
-        this.wheelnav.animateLocked === false) {
+    if (this.wheelnav.animateLocked === false) {
         if (isEnter) {
             if (hovered !== this.wheelnav.currentClick) {
                 this.navSlice.attr(this.sliceHoverAttr).toFront();
@@ -1993,9 +2008,11 @@ spreader.prototype.setCurrentTransform = function () {
 
         if (this.wheelnav.currentPercent === this.wheelnav.maxPercent) {
             currentTitle = this.offTitle;
+            this.spreaderTitle.attr(this.wheelnav.spreaderOffAttr);
         }
         else {
             currentTitle = this.onTitle;
+            this.spreaderTitle.attr(this.wheelnav.spreaderOnAttr);
         }
 
         if (this.spreaderTitle.type === "path") {
@@ -2369,10 +2386,10 @@ marker.prototype.setCurrentTransform = function (navAngle) {
         }
 
         if (navAngle !== undefined) {
-            var rotateAngle = navAngle - this.markerHelper.navAngle;
+            var rotationAngle = navAngle - this.markerHelper.navAngle;
 
             markerTransformAttr = {
-                transform: "r," + (rotateAngle).toString() + "," + this.wheelnav.centerX + "," + this.wheelnav.centerY,
+                transform: "r," + (rotationAngle).toString() + "," + this.wheelnav.centerX + "," + this.wheelnav.centerY,
                 path: currentPath
             };
         }
@@ -2440,7 +2457,7 @@ this.TriangleMarker = function (helper, percent, custom) {
 
     markerPathString = [helper.MoveTo(helper.navAngle, arcBaseRadius),
                  helper.LineTo(startAngle, arcRadius),
-                 helper.ArcTo(arcRadius - arcBaseRadius, endAngle, arcRadius),
+                 helper.LineTo(endAngle, arcRadius),
                  helper.Close()];
     
     return {
@@ -2638,7 +2655,7 @@ var colorpalette = {
     greenred: new Array("#17B92A", "#FF3D00", "#17B92A", "#FF3D00"),
     oceanfive: new Array("#00A0B0", "#6A4A3C", "#CC333F", "#EB6841", "#EDC951"),
     garden: new Array("#648A4F", "#2B2B29", "#DF6126", "#FFA337", "#F57C85"),
-    gamebookers: new Array("#FF9900", "#E9E9E9", "#BCBCBC", "#3299BB", "#424242"),
+    gamebookers: new Array("#FF9900", "#DCDCDC", "#BCBCBC", "#3299BB", "#727272"),
     parrot: new Array("#D80351", "#F5D908", "#00A3EE", "#929292", "#3F3F3F"),
     pisycholand: new Array("#FF1919", "#FF5E19", "#FF9F19", "#E4FF19", "#29FF19"),
     makeLOVEnotWAR: new Array("#2C0EF0", "#B300FF", "#6751F0", "#FF006F", "#8119FF"),

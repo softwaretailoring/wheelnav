@@ -111,9 +111,11 @@ spreader.prototype.setCurrentTransform = function () {
 
         if (this.wheelnav.currentPercent === this.wheelnav.maxPercent) {
             currentTitle = this.offTitle;
+            this.spreaderTitle.attr(this.wheelnav.spreaderOffAttr);
         }
         else {
             currentTitle = this.onTitle;
+            this.spreaderTitle.attr(this.wheelnav.spreaderOnAttr);
         }
 
         if (this.spreaderTitle.type === "path") {
