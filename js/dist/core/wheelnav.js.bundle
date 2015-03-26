@@ -11,7 +11,9 @@
   <!--The order of the <file> elements determines the order of the files in the bundle.-->
   <files>
     <file>/js/source/wheelnav.core.js</file>
+    <file>/js/source/wheelnav.parse.js</file>
     <file>/js/source/wheelnav.navItem.js</file>
+    <file>/js/source/wheelnav.style.js</file>
     <file>/js/source/wheelnav.pathHelper.js</file>
     <file>/js/source/slicePath/wheelnav.slicePath.core.js</file>
     <file>/js/source/wheelnav.sliceTransform.js</file>
