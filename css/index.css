@@ -127,7 +127,8 @@ footer a:hover {
     font-size: 33px;
 }
 
-.wheelnav-radialWheel-spreader {
+.wheelnav-radialWheel-spreader-in,
+.wheelnav-radialWheel-spreader-out {
     fill: #0a6f25;
     stroke-width: 3px;
     cursor: pointer;
@@ -139,13 +140,3 @@ footer a:hover {
     fill: #666;
     fill-opacity: 0.3;
 }
-
-.wheelnav-radialWheel-spreadon,
-.wheelnav-radialWheel-spreadoff,
-.wheelnav-radialWheel-spreadon > tspan,
-.wheelnav-radialWheel-spreadoff > tspan {
-    fill: #FFF;
-    cursor: pointer;
-    stroke: #fff;
-}
-

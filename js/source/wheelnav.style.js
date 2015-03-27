@@ -7,23 +7,27 @@
 
 wheelnav.prototype.styleWheel = function () {
     if (!this.cssMode) {
-        if (this.spreaderPathAttr === undefined || this.spreaderPathAttr === null) {
-            this.spreaderPathAttr = { fill: "#444", stroke: "#444", "stroke-width": 2, cursor: 'pointer' };
+        if (this.spreaderPathInAttr === undefined || this.spreaderPathInAttr === null) {
+            this.spreaderPathInAttr = { fill: "#444", stroke: "#444", "stroke-width": 2, cursor: 'pointer' };
         }
-        if (this.spreaderOnAttr === undefined || this.spreaderOnAttr === null) {
-            this.spreaderOnAttr = { fill: "#eee", cursor: 'pointer' };
+        if (this.spreaderPathOutAttr === undefined || this.spreaderPathOutAttr === null) {
+            this.spreaderPathOutAttr = { fill: "#444", stroke: "#444", "stroke-width": 2, cursor: 'pointer' };
         }
-        if (this.spreaderOffAttr === undefined || this.spreaderOffAttr === null) {
-            this.spreaderOffAttr = { fill: "#eee", cursor: 'pointer' };
+        if (this.spreaderTitleInAttr === undefined || this.spreaderTitleInAttr === null) {
+            this.spreaderTitleInAttr = { fill: "#eee", cursor: 'pointer' };
+        }
+        if (this.spreaderTitleOutAttr === undefined || this.spreaderTitleOutAttr === null) {
+            this.spreaderTitleOutAttr = { fill: "#eee", cursor: 'pointer' };
         }
         if (this.markerAttr === undefined || this.markerAttr === null) {
             this.markerAttr = { stroke: "#444", "stroke-width": 2 };
         }
     }
     else {
-        this.spreaderPathAttr = { "class": this.getSpreaderCssClass() };
-        this.spreaderOnAttr = { "class": this.getSpreaderTitleCssClass("in") };
-        this.spreaderOffAttr = { "class": this.getSpreaderTitleCssClass("out") };
+        this.spreaderPathInAttr = { "class": this.getSpreaderCssClass("in") };
+        this.spreaderPathOutAttr = { "class": this.getSpreaderCssClass("out") };
+        this.spreaderTitleInAttr = { "class": this.getSpreaderTitleCssClass("in") };
+        this.spreaderTitleOutAttr = { "class": this.getSpreaderTitleCssClass("out") };
         this.markerAttr = { "class": this.getMarkerCssClass() };
     }
 };
@@ -70,8 +74,8 @@ wheelnav.prototype.getTitleCssClass = function (index, subclass) {
 wheelnav.prototype.getLineCssClass = function (index, subclass) {
     return "wheelnav-" + this.holderId + "-line-" + subclass + "-" + index;
 };
-wheelnav.prototype.getSpreaderCssClass = function () {
-    return "wheelnav-" + this.holderId + "-spreader";
+wheelnav.prototype.getSpreaderCssClass = function (state) {
+    return "wheelnav-" + this.holderId + "-spreader-" + state;
 };
 wheelnav.prototype.getSpreaderTitleCssClass = function (state) {
     return "wheelnav-" + this.holderId + "-spreadertitle-" + state;

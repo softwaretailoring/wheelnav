@@ -542,7 +542,7 @@ wheelnavItem.prototype.setWheelSettings = function () {
         this.slicePathFunction = this.wheelnav.slicePathFunction;
         this.sliceSelectedPathFunction = this.wheelnav.sliceSelectedPathFunction;
         this.sliceHoverPathFunction = this.wheelnav.sliceHoverPathFunction;
-
+            
         this.sliceTransformFunction = this.wheelnav.sliceTransformFunction;
         this.sliceSelectedTransformFunction = this.wheelnav.sliceSelectedTransformFunction;
         this.sliceHoverTransformFunction = this.wheelnav.sliceHoverTransformFunction;

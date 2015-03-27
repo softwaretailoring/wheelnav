@@ -117,11 +117,17 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     this.spreaderSliceAngle = 360;
     this.spreaderPathFunction = spreaderPath().PieSpreader;
     this.spreaderPathCustom = null;
-    this.spreaderOnPercent = 1;
-    this.spreaderOffPercent = 1;
-    this.spreaderOnTitle = "+";
-    this.spreaderOffTitle = "-";
+    this.spreaderInPercent = 1;
+    this.spreaderOutPercent = 1;
+    this.spreaderInTitle = "+";
+    this.spreaderOutTitle = "-";
     this.spreaderTitleFont = null;
+    this.spreaderPathInAttr = null;
+    this.spreaderPathOutAttr = null;
+    this.spreaderTitleInAttr = null;
+    this.spreaderTitleOutAttr = null;
+
+    //Percents
     this.minPercent = 0.01;
     this.maxPercent = 1;
     this.initPercent = 1;

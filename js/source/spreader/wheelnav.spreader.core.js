@@ -29,12 +29,12 @@ spreader = function (wheelnav) {
         if (this.wheelnav.spreaderTitleFont !== null) { this.fontAttr = { font: this.wheelnav.spreaderTitleFont }; }
         else { this.fontAttr = { font: '100 32px Impact, Charcoal, sans-serif' }; }
 
-        this.spreaderPathOn = this.wheelnav.spreaderPathFunction(this.spreaderHelper, this.wheelnav.spreaderOnPercent, this.wheelnav.spreaderPathCustom);
-        this.spreaderPathOff = this.wheelnav.spreaderPathFunction(this.spreaderHelper, this.wheelnav.spreaderOffPercent, this.wheelnav.spreaderPathCustom);
+        this.spreaderPathIn = this.wheelnav.spreaderPathFunction(this.spreaderHelper, this.wheelnav.spreaderInPercent, this.wheelnav.spreaderPathCustom);
+        this.spreaderPathOut = this.wheelnav.spreaderPathFunction(this.spreaderHelper, this.wheelnav.spreaderOutPercent, this.wheelnav.spreaderPathCustom);
 
-        var currentPath = this.spreaderPathOff;
+        var currentPath = this.spreaderPathOut;
         if (thisWheelNav.initPercent < thisWheelNav.maxPercent) {
-            currentPath = this.spreaderPathOn;
+            currentPath = this.spreaderPathIn;
         }
 
         this.spreaderPath = this.wheelnav.raphael.path(currentPath.spreaderPathString);
@@ -46,31 +46,24 @@ spreader = function (wheelnav) {
         });
 
         //Set titles
-        if (wheelnavTitle().isPathTitle(this.wheelnav.spreaderOnTitle)) {
-            onTitle = new wheelnavTitle(this.wheelnav.spreaderOnTitle, this.wheelnav.raphael.raphael);
-            this.onTitle = onTitle.getTitlePercentAttr(this.spreaderPathOff.titlePosX, this.spreaderPathOff.titlePosY);
+        if (wheelnavTitle().isPathTitle(this.wheelnav.spreaderInTitle)) {
+            onTitle = new wheelnavTitle(this.wheelnav.spreaderInTitle, this.wheelnav.raphael.raphael);
+            this.inTitle = onTitle.getTitlePercentAttr(this.spreaderPathOut.titlePosX, this.spreaderPathOut.titlePosY);
         }
         else {
-            onTitle = new wheelnavTitle(this.wheelnav.spreaderOnTitle);
-            this.onTitle = onTitle.getTitlePercentAttr(this.spreaderPathOff.titlePosX, this.spreaderPathOff.titlePosY);
+            onTitle = new wheelnavTitle(this.wheelnav.spreaderInTitle);
+            this.inTitle = onTitle.getTitlePercentAttr(this.spreaderPathOut.titlePosX, this.spreaderPathOut.titlePosY);
         }
 
-        if (wheelnavTitle().isPathTitle(this.wheelnav.spreaderOffTitle)) {
-            offTitle = new wheelnavTitle(this.wheelnav.spreaderOffTitle, this.wheelnav.raphael.raphael);
-            this.offTitle = offTitle.getTitlePercentAttr(this.spreaderPathOn.titlePosX, this.spreaderPathOn.titlePosY);
-            this.spreaderTitle = thisWheelNav.raphael.path(this.offTitle.path);
+        if (wheelnavTitle().isPathTitle(this.wheelnav.spreaderOutTitle)) {
+            offTitle = new wheelnavTitle(this.wheelnav.spreaderOutTitle, this.wheelnav.raphael.raphael);
+            this.outTitle = offTitle.getTitlePercentAttr(this.spreaderPathIn.titlePosX, this.spreaderPathIn.titlePosY);
+            this.spreaderTitle = thisWheelNav.raphael.path(this.outTitle.path);
         }
         else {
-            offTitle = new wheelnavTitle(this.wheelnav.spreaderOffTitle);
-            this.offTitle = offTitle.getTitlePercentAttr(this.spreaderPathOn.titlePosX, this.spreaderPathOn.titlePosY);
-            this.spreaderTitle = thisWheelNav.raphael.text(currentPath.titlePosX, currentPath.titlePosY, this.offTitle.title);
-        }
-
-        if (thisWheelNav.initPercent === thisWheelNav.maxPercent) {
-            
-        }
-        else {
-            
+            offTitle = new wheelnavTitle(this.wheelnav.spreaderOutTitle);
+            this.outTitle = offTitle.getTitlePercentAttr(this.spreaderPathIn.titlePosX, this.spreaderPathIn.titlePosY);
+            this.spreaderTitle = thisWheelNav.raphael.text(currentPath.titlePosX, currentPath.titlePosY, this.outTitle.title);
         }
 
         this.spreaderTitle.attr(this.fontAttr);
@@ -93,10 +86,10 @@ spreader.prototype.setCurrentTransform = function () {
         
 
         if (this.wheelnav.currentPercent > this.wheelnav.minPercent) {
-            currentPath = this.spreaderPathOn.spreaderPathString;
+            currentPath = this.spreaderPathOut.spreaderPathString;
         }
         else {
-            currentPath = this.spreaderPathOff.spreaderPathString;
+            currentPath = this.spreaderPathIn.spreaderPathString;
         }
 
         spreaderTransformAttr = {
@@ -110,12 +103,14 @@ spreader.prototype.setCurrentTransform = function () {
         var currentTitle;
 
         if (this.wheelnav.currentPercent === this.wheelnav.maxPercent) {
-            currentTitle = this.offTitle;
-            this.spreaderTitle.attr(this.wheelnav.spreaderOffAttr);
+            currentTitle = this.outTitle;
+            this.spreaderTitle.attr(this.wheelnav.spreaderTitleOutAttr);
+            this.spreaderPath.attr(this.wheelnav.spreaderPathOutAttr);
         }
         else {
-            currentTitle = this.onTitle;
-            this.spreaderTitle.attr(this.wheelnav.spreaderOnAttr);
+            currentTitle = this.inTitle;
+            this.spreaderTitle.attr(this.wheelnav.spreaderTitleInAttr);
+            this.spreaderPath.attr(this.wheelnav.spreaderPathInAttr);
         }
 
         if (this.spreaderTitle.type === "path") {

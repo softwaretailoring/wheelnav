@@ -15,12 +15,10 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
             var parsedNavItemsHref = [];
             var parsedNavItemsOnmouseup = [];
             var onlyInit = false;
-            var dataAttrExist = false;
 
             //data-wheelnav-slicepath
             var wheelnavSlicepath = holderDiv.getAttribute("data-wheelnav-slicepath");
             if (wheelnavSlicepath !== null) {
-                dataAttrExist = true;
                 if (slicePath()[wheelnavSlicepath] !== undefined) {
                     this.slicePathFunction = slicePath()[wheelnavSlicepath];
                 }
@@ -28,43 +26,36 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
             //data-wheelnav-wheelradius
             var wheelnavWheelradius = holderDiv.getAttribute("data-wheelnav-wheelradius");
             if (wheelnavWheelradius !== null) {
-                dataAttrExist = true;
                 this.wheelRadius = Number(wheelnavWheelradius);
             }
             //data-wheelnav-colors
             var wheelnavColors = holderDiv.getAttribute("data-wheelnav-colors");
             if (wheelnavColors !== null) {
-                dataAttrExist = true;
                 this.colors = wheelnavColors.split(',');
             }
             //data-wheelnav-navangle
             var wheelnavNavangle = holderDiv.getAttribute("data-wheelnav-navangle");
             if (wheelnavNavangle !== null) {
-                dataAttrExist = true;
                 this.navAngle = Number(wheelnavNavangle);
             }
             //data-wheelnav-cssmode
             var wheelnavCssmode = holderDiv.getAttribute("data-wheelnav-cssmode");
             if (wheelnavCssmode !== null) {
-                dataAttrExist = true;
                 this.cssMode = true;
             }
             //data-wheelnav-spreader
             var wheelnavSpreader = holderDiv.getAttribute("data-wheelnav-spreader");
             if (wheelnavSpreader !== null) {
-                dataAttrExist = true;
                 this.spreaderEnable = true;
             }
             //data-wheelnav-marker
             var wheelnavMarker = holderDiv.getAttribute("data-wheelnav-marker");
             if (wheelnavMarker !== null) {
-                dataAttrExist = true;
                 this.markerEnable = true;
             }
             //data-wheelnav-onlyinit
             var wheelnavOnlyinit = holderDiv.getAttribute("data-wheelnav-onlyinit");
             if (wheelnavOnlyinit !== null) {
-                dataAttrExist = true;
                 onlyInit = true;
             }
 
@@ -91,8 +82,6 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
                         //data-wheelnav-navitemtext or data-wheelnav-navitemicon is required
                         continue;
                     }
-
-                    dataAttrExist = true;
 
                     //onmouseup event of navitem element for call it in the navigateFunction
                     if (holderDiv.children[i].onmouseup !== undefined) {
@@ -122,10 +111,10 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
                     this.navItems[i].navigateFunction = parsedNavItemsOnmouseup[i];
                     this.navItems[i].navigateHref = parsedNavItemsHref[i];
                 }
-            }
 
-            if (dataAttrExist && !onlyInit) {
-                this.createWheel();
+                if (!onlyInit) {
+                    this.createWheel();
+                }
             }
         }
 
