@@ -73,7 +73,7 @@ marker.prototype.setCurrentTransform = function (navAngle) {
 
 ///#source 1 1 /js/source/marker/wheelnav.markerPathStart.js
 /* ======================================================================================= */
-/* Spreader path definitions.                                                              */
+/* Marker path definitions.                                                                */
 /* ======================================================================================= */
 
 markerPath = function () {

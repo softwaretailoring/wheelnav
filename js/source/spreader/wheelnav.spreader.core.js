@@ -47,22 +47,22 @@ spreader = function (wheelnav) {
 
         //Set titles
         if (wheelnavTitle().isPathTitle(this.wheelnav.spreaderInTitle)) {
-            onTitle = new wheelnavTitle(this.wheelnav.spreaderInTitle, this.wheelnav.raphael.raphael);
-            this.inTitle = onTitle.getTitlePercentAttr(this.spreaderPathOut.titlePosX, this.spreaderPathOut.titlePosY);
+            inTitle = new wheelnavTitle(this.wheelnav.spreaderInTitle, this.wheelnav.raphael.raphael);
+            this.inTitle = inTitle.getTitlePercentAttr(this.spreaderPathIn.titlePosX, this.spreaderPathIn.titlePosY);
         }
         else {
-            onTitle = new wheelnavTitle(this.wheelnav.spreaderInTitle);
-            this.inTitle = onTitle.getTitlePercentAttr(this.spreaderPathOut.titlePosX, this.spreaderPathOut.titlePosY);
+            inTitle = new wheelnavTitle(this.wheelnav.spreaderInTitle);
+            this.inTitle = inTitle.getTitlePercentAttr(this.spreaderPathIn.titlePosX, this.spreaderPathIn.titlePosY);
         }
 
         if (wheelnavTitle().isPathTitle(this.wheelnav.spreaderOutTitle)) {
-            offTitle = new wheelnavTitle(this.wheelnav.spreaderOutTitle, this.wheelnav.raphael.raphael);
-            this.outTitle = offTitle.getTitlePercentAttr(this.spreaderPathIn.titlePosX, this.spreaderPathIn.titlePosY);
+            outTitle = new wheelnavTitle(this.wheelnav.spreaderOutTitle, this.wheelnav.raphael.raphael);
+            this.outTitle = outTitle.getTitlePercentAttr(this.spreaderPathOut.titlePosX, this.spreaderPathOut.titlePosY);
             this.spreaderTitle = thisWheelNav.raphael.path(this.outTitle.path);
         }
         else {
-            offTitle = new wheelnavTitle(this.wheelnav.spreaderOutTitle);
-            this.outTitle = offTitle.getTitlePercentAttr(this.spreaderPathIn.titlePosX, this.spreaderPathIn.titlePosY);
+            outTitle = new wheelnavTitle(this.wheelnav.spreaderOutTitle);
+            this.outTitle = outTitle.getTitlePercentAttr(this.spreaderPathOut.titlePosX, this.spreaderPathOut.titlePosY);
             this.spreaderTitle = thisWheelNav.raphael.text(currentPath.titlePosX, currentPath.titlePosY, this.outTitle.title);
         }
 
@@ -83,7 +83,6 @@ spreader = function (wheelnav) {
 spreader.prototype.setCurrentTransform = function () {
     if (this.wheelnav.spreaderEnable) {
         this.spreaderPath.toFront();
-        
 
         if (this.wheelnav.currentPercent > this.wheelnav.minPercent) {
             currentPath = this.spreaderPathOut.spreaderPathString;

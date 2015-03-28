@@ -23,20 +23,25 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
                     this.slicePathFunction = slicePath()[wheelnavSlicepath];
                 }
             }
-            //data-wheelnav-wheelradius
-            var wheelnavWheelradius = holderDiv.getAttribute("data-wheelnav-wheelradius");
-            if (wheelnavWheelradius !== null) {
-                this.wheelRadius = Number(wheelnavWheelradius);
-            }
             //data-wheelnav-colors
             var wheelnavColors = holderDiv.getAttribute("data-wheelnav-colors");
             if (wheelnavColors !== null) {
                 this.colors = wheelnavColors.split(',');
             }
+            //data-wheelnav-wheelradius
+            var wheelnavWheelradius = holderDiv.getAttribute("data-wheelnav-wheelradius");
+            if (wheelnavWheelradius !== null) {
+                this.wheelRadius = Number(wheelnavWheelradius);
+            }
             //data-wheelnav-navangle
             var wheelnavNavangle = holderDiv.getAttribute("data-wheelnav-navangle");
             if (wheelnavNavangle !== null) {
                 this.navAngle = Number(wheelnavNavangle);
+            }
+            //data-wheelnav-rotateoff
+            var wheelnavRotateOff = holderDiv.getAttribute("data-wheelnav-rotateoff");
+            if (wheelnavRotateOff !== null) {
+                this.clickModeRotate = false;
             }
             //data-wheelnav-cssmode
             var wheelnavCssmode = holderDiv.getAttribute("data-wheelnav-cssmode");
@@ -48,10 +53,29 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
             if (wheelnavSpreader !== null) {
                 this.spreaderEnable = true;
             }
+            //data-wheelnav-spreaderradius
+            var wheelnavSpreaderRadius = holderDiv.getAttribute("data-wheelnav-spreaderradius");
+            if (wheelnavSpreaderRadius !== null) {
+                this.spreaderRadius = Number(wheelnavSpreaderRadius);
+            }
+            //data-wheelnav-spreaderpath
+            var wheelnavSpreaderPath = holderDiv.getAttribute("data-wheelnav-spreaderpath");
+            if (wheelnavSpreaderPath !== null) {
+                if (markerPath()[wheelnavSpreaderPath] !== undefined) {
+                    this.spreaderPathFunction = spreaderPath()[wheelnavSpreaderPath];
+                }
+            }
             //data-wheelnav-marker
             var wheelnavMarker = holderDiv.getAttribute("data-wheelnav-marker");
             if (wheelnavMarker !== null) {
                 this.markerEnable = true;
+            }
+            //data-wheelnav-markerpath
+            var wheelnavMarkerPath = holderDiv.getAttribute("data-wheelnav-markerpath");
+            if (wheelnavMarkerPath !== null) {
+                if (markerPath()[wheelnavMarkerPath] !== undefined) {
+                    this.markerPathFunction = markerPath()[wheelnavMarkerPath];
+                }
             }
             //data-wheelnav-onlyinit
             var wheelnavOnlyinit = holderDiv.getAttribute("data-wheelnav-onlyinit");

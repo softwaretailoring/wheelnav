@@ -476,20 +476,25 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
                     this.slicePathFunction = slicePath()[wheelnavSlicepath];
                 }
             }
-            //data-wheelnav-wheelradius
-            var wheelnavWheelradius = holderDiv.getAttribute("data-wheelnav-wheelradius");
-            if (wheelnavWheelradius !== null) {
-                this.wheelRadius = Number(wheelnavWheelradius);
-            }
             //data-wheelnav-colors
             var wheelnavColors = holderDiv.getAttribute("data-wheelnav-colors");
             if (wheelnavColors !== null) {
                 this.colors = wheelnavColors.split(',');
             }
+            //data-wheelnav-wheelradius
+            var wheelnavWheelradius = holderDiv.getAttribute("data-wheelnav-wheelradius");
+            if (wheelnavWheelradius !== null) {
+                this.wheelRadius = Number(wheelnavWheelradius);
+            }
             //data-wheelnav-navangle
             var wheelnavNavangle = holderDiv.getAttribute("data-wheelnav-navangle");
             if (wheelnavNavangle !== null) {
                 this.navAngle = Number(wheelnavNavangle);
+            }
+            //data-wheelnav-rotateoff
+            var wheelnavRotateOff = holderDiv.getAttribute("data-wheelnav-rotateoff");
+            if (wheelnavRotateOff !== null) {
+                this.clickModeRotate = false;
             }
             //data-wheelnav-cssmode
             var wheelnavCssmode = holderDiv.getAttribute("data-wheelnav-cssmode");
@@ -501,10 +506,29 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
             if (wheelnavSpreader !== null) {
                 this.spreaderEnable = true;
             }
+            //data-wheelnav-spreaderradius
+            var wheelnavSpreaderRadius = holderDiv.getAttribute("data-wheelnav-spreaderradius");
+            if (wheelnavSpreaderRadius !== null) {
+                this.spreaderRadius = Number(wheelnavSpreaderRadius);
+            }
+            //data-wheelnav-spreaderpath
+            var wheelnavSpreaderPath = holderDiv.getAttribute("data-wheelnav-spreaderpath");
+            if (wheelnavSpreaderPath !== null) {
+                if (markerPath()[wheelnavSpreaderPath] !== undefined) {
+                    this.spreaderPathFunction = spreaderPath()[wheelnavSpreaderPath];
+                }
+            }
             //data-wheelnav-marker
             var wheelnavMarker = holderDiv.getAttribute("data-wheelnav-marker");
             if (wheelnavMarker !== null) {
                 this.markerEnable = true;
+            }
+            //data-wheelnav-markerpath
+            var wheelnavMarkerPath = holderDiv.getAttribute("data-wheelnav-markerpath");
+            if (wheelnavMarkerPath !== null) {
+                if (markerPath()[wheelnavMarkerPath] !== undefined) {
+                    this.markerPathFunction = markerPath()[wheelnavMarkerPath];
+                }
             }
             //data-wheelnav-onlyinit
             var wheelnavOnlyinit = holderDiv.getAttribute("data-wheelnav-onlyinit");
@@ -2725,22 +2749,22 @@ spreader = function (wheelnav) {
 
         //Set titles
         if (wheelnavTitle().isPathTitle(this.wheelnav.spreaderInTitle)) {
-            onTitle = new wheelnavTitle(this.wheelnav.spreaderInTitle, this.wheelnav.raphael.raphael);
-            this.inTitle = onTitle.getTitlePercentAttr(this.spreaderPathOut.titlePosX, this.spreaderPathOut.titlePosY);
+            inTitle = new wheelnavTitle(this.wheelnav.spreaderInTitle, this.wheelnav.raphael.raphael);
+            this.inTitle = inTitle.getTitlePercentAttr(this.spreaderPathIn.titlePosX, this.spreaderPathIn.titlePosY);
         }
         else {
-            onTitle = new wheelnavTitle(this.wheelnav.spreaderInTitle);
-            this.inTitle = onTitle.getTitlePercentAttr(this.spreaderPathOut.titlePosX, this.spreaderPathOut.titlePosY);
+            inTitle = new wheelnavTitle(this.wheelnav.spreaderInTitle);
+            this.inTitle = inTitle.getTitlePercentAttr(this.spreaderPathIn.titlePosX, this.spreaderPathIn.titlePosY);
         }
 
         if (wheelnavTitle().isPathTitle(this.wheelnav.spreaderOutTitle)) {
-            offTitle = new wheelnavTitle(this.wheelnav.spreaderOutTitle, this.wheelnav.raphael.raphael);
-            this.outTitle = offTitle.getTitlePercentAttr(this.spreaderPathIn.titlePosX, this.spreaderPathIn.titlePosY);
+            outTitle = new wheelnavTitle(this.wheelnav.spreaderOutTitle, this.wheelnav.raphael.raphael);
+            this.outTitle = outTitle.getTitlePercentAttr(this.spreaderPathOut.titlePosX, this.spreaderPathOut.titlePosY);
             this.spreaderTitle = thisWheelNav.raphael.path(this.outTitle.path);
         }
         else {
-            offTitle = new wheelnavTitle(this.wheelnav.spreaderOutTitle);
-            this.outTitle = offTitle.getTitlePercentAttr(this.spreaderPathIn.titlePosX, this.spreaderPathIn.titlePosY);
+            outTitle = new wheelnavTitle(this.wheelnav.spreaderOutTitle);
+            this.outTitle = outTitle.getTitlePercentAttr(this.spreaderPathOut.titlePosX, this.spreaderPathOut.titlePosY);
             this.spreaderTitle = thisWheelNav.raphael.text(currentPath.titlePosX, currentPath.titlePosY, this.outTitle.title);
         }
 
@@ -3185,7 +3209,7 @@ marker.prototype.setCurrentTransform = function (navAngle) {
 
 ///#source 1 1 /js/source/marker/wheelnav.markerPathStart.js
 /* ======================================================================================= */
-/* Spreader path definitions.                                                              */
+/* Marker path definitions.                                                                */
 /* ======================================================================================= */
 
 markerPath = function () {
