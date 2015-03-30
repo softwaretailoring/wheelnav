@@ -7,7 +7,7 @@ It works on all major desktop and mobile browser.
 
 Possible uses:
 - tab navigation
-- pie menu (radial menu)
+- pie menu (radial menu, circular menu)
 - sub menu
 - option button
 - checkboxes
@@ -17,11 +17,32 @@ For more insight please visit [http://wheelnavjs.softwaretailoring.net][projectp
 
 ## Using
 
+### Via javascript
+
+```html
+<div id="divWheelnav"></div>
+```
+
 ```javascript
 var myWheelnav = new wheelnav("divWheelnav");
 myWheelnav.slicePathFunction = slicePath().WheelSlice;
 myWheelnav.colors = colorpalette.parrot;
 myWheelnav.createWheel([icon.smile, icon.star, icon.fork, icon.$]);
+```
+
+### Via html5 data- attributes
+
+```html
+<div id="divWheelnav" data-wheelnav data-wheelnav-slicepath="WheelSlice" data-wheelnav-colors="#D80351,#F5D908,#00A3EE,#929292">
+    <div data-wheelnav-navitemicon="smile">smile</div>
+    <div data-wheelnav-navitemicon="star">star</div>
+    <div data-wheelnav-navitemicon="fork">fork</div>
+    <div data-wheelnav-navitemicon="$">donate</div>
+</div>
+```
+
+```javascript
+var myWheelnav = new wheelnav("divWheelnav");
 ```
 
 ![demo image](wheelnav_demo.gif)

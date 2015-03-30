@@ -1,9 +1,14 @@
 ## 1.5.0
 
-* New wheelnav, navItem property: initPathEnable, initTransformEnable, initTitleRotate
-* Fixed clientWidth bug in multiple wheelnav mode
-* New wheelnav properties: spreaderPathFunction, spreaderPathCustom, spreaderStartAngle, spreaderSliceAngle
+* Support for html5 data- attributes
+* Implement marker
+* Redesign default style
 * Reorganize path related code, implement path for spreader
+* New wheelnav properties: initTitleRotate, initPercent
+* New spreader properties: spreaderPathFunction, spreaderPathCustom, spreaderStartAngle, spreaderSliceAngle
+* New spreader properties: spreaderInTitle, spreaderOutTitle, spreaderInPercent, spreaderOutPercent
+* New spreader style properties: spreaderPathInAttr, spreaderPathOutAttr, spreaderTitleInAttr, spreaderTitleOutAttr
+* Fixed clientWidth bug in multiple wheelnav mode
 
 ### 1.4.0
 
