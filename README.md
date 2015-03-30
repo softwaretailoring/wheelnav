@@ -19,10 +19,12 @@ For more insight please visit [http://wheelnavjs.softwaretailoring.net][projectp
 
 ### Via javascript
 
+HTML
 ```html
 <div id="divWheelnav"></div>
 ```
 
+JS
 ```javascript
 var myWheelnav = new wheelnav("divWheelnav");
 myWheelnav.slicePathFunction = slicePath().WheelSlice;
@@ -32,6 +34,7 @@ myWheelnav.createWheel([icon.smile, icon.star, icon.fork, icon.$]);
 
 ### Via html5 data- attributes
 
+HTML
 ```html
 <div id="divWheelnav" data-wheelnav data-wheelnav-slicepath="WheelSlice" data-wheelnav-colors="#D80351,#F5D908,#00A3EE,#929292">
     <div data-wheelnav-navitemicon="smile">smile</div>
@@ -41,6 +44,7 @@ myWheelnav.createWheel([icon.smile, icon.star, icon.fork, icon.$]);
 </div>
 ```
 
+JS
 ```javascript
 var myWheelnav = new wheelnav("divWheelnav");
 ```
