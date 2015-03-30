@@ -59,16 +59,28 @@ spreader = function (wheelnav) {
         if (wheelnavTitle().isPathTitle(this.wheelnav.spreaderOutTitle)) {
             outTitle = new wheelnavTitle(this.wheelnav.spreaderOutTitle, this.wheelnav.raphael.raphael);
             this.outTitle = outTitle.getTitlePercentAttr(this.spreaderPathOut.titlePosX, this.spreaderPathOut.titlePosY);
-            this.spreaderTitle = thisWheelNav.raphael.path(this.outTitle.path);
         }
         else {
             outTitle = new wheelnavTitle(this.wheelnav.spreaderOutTitle);
             this.outTitle = outTitle.getTitlePercentAttr(this.spreaderPathOut.titlePosX, this.spreaderPathOut.titlePosY);
-            this.spreaderTitle = thisWheelNav.raphael.text(currentPath.titlePosX, currentPath.titlePosY, this.outTitle.title);
         }
 
+        var currentTitle = this.outTitle;
+        var currentTitleAttr = this.wheelnav.spreaderTitleOutAttr;
+        if (thisWheelNav.initPercent < thisWheelNav.maxPercent) {
+            currentTitle = this.inTitle;
+            currentTitleAttr = this.wheelnav.spreaderTitleInAttr;
+        }
+
+        if (wheelnavTitle().isPathTitle(this.wheelnav.spreaderOutTitle)) {
+            this.spreaderTitle = thisWheelNav.raphael.path(currentTitle.path);
+        }
+        else {
+            this.spreaderTitle = thisWheelNav.raphael.text(currentPath.titlePosX, currentPath.titlePosY, currentTitle.title);
+        }
+        
         this.spreaderTitle.attr(this.fontAttr);
-        this.spreaderTitle.attr(thisWheelNav.spreaderOnAttr);
+        this.spreaderTitle.attr(currentTitleAttr);
         this.spreaderTitle.id = thisWheelNav.getSpreaderTitleId();
         this.spreaderTitle.node.id = this.spreaderTitle.id;
         this.spreaderTitle.click(function () {
@@ -81,60 +93,62 @@ spreader = function (wheelnav) {
     return this;
 };
 
-spreader.prototype.setCurrentTransform = function () {
+spreader.prototype.setCurrentTransform = function (withoutAnimate) {
     if (this.wheelnav.spreaderEnable) {
-        this.spreaderPath.toFront();
-        
 
-        if (this.wheelnav.currentPercent > this.wheelnav.minPercent) {
-            currentPath = this.spreaderPathOut.spreaderPathString;
-        }
-        else {
-            currentPath = this.spreaderPathIn.spreaderPathString;
-        }
-
-        spreaderTransformAttr = {
-            path: currentPath
-        };
-
-        //Animate spreader
-        this.spreaderPath.animate(spreaderTransformAttr, this.animatetime, this.animateeffect);
-
-        //titles
-        var currentTitle;
-
-        if (this.wheelnav.currentPercent === this.wheelnav.maxPercent) {
-            currentTitle = this.outTitle;
-            this.spreaderTitle.attr(this.wheelnav.spreaderTitleOutAttr);
-            this.spreaderPath.attr(this.wheelnav.spreaderPathOutAttr);
-        }
-        else {
-            currentTitle = this.inTitle;
-            this.spreaderTitle.attr(this.wheelnav.spreaderTitleInAttr);
-            this.spreaderPath.attr(this.wheelnav.spreaderPathInAttr);
-        }
-
-        if (this.spreaderTitle.type === "path") {
-            titleTransformAttr = {
-                path: currentTitle.path
-            };
-        }
-        else {
-            //Little hack for proper appearance of "-" sign
-            offYOffset = 0;
-            if (currentTitle.title === "-") { offYOffset = 3; }
-
-            titleTransformAttr = {
-                x: currentTitle.x,
-                y: currentTitle.y - offYOffset
-            };
-
-            if (currentTitle.title !== null) {
-                this.spreaderTitle.attr({ text: currentTitle.title });
+        if (withoutAnimate === undefined ||
+            withoutAnimate === false) {
+            
+            if (this.wheelnav.currentPercent > this.wheelnav.minPercent) {
+                currentPath = this.spreaderPathOut.spreaderPathString;
             }
+            else {
+                currentPath = this.spreaderPathIn.spreaderPathString;
+            }
+
+            spreaderTransformAttr = {
+                path: currentPath
+            };
+
+            //Animate spreader
+            this.spreaderPath.animate(spreaderTransformAttr, this.animatetime, this.animateeffect);
+
+            //titles
+            var currentTitle;
+            var titleTransformAttr;
+
+            if (this.wheelnav.currentPercent === this.wheelnav.maxPercent) {
+                currentTitle = this.outTitle;
+                titleTransformAttr = this.wheelnav.spreaderTitleOutAttr;
+                this.spreaderPath.attr(this.wheelnav.spreaderPathOutAttr);
+            }
+            else {
+                currentTitle = this.inTitle;
+                titleTransformAttr = this.wheelnav.spreaderTitleInAttr;
+                this.spreaderPath.attr(this.wheelnav.spreaderPathInAttr);
+            }
+
+            if (this.spreaderTitle.type === "path") {
+                titleTransformAttr.path = currentTitle.path;
+            }
+            else {
+                //Little hack for proper appearance of "-" sign
+                offYOffset = 0;
+                if (currentTitle.title === "-") { offYOffset = 3; };
+
+                titleTransformAttr.x = currentTitle.x;
+                titleTransformAttr.y = currentTitle.y - offYOffset;
+
+                if (currentTitle.title !== null) {
+                    this.spreaderTitle.attr({ text: currentTitle.title });
+                }
+            }
+
+            //Animate title
+            this.spreaderTitle.animate(titleTransformAttr, this.animatetime, this.animateeffect);
         }
 
-        this.spreaderTitle.animate(titleTransformAttr, this.animatetime, this.animateeffect);
+        this.spreaderPath.toFront();
         this.spreaderTitle.toFront();
     }
 };

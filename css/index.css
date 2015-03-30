@@ -16,6 +16,7 @@ header a {
     background-color: #ddd;
     color: #555;
     text-decoration: none;
+    padding: 0 3px 0 3px;
 }
 
 header a:hover {
@@ -37,6 +38,7 @@ footer a {
     background-color: #ddd;
     color: #555;
     text-decoration: none;
+    padding: 0 3px 0 3px;
 }
 
 footer a:hover {

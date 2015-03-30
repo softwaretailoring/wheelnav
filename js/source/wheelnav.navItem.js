@@ -59,14 +59,15 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     this.animateeffect = "bounce";
     this.animatetime = 1500;
     this.sliceAngle = 360 / wheelnav.navItemCount;
-    
+
+    this.navigateHref = null;
+    this.navigateFunction = null;
+
+    //Navitem styles
     this.styleNavItem();
 
     //Wheelnav settings
     this.setWheelSettings();
-
-    this.navigateHref = null;
-    this.navigateFunction = null;
 
     return this;
 };
@@ -277,7 +278,7 @@ wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
         }
 
         this.wheelnav.marker.setCurrentTransform();
-        this.wheelnav.spreader.setCurrentTransform();
+        this.wheelnav.spreader.setCurrentTransform(true);
     }
 };
 

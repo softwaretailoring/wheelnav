@@ -77,8 +77,8 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
                     this.markerPathFunction = markerPath()[wheelnavMarkerPath];
                 }
             }
-            //data-wheelnav-onlyinit
-            var wheelnavOnlyinit = holderDiv.getAttribute("data-wheelnav-onlyinit");
+            //data-wheelnav-init
+            var wheelnavOnlyinit = holderDiv.getAttribute("data-wheelnav-init");
             if (wheelnavOnlyinit !== null) {
                 onlyInit = true;
             }

@@ -356,7 +356,7 @@ wheelnav.prototype.navigateWheel = function (clicked) {
         else {
             this.marker.setCurrentTransform();
         }
-        this.spreader.setCurrentTransform();
+        this.spreader.setCurrentTransform(true);
     }
 };
 
