@@ -257,9 +257,8 @@ this.LineMarker = function (helper, percent, custom) {
 this.DropMarkerCustomization = function () {
 
     var custom = new markerPathCustomization();
-    custom.arcBaseRadiusPercent = 0;
-    custom.arcRadiusPercent = 0.1;
-    custom.startRadiusPercent = 0;
+    custom.dropBaseRadiusPercent = 0;
+    custom.dropRadiusPercent = 0.15;
     return custom;
 };
 
@@ -271,23 +270,22 @@ this.DropMarker = function (helper, percent, custom) {
 
     helper.setBaseValue(custom.markerPercent * percent, custom);
 
-    var arcBaseRadius = helper.sliceRadius * custom.arcBaseRadiusPercent;
-    var arcRadius = helper.sliceRadius * custom.arcRadiusPercent;
+    var arcBaseRadius = helper.sliceRadius * custom.dropBaseRadiusPercent;
     var startAngle = helper.startAngle + helper.sliceAngle * 0.2;
     var startAngle2 = helper.startAngle;
     var endAngle = helper.startAngle + helper.sliceAngle * 0.8;
     var endAngle2 = helper.startAngle + helper.sliceAngle;
-    var dropRadius = helper.sliceRadius * 0.1;
+    var dropRadius = helper.sliceRadius * custom.dropRadiusPercent;
 
     markerPathString = [helper.MoveTo(0, dropRadius),
         helper.ArcTo(dropRadius, 180, dropRadius),
         helper.ArcTo(dropRadius, 360, dropRadius),
         helper.MoveTo(helper.navAngle, arcBaseRadius),
-                helper.LineTo(startAngle, arcRadius),
-                 helper.LineTo(startAngle2, arcRadius),
-                 helper.LineTo(helper.navAngle, arcRadius * 1.6),
-                helper.LineTo(endAngle2, arcRadius),
-                 helper.LineTo(endAngle, arcRadius),
+                helper.LineTo(startAngle, dropRadius),
+                 helper.LineTo(startAngle2, dropRadius),
+                 helper.LineTo(helper.navAngle, dropRadius * 1.6),
+                helper.LineTo(endAngle2, dropRadius),
+                 helper.LineTo(endAngle, dropRadius),
                  helper.Close()];
     return {
         markerPathString: markerPathString,
