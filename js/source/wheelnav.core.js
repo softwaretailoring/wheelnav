@@ -1,5 +1,5 @@
 ﻿/* ======================================================================================= */
-/*                                   wheelnav.js - v1.5.0                                  */
+/*                                   wheelnav.js - v1.5.1                                  */
 /* ======================================================================================= */
 /* This is a small javascript library for animated SVG based wheel navigation.             */
 /* Requires Raphaël JavaScript Vector Library (http://raphaeljs.com)                       */
@@ -168,7 +168,12 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
 
     this.animateeffect = null;
     this.animatetime = null;
-    this.slicePathFunction = slicePath().PieSlice;
+    if (slicePath()["PieSlice"] !== undefined) {
+        this.slicePathFunction = slicePath().PieSlice;
+    }
+    else {
+        this.slicePathFunction = slicePath().NullSlice;
+    }
     this.sliceClickablePathFunction = null;
     this.sliceTransformFunction = null;
     this.sliceSelectedPathFunction = null;
