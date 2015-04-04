@@ -345,7 +345,7 @@ wheelnav.prototype.navigateWheel = function (clicked) {
 
     for (i = 0; i < this.navItemCount; i++) {
         navItem = this.navItems[i];
-        navItem.setCurrentTransform(true);
+        navItem.setCurrentTransform(true, true);
         navItem.refreshNavItem();
     }
 
@@ -382,7 +382,7 @@ wheelnav.prototype.spreadWheel = function () {
     for (i = 0; i < this.navItemCount; i++) {
         var navItem = this.navItems[i];
         navItem.hovered = false;
-        navItem.setCurrentTransform(true);
+        navItem.setCurrentTransform(true, false);
     }
 
     this.marker.setCurrentTransform();
@@ -391,9 +391,10 @@ wheelnav.prototype.spreadWheel = function () {
     return this;
 };
 
-wheelnav.prototype.animateUnlock = function (force) {
+wheelnav.prototype.animateUnlock = function (force, withFinishFunction) {
 
-    if (force !== undefined) {
+    if (force !== undefined && 
+        force === true) {
         for (var f = 0; f < this.navItemCount; f++) {
             this.navItems[f].navSliceUnderAnimation = false;
             this.navItems[f].navTitleUnderAnimation = false;
@@ -413,7 +414,9 @@ wheelnav.prototype.animateUnlock = function (force) {
         }
 
         this.animateLocked = false;
-        if (this.animateFinishFunction !== null) {
+        if (this.animateFinishFunction !== null &&
+            withFinishFunction !== undefined &&
+            withFinishFunction === true) {
             this.animateFinishFunction();
         }
     }
@@ -870,7 +873,7 @@ wheelnavItem.prototype.createNavItem = function () {
         });
     }
 
-    this.setCurrentTransform();
+    this.setCurrentTransform(true, false);
 };
 
 wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
@@ -891,7 +894,7 @@ wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
             this.sliceHoverPathFunction !== null ||
             this.sliceHoverTransformFunction !== null ||
             this.titleHover !== this.title) {
-            this.setCurrentTransform();
+            this.setCurrentTransform(false, false);
         }
 
         this.wheelnav.marker.setCurrentTransform();
@@ -899,7 +902,7 @@ wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
     }
 };
 
-wheelnavItem.prototype.setCurrentTransform = function (locked) {
+wheelnavItem.prototype.setCurrentTransform = function (locked, withFinishFunction) {
 
     if (!this.wheelnav.clickModeRotate ||
         (!this.navSliceUnderAnimation &&
@@ -1031,15 +1034,15 @@ wheelnavItem.prototype.setCurrentTransform = function (locked) {
         //Animate navitem
         this.animSlice = Raphael.animation(sliceTransformAttr, this.animatetime, this.animateeffect, function () {
             thisNavItem.navSliceUnderAnimation = false;
-            thisWheelnav.animateUnlock();
+            thisWheelnav.animateUnlock(false, withFinishFunction);
         });
         this.animLine = Raphael.animation(lineTransformAttr, this.animatetime, this.animateeffect, function () {
             thisNavItem.navLineUnderAnimation = false;
-            thisWheelnav.animateUnlock();
+            thisWheelnav.animateUnlock(false, withFinishFunction);
         });
         this.animTitle = Raphael.animation(titleTransformAttr, this.animatetime, this.animateeffect, function () {
             thisNavItem.navTitleUnderAnimation = false;
-            thisWheelnav.animateUnlock();
+            thisWheelnav.animateUnlock(false, withFinishFunction);
         });
 
         if (this.navClickableSlice !== null) {
@@ -1129,7 +1132,7 @@ wheelnavItem.prototype.refreshNavItem = function (withPathAndTransform) {
     if (withPathAndTransform !== undefined &&
         withPathAndTransform === true) {
         this.initPathsAndTransforms();
-        this.setCurrentTransform();
+        this.setCurrentTransform(false, false);
     }
 };
 

@@ -344,7 +344,7 @@ wheelnav.prototype.navigateWheel = function (clicked) {
 
     for (i = 0; i < this.navItemCount; i++) {
         navItem = this.navItems[i];
-        navItem.setCurrentTransform(true);
+        navItem.setCurrentTransform(true, true);
         navItem.refreshNavItem();
     }
 
@@ -381,7 +381,7 @@ wheelnav.prototype.spreadWheel = function () {
     for (i = 0; i < this.navItemCount; i++) {
         var navItem = this.navItems[i];
         navItem.hovered = false;
-        navItem.setCurrentTransform(true);
+        navItem.setCurrentTransform(true, false);
     }
 
     this.marker.setCurrentTransform();
@@ -390,9 +390,10 @@ wheelnav.prototype.spreadWheel = function () {
     return this;
 };
 
-wheelnav.prototype.animateUnlock = function (force) {
+wheelnav.prototype.animateUnlock = function (force, withFinishFunction) {
 
-    if (force !== undefined) {
+    if (force !== undefined && 
+        force === true) {
         for (var f = 0; f < this.navItemCount; f++) {
             this.navItems[f].navSliceUnderAnimation = false;
             this.navItems[f].navTitleUnderAnimation = false;
@@ -412,7 +413,9 @@ wheelnav.prototype.animateUnlock = function (force) {
         }
 
         this.animateLocked = false;
-        if (this.animateFinishFunction !== null) {
+        if (this.animateFinishFunction !== null &&
+            withFinishFunction !== undefined &&
+            withFinishFunction === true) {
             this.animateFinishFunction();
         }
     }

@@ -253,7 +253,7 @@ wheelnavItem.prototype.createNavItem = function () {
         });
     }
 
-    this.setCurrentTransform();
+    this.setCurrentTransform(true, false);
 };
 
 wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
@@ -274,7 +274,7 @@ wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
             this.sliceHoverPathFunction !== null ||
             this.sliceHoverTransformFunction !== null ||
             this.titleHover !== this.title) {
-            this.setCurrentTransform();
+            this.setCurrentTransform(false, false);
         }
 
         this.wheelnav.marker.setCurrentTransform();
@@ -282,7 +282,7 @@ wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
     }
 };
 
-wheelnavItem.prototype.setCurrentTransform = function (locked) {
+wheelnavItem.prototype.setCurrentTransform = function (locked, withFinishFunction) {
 
     if (!this.wheelnav.clickModeRotate ||
         (!this.navSliceUnderAnimation &&
@@ -414,15 +414,15 @@ wheelnavItem.prototype.setCurrentTransform = function (locked) {
         //Animate navitem
         this.animSlice = Raphael.animation(sliceTransformAttr, this.animatetime, this.animateeffect, function () {
             thisNavItem.navSliceUnderAnimation = false;
-            thisWheelnav.animateUnlock();
+            thisWheelnav.animateUnlock(false, withFinishFunction);
         });
         this.animLine = Raphael.animation(lineTransformAttr, this.animatetime, this.animateeffect, function () {
             thisNavItem.navLineUnderAnimation = false;
-            thisWheelnav.animateUnlock();
+            thisWheelnav.animateUnlock(false, withFinishFunction);
         });
         this.animTitle = Raphael.animation(titleTransformAttr, this.animatetime, this.animateeffect, function () {
             thisNavItem.navTitleUnderAnimation = false;
-            thisWheelnav.animateUnlock();
+            thisWheelnav.animateUnlock(false, withFinishFunction);
         });
 
         if (this.navClickableSlice !== null) {
@@ -512,7 +512,7 @@ wheelnavItem.prototype.refreshNavItem = function (withPathAndTransform) {
     if (withPathAndTransform !== undefined &&
         withPathAndTransform === true) {
         this.initPathsAndTransforms();
-        this.setCurrentTransform();
+        this.setCurrentTransform(false, false);
     }
 };
 
