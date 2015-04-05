@@ -17,6 +17,7 @@
     <file>/js/source/spreader/wheelnav.spreaderPath.AntiStar.js</file>
     <file>/js/source/spreader/wheelnav.spreaderPath.Flower.js</file>
     <file>/js/source/spreader/wheelnav.spreaderPath.Holder.js</file>
+    <file>/js/source/spreader/wheelnav.spreaderPath.Line.js</file>
     <file>/js/source/spreader/wheelnav.spreaderPathEnd.js</file>
   </files>
 </bundle>

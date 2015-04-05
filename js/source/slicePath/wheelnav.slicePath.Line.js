@@ -22,12 +22,24 @@ this.LineSlice = function (helper, percent, custom) {
                  helper.Close()];
     }
     else {
-        slicePathString = [helper.MoveToCenter(),
+        if (helper.startAngle === 180 ||
+            helper.startAngle === 0 ||
+            helper.startAngle === -180) {
+            slicePathString = [helper.MoveToCenter(),
+                 helper.LineTo(helper.startAngle, r),
+                 helper.LineTo(helper.startAngle, r, helper.middleAngle, r),
+                 helper.LineTo(helper.endAngle, r, helper.middleAngle, r),
+                 helper.LineTo(helper.endAngle, r),
+                 helper.Close()];
+        }
+        else {
+            slicePathString = [helper.MoveToCenter(),
              helper.LineTo(helper.startAngle, r),
              helper.LineTo(helper.middleAngle, r, helper.startAngle, r),
              helper.LineTo(helper.middleAngle, r, helper.endAngle, r),
              helper.LineTo(helper.endAngle, r),
              helper.Close()];
+        }
     }
 
     return {
