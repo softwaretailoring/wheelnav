@@ -69,7 +69,7 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     else {
         //The divId parameter has to be the identifier of the wheelnav in this case.
         this.raphael = raphael;
-        canvasWidth = this.raphael.canvas.clientWidth;
+        canvasWidth = this.raphael.width;
         clearContent = false;
     }
 
