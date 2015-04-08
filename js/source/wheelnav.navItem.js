@@ -562,6 +562,7 @@ wheelnavItem.prototype.setWheelSettings = function () {
     }
 
     this.slicePathCustom = this.wheelnav.slicePathCustom;
+    this.sliceClickablePathCustom = this.wheelnav.sliceClickablePathCustom;
     this.sliceSelectedPathCustom = this.wheelnav.sliceSelectedPathCustom;
     this.sliceHoverPathCustom = this.wheelnav.sliceHoverPathCustom;
     this.sliceInitPathCustom = this.wheelnav.sliceInitPathCustom;
@@ -636,9 +637,9 @@ wheelnavItem.prototype.initPathsAndTransforms = function () {
     
     if (this.sliceClickablePathFunction !== null) {
         //Default - min
-        this.clickableSlicePathMin = this.sliceClickablePathFunction(this.sliceHelper, this.clickablePercentMin, this.slicePathCustom);
+        this.clickableSlicePathMin = this.sliceClickablePathFunction(this.sliceHelper, this.clickablePercentMin, this.sliceClickablePathCustom);
         //Default - max
-        this.clickableSlicePathMax = this.sliceClickablePathFunction(this.sliceHelper, this.clickablePercentMax, this.slicePathCustom);
+        this.clickableSlicePathMax = this.sliceClickablePathFunction(this.sliceHelper, this.clickablePercentMax, this.sliceClickablePathCustom);
     }
 
     //Initial path

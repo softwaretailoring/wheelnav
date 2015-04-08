@@ -158,6 +158,7 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     this.lineSelectedAttr = null;
 
     this.slicePathCustom = null;
+    this.sliceClickablePathCustom = null;
     this.sliceSelectedPathCustom = null;
     this.sliceHoverPathCustom = null;
     this.sliceInitPathCustom = null;
@@ -1182,6 +1183,7 @@ wheelnavItem.prototype.setWheelSettings = function () {
     }
 
     this.slicePathCustom = this.wheelnav.slicePathCustom;
+    this.sliceClickablePathCustom = this.wheelnav.sliceClickablePathCustom;
     this.sliceSelectedPathCustom = this.wheelnav.sliceSelectedPathCustom;
     this.sliceHoverPathCustom = this.wheelnav.sliceHoverPathCustom;
     this.sliceInitPathCustom = this.wheelnav.sliceInitPathCustom;
@@ -1256,9 +1258,9 @@ wheelnavItem.prototype.initPathsAndTransforms = function () {
     
     if (this.sliceClickablePathFunction !== null) {
         //Default - min
-        this.clickableSlicePathMin = this.sliceClickablePathFunction(this.sliceHelper, this.clickablePercentMin, this.slicePathCustom);
+        this.clickableSlicePathMin = this.sliceClickablePathFunction(this.sliceHelper, this.clickablePercentMin, this.sliceClickablePathCustom);
         //Default - max
-        this.clickableSlicePathMax = this.sliceClickablePathFunction(this.sliceHelper, this.clickablePercentMax, this.slicePathCustom);
+        this.clickableSlicePathMax = this.sliceClickablePathFunction(this.sliceHelper, this.clickablePercentMax, this.sliceClickablePathCustom);
     }
 
     //Initial path
@@ -2122,7 +2124,7 @@ this.StarBasePieSlice = function (helper, percent, custom) {
 this.MenuSliceCustomization = function () {
 
     var custom = new slicePathCustomization();
-    custom.menuRadius = 25;
+    custom.menuRadius = 35;
     custom.titleRadiusPercent = 0.63;
     custom.isSelectedLine = false;
     custom.lineBaseRadiusPercent = 0;
@@ -3400,7 +3402,7 @@ this.PieLineMarker = function (helper, percent, custom) {
 this.MenuMarkerCustomization = function () {
 
     var custom = new markerPathCustomization();
-    custom.menuRadius = 30;
+    custom.menuRadius = 40;
     custom.titleRadiusPercent = 0.63;
     custom.lineBaseRadiusPercent = 0;
     return custom;

@@ -2,7 +2,7 @@
 this.MenuSliceCustomization = function () {
 
     var custom = new slicePathCustomization();
-    custom.menuRadius = 25;
+    custom.menuRadius = 35;
     custom.titleRadiusPercent = 0.63;
     custom.isSelectedLine = false;
     custom.lineBaseRadiusPercent = 0;

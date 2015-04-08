@@ -157,6 +157,7 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     this.lineSelectedAttr = null;
 
     this.slicePathCustom = null;
+    this.sliceClickablePathCustom = null;
     this.sliceSelectedPathCustom = null;
     this.sliceHoverPathCustom = null;
     this.sliceInitPathCustom = null;

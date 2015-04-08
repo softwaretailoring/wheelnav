@@ -180,7 +180,7 @@ this.PieLineMarker = function (helper, percent, custom) {
 this.MenuMarkerCustomization = function () {
 
     var custom = new markerPathCustomization();
-    custom.menuRadius = 30;
+    custom.menuRadius = 40;
     custom.titleRadiusPercent = 0.63;
     custom.lineBaseRadiusPercent = 0;
     return custom;
