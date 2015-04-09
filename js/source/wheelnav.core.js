@@ -250,6 +250,7 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
     }
 
     for (i = 0; i < this.navItemCount; i++) {
+        this.navItems[i].setWheelSettings();
         this.navItems[i].createNavItem();
     }
 

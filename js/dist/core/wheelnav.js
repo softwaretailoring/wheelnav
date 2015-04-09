@@ -251,6 +251,7 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
     }
 
     for (i = 0; i < this.navItemCount; i++) {
+        this.navItems[i].setWheelSettings();
         this.navItems[i].createNavItem();
     }
 
@@ -1515,10 +1516,10 @@ wheelnav.prototype.styleWheel = function () {
             this.spreaderPathOutAttr = { fill: "#444", stroke: "#444", "stroke-width": 2, cursor: 'pointer' };
         }
         if (this.spreaderTitleInAttr === undefined || this.spreaderTitleInAttr === null) {
-            this.spreaderTitleInAttr = { fill: "#eee", cursor: 'pointer' };
+            this.spreaderTitleInAttr = { fill: "#eee", stroke: "#444", cursor: 'pointer' };
         }
         if (this.spreaderTitleOutAttr === undefined || this.spreaderTitleOutAttr === null) {
-            this.spreaderTitleOutAttr = { fill: "#eee", cursor: 'pointer' };
+            this.spreaderTitleOutAttr = { fill: "#eee", stroke: "#444", cursor: 'pointer' };
         }
         if (this.markerAttr === undefined || this.markerAttr === null) {
             this.markerAttr = { stroke: "#444", "stroke-width": 2 };
