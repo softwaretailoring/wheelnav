@@ -1,4 +1,13 @@
-## 1.5.0
+## 1.5.1
+
+* Fixed Firefox bug with raphael.canvas.clientWidth
+* Fixed animateFinishFunction calls
+* New wheelnav, navItem property: sliceClickablePathCustom
+* New spreaderPath: LineSpreader
+* Customizable DropMarker size
+* Expand menuRadius in MenuSlice and MenuMarker
+
+### 1.5.0
 
 * Support for html5 data- attributes
 * Implement marker
