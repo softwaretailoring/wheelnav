@@ -17,7 +17,7 @@ For more insight please visit [http://wheelnavjs.softwaretailoring.net][projectp
 
 ## Using
 
-### Via javascript
+### Via JavaScript
 
 HTML
 ```html
@@ -32,7 +32,7 @@ myWheelnav.colors = colorpalette.parrot;
 myWheelnav.createWheel([icon.smile, icon.star, icon.fork, icon.$]);
 ```
 
-### Via html5 data- attributes
+### Via data attributes
 
 HTML
 ```html
