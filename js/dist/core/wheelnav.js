@@ -251,7 +251,6 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
     }
 
     for (i = 0; i < this.navItemCount; i++) {
-        this.navItems[i].setWheelSettings();
         this.navItems[i].createNavItem();
     }
 
@@ -273,7 +272,7 @@ wheelnav.prototype.refreshWheel = function (withPathAndTransform) {
 
     for (i = 0; i < this.navItemCount; i++) {
         var navItem = this.navItems[i];
-        navItem.setWheelSettings();
+        navItem.setWheelSettings(withPathAndTransform);
         navItem.refreshNavItem(withPathAndTransform);
     }
 
@@ -677,24 +676,56 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     //Default settings
     this.fillAttr = "#CCC";
     this.titleFont = this.wheelnav.titleFont;
-    this.titleSpreadScale = false;
-    this.animateeffect = "bounce";
-    this.animatetime = 1500;
-    this.sliceAngle = 360 / wheelnav.navItemCount;
-
     this.navigateHref = null;
     this.navigateFunction = null;
 
-    //Navitem styles
-    this.styleNavItem();
+    //Wheelnav properties
+    this.animateeffect = null;
+    this.animatetime = null;
 
-    //Wheelnav settings
-    this.setWheelSettings();
+    this.sliceInitPathFunction = null;
+    this.sliceClickablePathFunction = null;
+    this.slicePathFunction = null;
+    this.sliceSelectedPathFunction = null;
+    this.sliceHoverPathFunction = null;
+
+    this.sliceTransformFunction = null;
+    this.sliceSelectedTransformFunction = null;
+    this.sliceHoverTransformFunction = null;
+    this.sliceInitTransformFunction = null;
+
+    this.slicePathCustom = null;
+    this.sliceClickablePathCustom = null;
+    this.sliceSelectedPathCustom = null;
+    this.sliceHoverPathCustom = null;
+    this.sliceInitPathCustom = null;
+
+    this.sliceTransformCustom = null;
+    this.sliceSelectedTransformCustom = null;
+    this.sliceHoverTransformCustom = null;
+    this.sliceInitTransformCustom = null;
+
+    this.initPercent = null;
+    this.minPercent = null;
+    this.maxPercent = null;
+    this.hoverPercent = null;
+    this.selectedPercent = null;
+    this.clickablePercentMin = null;
+    this.clickablePercentMax = null;
+
+    this.titleSpreadScale = null;
+    this.sliceAngle = null;
+
+    //Default navitem styles
+    this.styleNavItem();
 
     return this;
 };
 
 wheelnavItem.prototype.createNavItem = function () {
+
+    //Wheel settings
+    this.setWheelSettings(false);
 
     //Set href navigation
     if (this.navigateHref !== null) {
@@ -728,7 +759,9 @@ wheelnavItem.prototype.createNavItem = function () {
     //Set angles
     var prevItemIndex = this.wheelItemIndex - 1;
     var wheelSliceAngle = 360 / this.wheelnav.navItemCount;
-
+    if (this.sliceAngle === null) {
+        this.sliceAngle = 360 / this.wheelnav.navItemCount;
+    }
     if (this.wheelnav.clockwise) {
         if (this.wheelnav.navItemsContinuous) {
             if (this.itemIndex === 0) {
@@ -1138,7 +1171,7 @@ wheelnavItem.prototype.refreshNavItem = function (withPathAndTransform) {
     }
 };
 
-wheelnavItem.prototype.setWheelSettings = function () {
+wheelnavItem.prototype.setWheelSettings = function (force) {
 
     //Set slice from wheelnav
     if (this.wheelnav.slicePathAttr !== null) { this.slicePathAttr = JSON.parse(JSON.stringify(this.wheelnav.slicePathAttr)); }
@@ -1156,20 +1189,26 @@ wheelnavItem.prototype.setWheelSettings = function () {
     if (this.wheelnav.lineSelectedAttr !== null) { this.lineSelectedAttr = JSON.parse(JSON.stringify(this.wheelnav.lineSelectedAttr)); }
 
     //Set animation from wheelnav
-    if (this.wheelnav.animateeffect !== null) { this.animateeffect = this.wheelnav.animateeffect; }
-    if (this.wheelnav.animatetime !== null) { this.animatetime = this.wheelnav.animatetime; }
+    if (this.animateeffect === null || force) {
+        if (this.wheelnav.animateeffect !== null) { this.animateeffect = this.wheelnav.animateeffect; }
+        else { this.animateeffect = "bounce"; }
+    }
+    if (this.animatetime === null || force) {
+        if (this.wheelnav.animatetime !== null) { this.animatetime = this.wheelnav.animatetime; }
+        else { this.animatetime = 1500; }
+    }
 
     if (this.title !== null) {
-        this.sliceInitPathFunction = this.wheelnav.sliceInitPathFunction;
-        this.sliceClickablePathFunction = this.wheelnav.sliceClickablePathFunction;
-        this.slicePathFunction = this.wheelnav.slicePathFunction;
-        this.sliceSelectedPathFunction = this.wheelnav.sliceSelectedPathFunction;
-        this.sliceHoverPathFunction = this.wheelnav.sliceHoverPathFunction;
+        if (this.sliceInitPathFunction === null || force) { this.sliceInitPathFunction = this.wheelnav.sliceInitPathFunction; }
+        if (this.sliceClickablePathFunction === null || force) { this.sliceClickablePathFunction = this.wheelnav.sliceClickablePathFunction; }
+        if (this.slicePathFunction === null || force) { this.slicePathFunction = this.wheelnav.slicePathFunction; }
+        if (this.sliceSelectedPathFunction === null || force) { this.sliceSelectedPathFunction = this.wheelnav.sliceSelectedPathFunction; }
+        if (this.sliceHoverPathFunction === null || force) { this.sliceHoverPathFunction = this.wheelnav.sliceHoverPathFunction; }
             
-        this.sliceTransformFunction = this.wheelnav.sliceTransformFunction;
-        this.sliceSelectedTransformFunction = this.wheelnav.sliceSelectedTransformFunction;
-        this.sliceHoverTransformFunction = this.wheelnav.sliceHoverTransformFunction;
-        this.sliceInitTransformFunction = this.wheelnav.sliceInitTransformFunction;
+        if (this.sliceTransformFunction === null || force) { this.sliceTransformFunction = this.wheelnav.sliceTransformFunction; }
+        if (this.sliceSelectedTransformFunction === null || force) { this.sliceSelectedTransformFunction = this.wheelnav.sliceSelectedTransformFunction; }
+        if (this.sliceHoverTransformFunction === null || force) { this.sliceHoverTransformFunction = this.wheelnav.sliceHoverTransformFunction; }
+        if (this.sliceInitTransformFunction === null || force) { this.sliceInitTransformFunction = this.wheelnav.sliceInitTransformFunction; }
     }
     else {
         this.sliceInitPathFunction = slicePath().NullInitSlice;
@@ -1183,27 +1222,32 @@ wheelnavItem.prototype.setWheelSettings = function () {
         this.sliceInitTransformFunction = null;
     }
 
-    this.slicePathCustom = this.wheelnav.slicePathCustom;
-    this.sliceClickablePathCustom = this.wheelnav.sliceClickablePathCustom;
-    this.sliceSelectedPathCustom = this.wheelnav.sliceSelectedPathCustom;
-    this.sliceHoverPathCustom = this.wheelnav.sliceHoverPathCustom;
-    this.sliceInitPathCustom = this.wheelnav.sliceInitPathCustom;
+    if (this.slicePathCustom === null || force) { this.slicePathCustom = this.wheelnav.slicePathCustom; }
+    if (this.sliceClickablePathCustom === null || force) { this.sliceClickablePathCustom = this.wheelnav.sliceClickablePathCustom; }
+    if (this.sliceSelectedPathCustom === null || force) { this.sliceSelectedPathCustom = this.wheelnav.sliceSelectedPathCustom; }
+    if (this.sliceHoverPathCustom === null || force) { this.sliceHoverPathCustom = this.wheelnav.sliceHoverPathCustom; }
+    if (this.sliceInitPathCustom === null || force) { this.sliceInitPathCustom = this.wheelnav.sliceInitPathCustom; }
 
-    this.sliceTransformCustom = this.wheelnav.sliceTransformCustom;
-    this.sliceSelectedTransformCustom = this.wheelnav.sliceSelectedTransformCustom;
-    this.sliceHoverTransformCustom = this.wheelnav.sliceHoverTransformCustom;
-    this.sliceInitTransformCustom = this.wheelnav.sliceInitTransformCustom;
+    if (this.sliceTransformCustom === null || force) { this.sliceTransformCustom = this.wheelnav.sliceTransformCustom; }
+    if (this.sliceSelectedTransformCustom === null || force) { this.sliceSelectedTransformCustom = this.wheelnav.sliceSelectedTransformCustom; }
+    if (this.sliceHoverTransformCustom === null || force) { this.sliceHoverTransformCustom = this.wheelnav.sliceHoverTransformCustom; }
+    if (this.sliceInitTransformCustom === null || force) { this.sliceInitTransformCustom = this.wheelnav.sliceInitTransformCustom; }
 
-    this.initPercent = this.wheelnav.initPercent;
-    this.minPercent = this.wheelnav.minPercent;
-    this.maxPercent = this.wheelnav.maxPercent;
-    this.hoverPercent = this.wheelnav.hoverPercent;
-    this.selectedPercent = this.wheelnav.selectedPercent;
-    this.clickablePercentMin = this.wheelnav.clickablePercentMin;
-    this.clickablePercentMax = this.wheelnav.clickablePercentMax;
+    if (this.initPercent === null || force) { this.initPercent = this.wheelnav.initPercent; }
+    if (this.minPercent === null || force) { this.minPercent = this.wheelnav.minPercent; }
+    if (this.maxPercent === null || force) { this.maxPercent = this.wheelnav.maxPercent; }
+    if (this.hoverPercent === null || force) { this.hoverPercent = this.wheelnav.hoverPercent; }
+    if (this.selectedPercent === null || force) { this.selectedPercent = this.wheelnav.selectedPercent; }
+    if (this.clickablePercentMin === null || force) { this.clickablePercentMin = this.wheelnav.clickablePercentMin; }
+    if (this.clickablePercentMax === null || force) { this.clickablePercentMax = this.wheelnav.clickablePercentMax; }
 
-    if (this.wheelnav.titleSpreadScale !== null) { this.titleSpreadScale = this.wheelnav.titleSpreadScale; }
-    if (this.wheelnav.sliceAngle !== null) { this.sliceAngle = this.wheelnav.sliceAngle; }
+    if (this.titleSpreadScale === null || force) {
+        if (this.wheelnav.titleSpreadScale !== null) { this.titleSpreadScale = this.wheelnav.titleSpreadScale; }
+        else { this.titleSpreadScale = false; }
+    }
+    if (this.sliceAngle === null || force) {
+        if (this.wheelnav.sliceAngle !== null) { this.sliceAngle = this.wheelnav.sliceAngle; }
+    }
 };
 
 wheelnavItem.prototype.initPathsAndTransforms = function () {

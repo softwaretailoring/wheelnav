@@ -250,7 +250,6 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
     }
 
     for (i = 0; i < this.navItemCount; i++) {
-        this.navItems[i].setWheelSettings();
         this.navItems[i].createNavItem();
     }
 
@@ -272,7 +271,7 @@ wheelnav.prototype.refreshWheel = function (withPathAndTransform) {
 
     for (i = 0; i < this.navItemCount; i++) {
         var navItem = this.navItems[i];
-        navItem.setWheelSettings();
+        navItem.setWheelSettings(withPathAndTransform);
         navItem.refreshNavItem(withPathAndTransform);
     }
 
