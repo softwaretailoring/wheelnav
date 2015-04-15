@@ -277,7 +277,6 @@ wheelnavItem.prototype.createNavItem = function () {
         });
         this.navItem.mouseover(function () {
             if (thisNavItem.hovered !== true) {
-                thisNavItem.hovered = true;
                 thisNavItem.hoverEffect(thisItemIndex, true);
             }
         });
@@ -295,15 +294,12 @@ wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
     if (this.wheelnav.animateLocked === false) {
         if (isEnter) {
             if (hovered !== this.wheelnav.currentClick) {
-                this.navSlice.attr(this.sliceHoverAttr).toFront();
-                this.navLine.attr(this.lineHoverAttr).toFront();
-                this.navTitle.attr(this.titleHoverAttr).toFront();
-                if (this.navClickableSlice !== null) { this.navClickableSlice.attr(this.sliceClickableHoverAttr).toFront(); }
+                this.hovered = true;
             }
         }
-        else {
-            this.refreshNavItem();
-        }
+
+        this.refreshNavItem();
+
         if (this.hoverPercent !== 1 ||
             this.sliceHoverPathFunction !== null ||
             this.sliceHoverTransformFunction !== null ||
@@ -530,6 +526,12 @@ wheelnavItem.prototype.refreshNavItem = function (withPathAndTransform) {
             this.navLine.toBack();
             this.navSlice.toBack();
         }
+    }
+    else if (this.hovered) {
+        this.navSlice.attr(this.sliceHoverAttr).toFront();
+        this.navLine.attr(this.lineHoverAttr).toFront();
+        this.navTitle.attr(this.titleHoverAttr).toFront();
+        if (this.navClickableSlice !== null) { this.navClickableSlice.attr(this.sliceClickableHoverAttr).toFront(); }
     }
     else {
         this.navSlice.attr(this.slicePathAttr);
