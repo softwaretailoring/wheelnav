@@ -69,7 +69,9 @@ $ bower install wheelnav
 
 ## Author
 
-Gábor Berkesi: gabor.berkesi@softwaretailoring.net
+Developer: Gábor Berkesi (gabor.berkesi@softwaretailoring.net)
+
+Development environment: [Visual Studio Community 2013][vs2013] with [Web Essentials][webessentials]
 
 ## License
 
@@ -81,4 +83,5 @@ Licensed under [MIT][mit]. Enjoy the spinning.
 [raphaeljs]: http://raphaeljs.com/
 [npm]: https://www.npmjs.com/package/wheelnav
 [bower]: http://bower.io/search/?q=wheelnav
-
+[vs2013]: https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx
+[webessentials]: http://vswebessentials.com/
