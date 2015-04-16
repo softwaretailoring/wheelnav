@@ -1,7 +1,7 @@
 ## 1.5.1
 
 * Fixed Firefox bug with raphael.canvas.clientWidth
-* Fixed animateFinishFunction calls
+* Fixed animateFinishFunction calls and setWheelSettings function
 * New wheelnav, navItem property: sliceClickablePathCustom
 * New spreaderPath: LineSpreader
 * Customizable DropMarker size
