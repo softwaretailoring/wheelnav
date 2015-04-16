@@ -484,7 +484,8 @@ this.LineSlice = function (helper, percent, custom) {
     else {
         if (helper.startAngle === 180 ||
             helper.startAngle === 0 ||
-            helper.startAngle === -180) {
+            helper.startAngle === -180 ||
+            helper.startAngle === 360) {
             slicePathString = [helper.MoveToCenter(),
                  helper.LineTo(helper.startAngle, r),
                  helper.LineTo(helper.startAngle, r, helper.middleAngle, r),

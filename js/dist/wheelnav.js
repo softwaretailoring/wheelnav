@@ -2,7 +2,7 @@
 /* ======================================================================================= */
 /*                                   wheelnav.js - v1.5.1                                  */
 /* ======================================================================================= */
-/* This is a small javascript library for animated SVG based wheel navigation.             */
+/* This is a small JavaScript library for animated SVG based wheel navigation.             */
 /* Requires Raphaël JavaScript Vector Library (http://raphaeljs.com)                       */
 /* ======================================================================================= */
 /* Check http://wheelnavjs.softwaretailoring.net for samples.                              */
@@ -2284,7 +2284,8 @@ this.LineSlice = function (helper, percent, custom) {
     else {
         if (helper.startAngle === 180 ||
             helper.startAngle === 0 ||
-            helper.startAngle === -180) {
+            helper.startAngle === -180 ||
+            helper.startAngle === 360) {
             slicePathString = [helper.MoveToCenter(),
                  helper.LineTo(helper.startAngle, r),
                  helper.LineTo(helper.startAngle, r, helper.middleAngle, r),
