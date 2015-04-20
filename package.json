@@ -1,6 +1,6 @@
 {
     "name": "wheelnav",
-    "version": "1.5.1",
+    "version": "1.5.2",
     "description": "Animated javascript navigation component based on Raphaël.js (SVG/VML). It can be a pie menu (radial menu, circular menu) and many more.",
     "homepage": "http://wheelnavjs.softwaretailoring.net",
     "main": "js/dist/wheelnav.js",
@@ -20,13 +20,10 @@
         "js/dist/core/wheelnav.js",
         "js/dist/core/wheelnav.min.js",
         "js/dist/core/wheelnav.min.js.map",
-        "js/required/raphael.js",
-        "js/required/raphael.min.js",
-        "js/required/raphael.min.js.map",
-        "js/required/raphael.icons.js",
-        "js/required/raphael.icons.min.js",
-        "js/required/raphael.icons.min.js.map",
-        "js/required/raphael.license.txt",
+        "js/dist/raphael.min.js",
+        "js/dist/raphael.icons.min.js",
+        "js/dist/raphael.license.txt",
+        "js/dist/welcome.html",
         "LICENSE"
     ],    
     "keywords": [

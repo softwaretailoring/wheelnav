@@ -1,4 +1,8 @@
-## 1.5.1
+## 1.5.2
+
+* Add welcome.html
+
+### 1.5.1
 
 * Fixed Firefox bug with raphael.canvas.clientWidth
 * Fixed animateFinishFunction calls and setWheelSettings function
