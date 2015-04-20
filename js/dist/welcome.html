@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Welcome by wheelnav.js">
+    <meta name="author" content="gabor.berkesi@softwaretailoring.net">
+    <link rel="shortcut icon" href="http://wheelnavjs.softwaretailoring.net/wheelnav_favicon.png">
+
+    <title>wheelnav.js - Welcome</title>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script type="text/javascript" src="raphael.min.js"></script>
+    <script type="text/javascript" src="raphael.icons.min.js"></script>
+    <script type="text/javascript" src="wheelnav.min.js"></script>
+
+    <style>
+        body {
+            background-color: #E7E7E7;
+            font-family: Helvetica, Arial, sans-serif;
+        }
+
+        header {
+            font-size: x-large;
+            text-align: center;
+            background-color: #555;
+            color: #ddd;
+            padding: 5px;
+            font-family: Helvetica, sans-serif;
+            margin-bottom: 50px;
+        }
+
+            header a {
+                background-color: #ddd;
+                color: #555;
+                text-decoration: none;
+                padding: 0 3px 0 3px;
+            }
+
+                header a:hover {
+                    background-color: #555;
+                    color: #ddd;
+                    text-decoration: underline;
+                }
+
+        footer {
+            text-align: center;
+            background-color: #555;
+            color: #ddd;
+            padding: 5px;
+            margin-top: 50px;
+        }
+
+            footer a {
+                background-color: #ddd;
+                color: #555;
+                text-decoration: none;
+                padding: 0 3px 0 3px;
+            }
+
+                footer a:hover {
+                    background-color: #555;
+                    color: #ddd;
+                    text-decoration: underline;
+                }
+
+        #wheelDiv {
+            height: 400px;
+            width: 400px;
+            margin: auto;
+        }
+
+        @media (max-width: 400px) {
+            #wheelDiv {
+                height: 300px;
+                width: 300px;
+            }
+        }
+
+        /* Insert generated CSS code from here -> http://pmg.softwaretailoring.net */
+
+    </style>
+
+    <script type="text/javascript">
+
+        window.onload = function () {
+
+            var wheel = new wheelnav("wheelDiv");
+
+            //This is the place for code snippets from the documentation -> http://wheelnavjs.softwaretailoring.net/documentation.html
+
+            wheel.createWheel(["Thank you", "for", "download", icon.fave]);
+            wheel.navigateWheel(2);
+
+            //Insert generated JavaScript code from here -> http://pmg.softwaretailoring.net
+
+        };
+
+    </script>
+
+</head>
+<body>
+    <header>
+        <p>
+            Welcome by <a href="http://wheelnavjs.softwaretailoring.net" target="_blank">wheelnav.js</a>
+        </p>
+    </header>
+
+    <div id="wheelDiv"></div>
+
+    <!-- Insert generated HTML5 code from here -> http://pmg.softwaretailoring.net -->
+
+    <footer>
+        <p>&copy; 2015 <a href="http://softwaretailoring.net" target="_blank">softwaretailoring.net</a></p>
+    </footer>
+</body>
+</html>
