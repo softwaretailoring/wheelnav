@@ -1,6 +1,8 @@
 wheelnav.js
 ===========
 
+[![Join the chat at https://gitter.im/softwaretailoring/wheelnav](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/softwaretailoring/wheelnav?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Animated wheel navigation javascript library based on [Raphaël.js][raphaeljs] (SVG/VML).
 
 It works on all major desktop and mobile browser.
