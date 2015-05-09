@@ -1,5 +1,5 @@
 ﻿/* ======================================================================================= */
-/*                                   wheelnav.js - v1.5.3                                  */
+/*                                   wheelnav.js - v1.5.4                                  */
 /* ======================================================================================= */
 /* This is a small JavaScript library for animated SVG based wheel navigation.             */
 /* Requires Raphaël JavaScript Vector Library (http://raphaeljs.com)                       */
@@ -354,6 +354,7 @@ wheelnav.prototype.navigateWheel = function (clicked) {
     this.currentClick = clicked;
 
     if (this.clickModeSpreadOff) {
+        this.currentPercent = this.maxPercent;
         this.spreadWheel();
     }
     else {
