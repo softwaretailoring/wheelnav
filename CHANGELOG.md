@@ -1,4 +1,8 @@
-## 1.5.3
+## 1.5.4
+
+* Fixed clickModeSpreadOff bug
+
+### 1.5.3
 
 * Add responsive behaviour
 
