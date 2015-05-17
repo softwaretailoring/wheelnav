@@ -1,6 +1,6 @@
 ﻿///#source 1 1 /js/source/wheelnav.core.js
 /* ======================================================================================= */
-/*                                   wheelnav.js - v1.5.4                                  */
+/*                                   wheelnav.js - v1.5.5                                  */
 /* ======================================================================================= */
 /* This is a small JavaScript library for animated SVG based wheel navigation.             */
 /* Requires Raphaël JavaScript Vector Library (http://raphaeljs.com)                       */
@@ -241,11 +241,13 @@ wheelnav.prototype.initWheel = function (titles) {
 
 wheelnav.prototype.createWheel = function (titles, withSpread) {
 
-    if (withSpread) {
-        this.currentPercent = this.minPercent;
-    }
-    else {
-        this.currentPercent = this.maxPercent;
+    if (this.currentPercent === null) {
+        if (withSpread) {
+            this.currentPercent = this.minPercent;
+        }
+        else {
+            this.currentPercent = this.maxPercent;
+        }
     }
 
     if (this.navItems.length === 0) {
@@ -853,6 +855,9 @@ wheelnavItem.prototype.createNavItem = function () {
     this.navTitleCurrentTransformString = "";
     if (this.wheelnav.initTitleRotate) { this.navTitleCurrentTransformString += this.getTitleRotateString(); }
     if (this.initTransform.titleTransformString !== "") { this.navTitleCurrentTransformString += this.initTransform.titleTransformString; }
+    if (this.wheelnav.currentPercent < 0.05) {
+        this.navTitleCurrentTransformString += ",s0.05";
+    }
 
     this.navSlice.attr({ transform: this.navSliceCurrentTransformString });
     this.navLine.attr({ transform: this.navLineCurrentTransformString });

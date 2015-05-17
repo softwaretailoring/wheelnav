@@ -229,6 +229,9 @@ wheelnavItem.prototype.createNavItem = function () {
     this.navTitleCurrentTransformString = "";
     if (this.wheelnav.initTitleRotate) { this.navTitleCurrentTransformString += this.getTitleRotateString(); }
     if (this.initTransform.titleTransformString !== "") { this.navTitleCurrentTransformString += this.initTransform.titleTransformString; }
+    if (this.wheelnav.currentPercent < 0.05) {
+        this.navTitleCurrentTransformString += ",s0.05";
+    }
 
     this.navSlice.attr({ transform: this.navSliceCurrentTransformString });
     this.navLine.attr({ transform: this.navLineCurrentTransformString });
