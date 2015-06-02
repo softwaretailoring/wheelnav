@@ -856,9 +856,7 @@ wheelnavItem.prototype.getTitleRotateString = function () {
 
     if (this.wheelnav.titleRotateAngle !== null) {
         titleRotate += this.getItemRotateString();
-        titleRotate += ",r," + this.itemIndex * (360 / this.wheelnav.navItemCount);
-        titleRotate += ",r," + this.wheelnav.titleRotateAngle;
-        titleRotate += ",r," + this.wheelnav.navAngle;
+        titleRotate += ",r," + (this.navAngle + this.wheelnav.titleRotateAngle).toString();
     }
     else {
         titleRotate += this.getItemRotateString();
