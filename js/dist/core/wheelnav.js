@@ -1514,8 +1514,10 @@ wheelnavTitle = function (title, raphael) {
 
     this.isPathTitle = function (title) {
         if (title !== null &&
-            title.substr(0, 1) === "M" &&
-            title.substr(title.length - 1, 1) === "z") {
+            (title.substr(0, 1) === "m" ||
+            title.substr(0, 1) === "M") &&
+            (title.substr(title.length - 1, 1) === "z" ||
+            title.substr(title.length - 1, 1) === "Z")) {
             return true;
         }
         else {
