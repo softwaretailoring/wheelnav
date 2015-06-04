@@ -1,4 +1,10 @@
-## 1.5.4
+## 1.5.5
+
+* Fixed getTitleRotateString for partial wheel
+* Fixed isPathTitle, now supports lowercase and uppercase letters
+* wheelnav.currentPercent is available from outside
+
+### 1.5.4
 
 * Fixed clickModeSpreadOff bug
 
