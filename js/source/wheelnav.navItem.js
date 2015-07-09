@@ -17,12 +17,7 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     }
 
     this.enabled = wheelnav.navItemsEnabled;
-    if (itemIndex === 0) {
-        this.selected = true;
-    }
-    else {
-        this.selected = false;
-    }
+    this.selected = false;
     this.hovered = false;
 
     //Private properties
@@ -296,7 +291,7 @@ wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
 
     if (this.wheelnav.animateLocked === false) {
         if (isEnter) {
-            if (hovered !== this.wheelnav.currentClick) {
+            if (!this.selected) {
                 this.hovered = true;
             }
         }

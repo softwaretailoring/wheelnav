@@ -7,6 +7,7 @@
 
 var colorpalette = {
     defaultpalette: new Array("#2ECC40", "#FFDC00", "#FF851B", "#FF4136", "#0074D9", "#777"),
+    //defaultpalette: new Array("#258039", "#f5be41", "#f77604", "#cf3721", "#0074D9", "#777"),
     purple: new Array("#4F346B", "#623491", "#9657D6", "#AD74E7", "#CBA3F3"),
     greenred: new Array("#17B92A", "#FF3D00", "#17B92A", "#FF3D00"),
     greensilver: new Array("#1F700A", "#79CC3C", "#D4E178", "#E6D5C3", "#AC875D"),

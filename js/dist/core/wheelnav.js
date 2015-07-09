@@ -1,6 +1,6 @@
 ﻿///#source 1 1 /js/source/wheelnav.core.js
 /* ======================================================================================= */
-/*                                   wheelnav.js - v1.5.5                                  */
+/*                                   wheelnav.js - v1.5.6                                  */
 /* ======================================================================================= */
 /* This is a small JavaScript library for animated SVG based wheel navigation.             */
 /* Requires Raphaël JavaScript Vector Library (http://raphaeljs.com)                       */
@@ -254,6 +254,10 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
         this.initWheel(titles);
     }
 
+    if (this.selectedNavItemIndex !== null) {
+        this.navItems[this.selectedNavItemIndex].selected = true;
+    }
+
     for (i = 0; i < this.navItemCount; i++) {
         this.navItems[i].createNavItem();
     }
@@ -262,7 +266,6 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
 
     this.marker = new marker(this);
 
-    this.navItems[0].selected = true;
     this.refreshWheel();
 
     if (withSpread !== undefined) {
@@ -643,12 +646,7 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     }
 
     this.enabled = wheelnav.navItemsEnabled;
-    if (itemIndex === 0) {
-        this.selected = true;
-    }
-    else {
-        this.selected = false;
-    }
+    this.selected = false;
     this.hovered = false;
 
     //Private properties
@@ -922,7 +920,7 @@ wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
 
     if (this.wheelnav.animateLocked === false) {
         if (isEnter) {
-            if (hovered !== this.wheelnav.currentClick) {
+            if (!this.selected) {
                 this.hovered = true;
             }
         }
@@ -2827,6 +2825,7 @@ this.DropMarker = function (helper, percent, custom) {
 
 var colorpalette = {
     defaultpalette: new Array("#2ECC40", "#FFDC00", "#FF851B", "#FF4136", "#0074D9", "#777"),
+    //defaultpalette: new Array("#258039", "#f5be41", "#f77604", "#cf3721", "#0074D9", "#777"),
     purple: new Array("#4F346B", "#623491", "#9657D6", "#AD74E7", "#CBA3F3"),
     greenred: new Array("#17B92A", "#FF3D00", "#17B92A", "#FF3D00"),
     greensilver: new Array("#1F700A", "#79CC3C", "#D4E178", "#E6D5C3", "#AC875D"),

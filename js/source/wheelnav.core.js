@@ -1,5 +1,5 @@
 ﻿/* ======================================================================================= */
-/*                                   wheelnav.js - v1.5.5                                  */
+/*                                   wheelnav.js - v1.5.6                                  */
 /* ======================================================================================= */
 /* This is a small JavaScript library for animated SVG based wheel navigation.             */
 /* Requires Raphaël JavaScript Vector Library (http://raphaeljs.com)                       */
@@ -97,6 +97,7 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     this.currentPercent = null;
     this.cssMode = false;
     this.selectedToFront = true;
+    this.selectedNavItemIndex = 0;
 
     this.navItemCount = 0;
     this.navItemCountLabeled = false;
@@ -141,7 +142,6 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
 
     //Private properties
     this.currentClick = 0;
-    this.selectedNavItemIndex = 0;
     this.animateLocked = false;
 
     //NavItem default settings. These are configurable between initWheel() and createWheel().
@@ -253,6 +253,10 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
         this.initWheel(titles);
     }
 
+    if (this.selectedNavItemIndex !== null) {
+        this.navItems[this.selectedNavItemIndex].selected = true;
+    }
+
     for (i = 0; i < this.navItemCount; i++) {
         this.navItems[i].createNavItem();
     }
@@ -261,7 +265,6 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
 
     this.marker = new marker(this);
 
-    this.navItems[0].selected = true;
     this.refreshWheel();
 
     if (withSpread !== undefined) {
