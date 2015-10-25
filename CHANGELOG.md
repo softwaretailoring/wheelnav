@@ -1,4 +1,10 @@
-## 1.5.5
+## 1.6.0
+
+* New navTitle type: image, when navTitle start with 'imgsrc:' it can parse as URL of image or data URI 
+* selectedNavItemIndex property is public now for set first selected item
+* modify defaultpalette
+
+### 1.5.5
 
 * Fixed getTitleRotateString for partial wheel
 * Fixed isPathTitle, now supports lowercase and uppercase letters
