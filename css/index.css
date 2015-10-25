@@ -144,6 +144,10 @@ footer {
     stroke-width: 3px;
 }
 
+[class|=wheelnav-radialWheel-title] {
+    cursor: pointer;
+}
+
 #wheelnav-radialWheel-title-5 > tspan {
     font-family: 'Bookman Old Style', Bookman, 'URW Bookman L', 'Palatino Linotype', serif;
 }

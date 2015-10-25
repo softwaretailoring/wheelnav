@@ -87,8 +87,10 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
 
                 var wheelnavNavitemtext = holderDiv.children[i].getAttribute("data-wheelnav-navitemtext");
                 var wheelnavNavitemicon = holderDiv.children[i].getAttribute("data-wheelnav-navitemicon");
+                var wheelnavNavitemimg = holderDiv.children[i].getAttribute("data-wheelnav-navitemimg");
                 if (wheelnavNavitemtext !== null ||
-                    wheelnavNavitemicon !== null) {
+                    wheelnavNavitemicon !== null ||
+                    wheelnavNavitemimg !== null) {
                     //data-wheelnav-navitemtext
                     if (wheelnavNavitemtext !== null) {
                         parsedNavItems.push(wheelnavNavitemtext);
@@ -102,8 +104,11 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
                             parsedNavItems.push(wheelnavNavitemicon);
                         }
                     }
+                    else if (wheelnavNavitemimg !== null) {
+                        parsedNavItems.push("imgsrc:" + wheelnavNavitemimg);
+                    }
                     else {
-                        //data-wheelnav-navitemtext or data-wheelnav-navitemicon is required
+                        //data-wheelnav-navitemtext or data-wheelnav-navitemicon or data-wheelnav-navitemimg is required
                         continue;
                     }
 

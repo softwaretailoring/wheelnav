@@ -1,6 +1,6 @@
 ﻿///#source 1 1 /js/source/wheelnav.core.js
 /* ======================================================================================= */
-/*                                   wheelnav.js - v1.5.6                                  */
+/*                                   wheelnav.js - v1.6.0                                  */
 /* ======================================================================================= */
 /* This is a small JavaScript library for animated SVG based wheel navigation.             */
 /* Requires Raphaël JavaScript Vector Library (http://raphaeljs.com)                       */
@@ -98,6 +98,7 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     this.currentPercent = null;
     this.cssMode = false;
     this.selectedToFront = true;
+    this.selectedNavItemIndex = 0;
 
     this.navItemCount = 0;
     this.navItemCountLabeled = false;
@@ -142,7 +143,6 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
 
     //Private properties
     this.currentClick = 0;
-    this.selectedNavItemIndex = 0;
     this.animateLocked = false;
 
     //NavItem default settings. These are configurable between initWheel() and createWheel().
@@ -557,8 +557,10 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
 
                 var wheelnavNavitemtext = holderDiv.children[i].getAttribute("data-wheelnav-navitemtext");
                 var wheelnavNavitemicon = holderDiv.children[i].getAttribute("data-wheelnav-navitemicon");
+                var wheelnavNavitemimg = holderDiv.children[i].getAttribute("data-wheelnav-navitemimg");
                 if (wheelnavNavitemtext !== null ||
-                    wheelnavNavitemicon !== null) {
+                    wheelnavNavitemicon !== null ||
+                    wheelnavNavitemimg !== null) {
                     //data-wheelnav-navitemtext
                     if (wheelnavNavitemtext !== null) {
                         parsedNavItems.push(wheelnavNavitemtext);
@@ -572,8 +574,11 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
                             parsedNavItems.push(wheelnavNavitemicon);
                         }
                     }
+                    else if (wheelnavNavitemimg !== null) {
+                        parsedNavItems.push("imgsrc:" + wheelnavNavitemimg);
+                    }
                     else {
-                        //data-wheelnav-navitemtext or data-wheelnav-navitemicon is required
+                        //data-wheelnav-navitemtext or data-wheelnav-navitemicon or data-wheelnav-navitemimg is required
                         continue;
                     }
 
@@ -681,6 +686,9 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     this.titleFont = this.wheelnav.titleFont;
     this.navigateHref = null;
     this.navigateFunction = null;
+    //When navTitle start with 'imgsrc:' it can parse as URL of image or data URI. The titleWidth and titleHeight properties are available for images. Use after initWheel(), before createWheel()
+    this.titleWidth = 50;
+    this.titleHeight = 50;
 
     //Wheelnav properties
     this.animateeffect = null;
@@ -836,7 +844,12 @@ wheelnavItem.prototype.createNavItem = function () {
     }
     //Title defined by text
     else {
-        this.navTitle = this.wheelnav.raphael.text(sliceInitPath.titlePosX, sliceInitPath.titlePosY, currentTitle.title);
+        if (currentTitle.title.substr(0, 7) === "imgsrc:") {
+            this.navTitle = this.wheelnav.raphael.image(currentTitle.title.substr(7, currentTitle.title.length), sliceInitPath.titlePosX - (this.titleWidth / 2), sliceInitPath.titlePosY - (this.titleHeight / 2), this.titleWidth, this.titleHeight);
+        }
+        else {
+            this.navTitle = this.wheelnav.raphael.text(sliceInitPath.titlePosX, sliceInitPath.titlePosY, currentTitle.title);
+        }
     }
 
     this.navTitle.attr(this.titleAttr);
@@ -1382,13 +1395,13 @@ wheelnavItem.prototype.initPathsAndTransforms = function () {
         selectedNavTitleMax = new wheelnavTitle(this.titleSelected);
     }
 
-    this.initNavTitle = initNavTitle.getTitlePercentAttr(this.sliceInitPath.titlePosX, this.sliceInitPath.titlePosY);
-    this.basicNavTitleMin = basicNavTitleMin.getTitlePercentAttr(this.slicePathMin.titlePosX, this.slicePathMin.titlePosY);
-    this.basicNavTitleMax = basicNavTitleMax.getTitlePercentAttr(this.slicePathMax.titlePosX, this.slicePathMax.titlePosY);
-    this.hoverNavTitleMin = hoverNavTitleMin.getTitlePercentAttr(this.hoverSlicePathMin.titlePosX, this.hoverSlicePathMin.titlePosY);
-    this.hoverNavTitleMax = hoverNavTitleMax.getTitlePercentAttr(this.hoverSlicePathMax.titlePosX, this.hoverSlicePathMax.titlePosY);
-    this.selectedNavTitleMin = selectedNavTitleMin.getTitlePercentAttr(this.selectedSlicePathMin.titlePosX, this.selectedSlicePathMin.titlePosY);
-    this.selectedNavTitleMax = selectedNavTitleMax.getTitlePercentAttr(this.selectedSlicePathMax.titlePosX, this.selectedSlicePathMax.titlePosY);
+    this.initNavTitle = initNavTitle.getTitlePercentAttr(this.sliceInitPath.titlePosX, this.sliceInitPath.titlePosY, this.titleWidth, this.titleHeight);
+    this.basicNavTitleMin = basicNavTitleMin.getTitlePercentAttr(this.slicePathMin.titlePosX, this.slicePathMin.titlePosY, this.titleWidth, this.titleHeight);
+    this.basicNavTitleMax = basicNavTitleMax.getTitlePercentAttr(this.slicePathMax.titlePosX, this.slicePathMax.titlePosY, this.titleWidth, this.titleHeight);
+    this.hoverNavTitleMin = hoverNavTitleMin.getTitlePercentAttr(this.hoverSlicePathMin.titlePosX, this.hoverSlicePathMin.titlePosY, this.titleWidth, this.titleHeight);
+    this.hoverNavTitleMax = hoverNavTitleMax.getTitlePercentAttr(this.hoverSlicePathMax.titlePosX, this.hoverSlicePathMax.titlePosY, this.titleWidth, this.titleHeight);
+    this.selectedNavTitleMin = selectedNavTitleMin.getTitlePercentAttr(this.selectedSlicePathMin.titlePosX, this.selectedSlicePathMin.titlePosY, this.titleWidth, this.titleHeight);
+    this.selectedNavTitleMax = selectedNavTitleMax.getTitlePercentAttr(this.selectedSlicePathMax.titlePosX, this.selectedSlicePathMax.titlePosY, this.titleWidth, this.titleHeight);
 };
 
 wheelnavItem.prototype.getCurrentPath = function () {
@@ -1513,7 +1526,8 @@ wheelnavTitle = function (title, raphael) {
             (title.substr(0, 1) === "m" ||
             title.substr(0, 1) === "M") &&
             (title.substr(title.length - 1, 1) === "z" ||
-            title.substr(title.length - 1, 1) === "Z")) {
+            title.substr(title.length - 1, 1) === "Z") &&
+            title.indexOf(",") > -1) {
             return true;
         }
         else {
@@ -1524,7 +1538,7 @@ wheelnavTitle = function (title, raphael) {
     return this;
 };
 
-wheelnavTitle.prototype.getTitlePercentAttr = function (currentX, currentY) {
+wheelnavTitle.prototype.getTitlePercentAttr = function (currentX, currentY, titlewidth, titleheight) {
 
     var transformAttr = {};
 
@@ -1540,11 +1554,22 @@ wheelnavTitle.prototype.getTitlePercentAttr = function (currentX, currentY) {
         };
     }
     else {
-        transformAttr = {
-            x: currentX,
-            y: currentY,
-            title: this.title
-        };
+        if (this.title.substr(0, 7) === "imgsrc:") {
+            transformAttr = {
+                x: currentX - (titlewidth / 2),
+                y: currentY - (titleheight / 2),
+                width: titlewidth,
+                height: titleheight,
+                title: this.title
+            };
+        }
+        else {
+            transformAttr = {
+                x: currentX,
+                y: currentY,
+                title: this.title
+            };
+        }
     }
 
     return transformAttr;
@@ -2824,8 +2849,7 @@ this.DropMarker = function (helper, percent, custom) {
 /* ======================================================================================== */
 
 var colorpalette = {
-    defaultpalette: new Array("#2ECC40", "#FFDC00", "#FF851B", "#FF4136", "#0074D9", "#777"),
-    //defaultpalette: new Array("#258039", "#f5be41", "#f77604", "#cf3721", "#0074D9", "#777"),
+    defaultpalette: new Array("#2D9E46", "#F5BE41", "#F77604", "#D63C22", "#006BA6", "#92ADAF"),
     purple: new Array("#4F346B", "#623491", "#9657D6", "#AD74E7", "#CBA3F3"),
     greenred: new Array("#17B92A", "#FF3D00", "#17B92A", "#FF3D00"),
     greensilver: new Array("#1F700A", "#79CC3C", "#D4E178", "#E6D5C3", "#AC875D"),

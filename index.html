@@ -41,8 +41,11 @@
                 radialWheel.cssMode = true;
                 radialWheel.markerEnable = true;
                 radialWheel.markerPathFunction = markerPath().MenuMarker;
-                radialWheel.createWheel([icon.merge, icon.filter, icon.charging, icon.biohazard, icon.book, "6"]);
-                radialWheel.setTooltips(["merge", "filter", "charging", "biohazard", "book", "six"]);
+                radialWheel.initWheel([icon.merge, icon.filter, icon.charging, "imgsrc:http://softwaretailoring.net/images/gabor.berkesi.jpg", icon.book, "6"]);
+                radialWheel.navItems[3].titleWidth = 33;
+                radialWheel.navItems[3].titleHeight = 48;
+                radialWheel.createWheel();
+                radialWheel.setTooltips(["merge", "filter", "charging", "author", "book", "six"]);
 
                 var cogWheel = new wheelnav("cogWheel");
                 cogWheel.slicePathFunction = slicePath().CogBasePieSlice;
