@@ -52,9 +52,13 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     this.titleFont = this.wheelnav.titleFont;
     this.navigateHref = null;
     this.navigateFunction = null;
-    //When navTitle start with 'imgsrc:' it can parse as URL of image or data URI. The titleWidth and titleHeight properties are available for images. Use after initWheel(), before createWheel()
+    //When navTitle start with 'imgsrc:' it can parse as URL of image or data URI. These properties are available for images and paths. Use after initWheel(), before createWheel()
     this.titleWidth = null;
     this.titleHeight = null;
+    this.titleHoverWidth = null;
+    this.titleHoverHeight = null;
+    this.titleSelectedWidth = null;
+    this.titleSelectedHeight = null;
 
     //Wheelnav properties
     this.animateeffect = null;
@@ -210,12 +214,8 @@ wheelnavItem.prototype.createNavItem = function () {
     }
     //Title defined by text
     else {
-        if (currentTitle.title.substr(0, 7) === "imgsrc:") {
-            var imgwidth = 32;
-            var imgheight = 32;
-            if (this.titleWidth !== null) { imgwidth = this.titleWidth; }
-            if (this.titleHeight !== null) { imgheight = this.titleHeight; }
-            this.navTitle = this.wheelnav.raphael.image(currentTitle.title.substr(7, currentTitle.title.length), sliceInitPath.titlePosX - (imgwidth / 2), sliceInitPath.titlePosY - (imgheight / 2), imgwidth, imgheight);
+        if (wheelnavTitle().isImageTitle(this.title)) {
+            this.navTitle = this.wheelnav.raphael.image(currentTitle.title.substr(7, currentTitle.title.length), sliceInitPath.titlePosX - (this.titleWidth / 2), sliceInitPath.titlePosY - (this.titleHeight / 2), this.titleWidth, this.titleHeight);
         }
         else {
             this.navTitle = this.wheelnav.raphael.text(sliceInitPath.titlePosX, sliceInitPath.titlePosY, currentTitle.title);
@@ -239,8 +239,8 @@ wheelnavItem.prototype.createNavItem = function () {
     if (this.wheelnav.currentPercent < 0.05) {
         this.navTitleCurrentTransformString += ",s0.05";
     }
-    if (this.navTitleWidthTransform !== undefined) {
-        this.navTitleCurrentTransformString += ",s" + this.navTitleWidthTransform + "," + this.navTitleHeightTransform;
+    if (this.navTitleSizeTransform !== undefined) {
+        this.navTitleCurrentTransformString += this.navTitleSizeTransform;
     }
 
     this.navSlice.attr({ transform: this.navSliceCurrentTransformString });
@@ -316,7 +316,9 @@ wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
         if (this.hoverPercent !== 1 ||
             this.sliceHoverPathFunction !== null ||
             this.sliceHoverTransformFunction !== null ||
-            this.titleHover !== this.title) {
+            this.titleHover !== this.title ||
+            this.titleHoverWidth !== this.titleWidth ||
+            this.titleHoverHeight !== this.titleHeight) {
             this.setCurrentTransform(false, false);
         }
 
@@ -366,11 +368,10 @@ wheelnavItem.prototype.setCurrentTransform = function (locked, withFinishFunctio
         this.navTitleCurrentTransformString = "";
         this.navTitleCurrentTransformString += this.getTitleRotateString();
 
-        if (this.navTitleWidthTransform !== undefined) {
-            this.navTitleCurrentTransformString += ",s" + this.navTitleWidthTransform + "," + this.navTitleHeightTransform;
-        }
-
         if (this.selected) {
+            if (this.navTitleSizeSelectedTransform !== undefined) {
+                this.navTitleCurrentTransformString += this.navTitleSizeSelectedTransform;
+            }
             if (this.selectTransform.titleTransformString === "" ||
                 this.selectTransform.titleTransformString === undefined) {
                 this.navTitleCurrentTransformString += ",s1";
@@ -383,6 +384,9 @@ wheelnavItem.prototype.setCurrentTransform = function (locked, withFinishFunctio
             }
         }
         else if (this.hovered) {
+            if (this.navTitleSizeHoverTransform !== undefined) {
+                this.navTitleCurrentTransformString += this.navTitleSizeHoverTransform;
+            }
             if (this.hoverTransform.titleTransformString === "" ||
                 this.hoverTransform.titleTransformString === undefined) {
                 this.navTitleCurrentTransformString += ",s1";
@@ -398,6 +402,9 @@ wheelnavItem.prototype.setCurrentTransform = function (locked, withFinishFunctio
             this.navTitleCurrentTransformString += ",s" + this.wheelnav.currentPercent;
         }
         else {
+            if (this.navTitleSizeTransform !== undefined) {
+                this.navTitleCurrentTransformString += this.navTitleSizeTransform;
+            }
             if (this.sliceTransform.titleTransformString === "" ||
                 this.sliceTransform.titleTransformString === undefined) {
                 this.navTitleCurrentTransformString += ",s1";
@@ -446,14 +453,27 @@ wheelnavItem.prototype.setCurrentTransform = function (locked, withFinishFunctio
             };
         }
         else {
-            titleTransformAttr = {
-                x: currentTitle.x,
-                y: currentTitle.y,
-                transform: this.navTitleCurrentTransformString
-            };
+            if (wheelnavTitle().isImageTitle(currentTitle.title)) {
+                titleTransformAttr = {
+                    x: currentTitle.x,
+                    y: currentTitle.y,
+                    width: currentTitle.width,
+                    height: currentTitle.height,
+                    transform: this.navTitleCurrentTransformString
+                };
 
-            if (currentTitle.title !== null) {
-                this.navTitle.attr({ text: currentTitle.title });
+                this.navTitle.attr({ src: currentTitle.title.substr(7, currentTitle.title.length) });
+            }
+            else {
+                titleTransformAttr = {
+                    x: currentTitle.x,
+                    y: currentTitle.y,
+                    transform: this.navTitleCurrentTransformString
+                };
+
+                if (currentTitle.title !== null) {
+                    this.navTitle.attr({ text: currentTitle.title });
+                }
             }
         }
 
@@ -582,10 +602,31 @@ wheelnavItem.prototype.setWheelSettings = function (force) {
     if (this.wheelnav.titleAttr !== null) { this.titleAttr = JSON.parse(JSON.stringify(this.wheelnav.titleAttr)); }
     if (this.wheelnav.titleHoverAttr !== null) { this.titleHoverAttr = JSON.parse(JSON.stringify(this.wheelnav.titleHoverAttr)); }
     if (this.wheelnav.titleSelectedAttr !== null) { this.titleSelectedAttr = JSON.parse(JSON.stringify(this.wheelnav.titleSelectedAttr)); }
+    // Size
+    if (wheelnavTitle().isImageTitle(this.title)) {
+        // Image default value
+        if (this.titleWidth === null && this.wheelnav.titleWidth === null) { this.titleWidth = 32; }
+        if (this.titleHeight === null && this.wheelnav.titleHeight === null) { this.titleHeight = 32; }
+    }
     if (this.wheelnav.titleWidth !== null && this.titleWidth === null) { this.titleWidth = this.wheelnav.titleWidth; }
     if (this.wheelnav.titleHeight !== null && this.titleHeight === null) { this.titleHeight = this.wheelnav.titleHeight; }
     if (this.titleWidth !== null && this.titleHeight === null) { this.titleHeight = this.titleWidth; }
     if (this.titleWidth === null && this.titleHeight !== null) { this.titleWidth = this.titleHeight; }
+
+    if (this.wheelnav.titleHoverWidth !== null && this.titleHoverWidth === null) { this.titleHoverWidth = this.wheelnav.titleHoverWidth; }
+    if (this.wheelnav.titleHoverHeight !== null && this.titleHoverHeight === null) { this.titleHoverHeight = this.wheelnav.titleHoverHeight; }
+    if (this.titleHoverWidth !== null && this.titleHoverHeight === null) { this.titleHoverHeight = this.titleHoverWidth; }
+    if (this.titleHoverWidth === null && this.titleHoverHeight !== null) { this.titleHoverWidth = this.titleHoverHeight; }
+
+    if (this.wheelnav.titleSelectedWidth !== null && this.titleSelectedWidth === null) { this.titleSelectedWidth = this.wheelnav.titleSelectedWidth; }
+    if (this.wheelnav.titleSelectedHeight !== null && this.titleSelectedHeight === null) { this.titleSelectedHeight = this.wheelnav.titleSelectedHeight; }
+    if (this.titleSelectedWidth !== null && this.titleSelectedHeight === null) { this.titleSelectedHeight = this.titleSelectedWidth; }
+    if (this.titleSelectedWidth === null && this.titleSelectedHeight !== null) { this.titleSelectedWidth = this.titleSelectedHeight; }
+
+    if (this.titleHoverHeight === null) { this.titleHoverHeight = this.titleHeight; }
+    if (this.titleHoverWidth === null) { this.titleHoverWidth = this.titleWidth; }
+    if (this.titleSelectedHeight === null) { this.titleSelectedHeight = this.titleHeight; }
+    if (this.titleSelectedWidth === null) { this.titleSelectedWidth = this.titleWidth; }
 
     //Set line from wheelnav
     if (this.wheelnav.linePathAttr !== null) { this.linePathAttr = JSON.parse(JSON.stringify(this.wheelnav.linePathAttr)); }
@@ -767,17 +808,9 @@ wheelnavItem.prototype.initPathsAndTransforms = function () {
         hoverNavTitleMax = new wheelnavTitle(this.titleHover, this.wheelnav.raphael.raphael);
         selectedNavTitleMin = new wheelnavTitle(this.titleSelected, this.wheelnav.raphael.raphael);
         selectedNavTitleMax = new wheelnavTitle(this.titleSelected, this.wheelnav.raphael.raphael);
-        //Calculate path width & height
-        if (this.titleWidth !== null && this.titleHeight !== null) {
-            if (basicNavTitleMin.height > basicNavTitleMin.width) {
-                this.navTitleWidthTransform = (this.titleWidth / basicNavTitleMin.height).toString();
-                this.navTitleHeightTransform = (this.titleHeight / basicNavTitleMin.height).toString();
-            }
-            else {
-                this.navTitleWidthTransform = (this.titleWidth / basicNavTitleMin.width).toString();
-                this.navTitleHeightTransform = (this.titleHeight / basicNavTitleMin.width).toString();
-            }
-        }
+        this.navTitleSizeTransform = basicNavTitleMax.getTitleSizeTransform(this.titleWidth, this.titleHeight);
+        this.navTitleSizeHoverTransform = hoverNavTitleMax.getTitleSizeTransform(this.titleHoverWidth, this.titleHoverHeight);
+        this.navTitleSizeSelectedTransform = selectedNavTitleMax.getTitleSizeTransform(this.titleSelectedWidth, this.titleSelectedHeight);
     }
     else {
         initNavTitle = new wheelnavTitle(this.title);
@@ -792,10 +825,10 @@ wheelnavItem.prototype.initPathsAndTransforms = function () {
     this.initNavTitle = initNavTitle.getTitlePercentAttr(this.sliceInitPath.titlePosX, this.sliceInitPath.titlePosY, this.titleWidth, this.titleHeight);
     this.basicNavTitleMin = basicNavTitleMin.getTitlePercentAttr(this.slicePathMin.titlePosX, this.slicePathMin.titlePosY, this.titleWidth, this.titleHeight);
     this.basicNavTitleMax = basicNavTitleMax.getTitlePercentAttr(this.slicePathMax.titlePosX, this.slicePathMax.titlePosY, this.titleWidth, this.titleHeight);
-    this.hoverNavTitleMin = hoverNavTitleMin.getTitlePercentAttr(this.hoverSlicePathMin.titlePosX, this.hoverSlicePathMin.titlePosY, this.titleWidth, this.titleHeight);
-    this.hoverNavTitleMax = hoverNavTitleMax.getTitlePercentAttr(this.hoverSlicePathMax.titlePosX, this.hoverSlicePathMax.titlePosY, this.titleWidth, this.titleHeight);
-    this.selectedNavTitleMin = selectedNavTitleMin.getTitlePercentAttr(this.selectedSlicePathMin.titlePosX, this.selectedSlicePathMin.titlePosY, this.titleWidth, this.titleHeight);
-    this.selectedNavTitleMax = selectedNavTitleMax.getTitlePercentAttr(this.selectedSlicePathMax.titlePosX, this.selectedSlicePathMax.titlePosY, this.titleWidth, this.titleHeight);
+    this.hoverNavTitleMin = hoverNavTitleMin.getTitlePercentAttr(this.hoverSlicePathMin.titlePosX, this.hoverSlicePathMin.titlePosY, this.titleHoverWidth, this.titleHoverHeight);
+    this.hoverNavTitleMax = hoverNavTitleMax.getTitlePercentAttr(this.hoverSlicePathMax.titlePosX, this.hoverSlicePathMax.titlePosY, this.titleHoverWidth, this.titleHoverHeight);
+    this.selectedNavTitleMin = selectedNavTitleMin.getTitlePercentAttr(this.selectedSlicePathMin.titlePosX, this.selectedSlicePathMin.titlePosY, this.titleSelectedWidth, this.titleSelectedHeight);
+    this.selectedNavTitleMax = selectedNavTitleMax.getTitlePercentAttr(this.selectedSlicePathMax.titlePosX, this.selectedSlicePathMax.titlePosY, this.titleSelectedWidth, this.titleSelectedHeight);
 };
 
 wheelnavItem.prototype.getCurrentPath = function () {
@@ -932,6 +965,17 @@ wheelnavTitle = function (title, raphael) {
         }
     };
 
+    this.isImageTitle = function (title) {
+        if (title === undefined) { title = this.title;}
+        if (title !== null &&
+            title.substr(0, 7) === "imgsrc:") {
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
+
     return this;
 };
 
@@ -951,7 +995,7 @@ wheelnavTitle.prototype.getTitlePercentAttr = function (currentX, currentY, titl
         };
     }
     else {
-        if (this.title.substr(0, 7) === "imgsrc:") {
+        if (this.isImageTitle()) {
             transformAttr = {
                 x: currentX - (titlewidth / 2),
                 y: currentY - (titleheight / 2),
@@ -972,3 +1016,22 @@ wheelnavTitle.prototype.getTitlePercentAttr = function (currentX, currentY, titl
     return transformAttr;
 };
 
+wheelnavTitle.prototype.getTitleSizeTransform = function (titlewidth, titleheight) {
+
+    var transformAttr = "";
+
+    //Calculate path width & height
+    if (titlewidth !== null && titleheight !== null) {
+        transformAttr = "s";
+        if (this.height > this.width) {
+            transformAttr += (titlewidth / this.height).toString() + ",";
+            transformAttr += (titleheight / this.height).toString();
+        }
+        else {
+            transformAttr += (titlewidth / this.width).toString() + ",";
+            transformAttr += (titleheight / this.width).toString();
+        }
+    }
+
+    return transformAttr;
+};

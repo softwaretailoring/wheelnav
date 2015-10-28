@@ -42,9 +42,15 @@
                 radialWheel.markerEnable = true;
                 radialWheel.markerPathFunction = markerPath().MenuMarker;
                 radialWheel.initWheel([icon.merge, icon.filter, icon.charging, "imgsrc:http://softwaretailoring.net/images/gabor.berkesi.jpg", icon.book, "6"]);
+                radialWheel.titleHeight = 35;
+                radialWheel.titleHoverHeight = 40;
+                radialWheel.titleSelectedHeight = 45;
                 radialWheel.navItems[3].titleWidth = 33;
                 radialWheel.navItems[3].titleHeight = 48;
-                radialWheel.titleHeight = 40;
+                radialWheel.navItems[3].titleHoverWidth = 36;
+                radialWheel.navItems[3].titleHoverHeight = 48;
+                radialWheel.navItems[3].titleSelectedWidth = 36;
+                radialWheel.navItems[3].titleSelectedHeight = 53;
                 radialWheel.createWheel();
                 radialWheel.setTooltips(["merge", "filter", "charging", "author", "book", "six"]);
 

@@ -153,9 +153,13 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     this.titleAttr = null;
     this.titleHoverAttr = null;
     this.titleSelectedAttr = null;
-    //When navTitle start with 'imgsrc:' it can parse as URL of image or data URI. The titleWidth and titleHeight properties are available for images.
+    //When navTitle start with 'imgsrc:' it can parse as URL of image or data URI. These properties are available for images and paths.
     this.titleWidth = null;
     this.titleHeight = null;
+    this.titleHoverWidth = null;
+    this.titleHoverHeight = null;
+    this.titleSelectedWidth = null;
+    this.titleSelectedHeight = null;
 
     this.linePathAttr = null;
     this.lineHoverAttr = null;
