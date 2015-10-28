@@ -53,8 +53,8 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     this.navigateHref = null;
     this.navigateFunction = null;
     //When navTitle start with 'imgsrc:' it can parse as URL of image or data URI. The titleWidth and titleHeight properties are available for images. Use after initWheel(), before createWheel()
-    this.titleWidth = 50;
-    this.titleHeight = 50;
+    this.titleWidth = 32;
+    this.titleHeight = 32;
 
     //Wheelnav properties
     this.animateeffect = null;
@@ -569,6 +569,8 @@ wheelnavItem.prototype.setWheelSettings = function (force) {
     if (this.wheelnav.titleAttr !== null) { this.titleAttr = JSON.parse(JSON.stringify(this.wheelnav.titleAttr)); }
     if (this.wheelnav.titleHoverAttr !== null) { this.titleHoverAttr = JSON.parse(JSON.stringify(this.wheelnav.titleHoverAttr)); }
     if (this.wheelnav.titleSelectedAttr !== null) { this.titleSelectedAttr = JSON.parse(JSON.stringify(this.wheelnav.titleSelectedAttr)); }
+    if (this.wheelnav.titleWidth !== null) { this.titleWidth = this.wheelnav.titleWidth; }
+    if (this.wheelnav.titleHeight !== null) { this.titleHeight = this.wheelnav.titleHeight; }
 
     //Set line from wheelnav
     if (this.wheelnav.linePathAttr !== null) { this.linePathAttr = JSON.parse(JSON.stringify(this.wheelnav.linePathAttr)); }

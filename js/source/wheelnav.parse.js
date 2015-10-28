@@ -77,6 +77,16 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
                     this.markerPathFunction = markerPath()[wheelnavMarkerPath];
                 }
             }
+            //data-wheelnav-titlewidth
+            var wheelnavTitleWidth = holderDiv.getAttribute("data-wheelnav-titlewidth");
+            if (wheelnavTitleWidth !== null) {
+                this.titleWidth = Number(wheelnavTitleWidth);
+            }
+            //data-wheelnav-titleheight
+            var wheelnavTitleHeight = holderDiv.getAttribute("data-wheelnav-titleheight");
+            if (wheelnavTitleHeight !== null) {
+                this.titleHeight = Number(wheelnavTitleHeight);
+            }
             //data-wheelnav-init
             var wheelnavOnlyinit = holderDiv.getAttribute("data-wheelnav-init");
             if (wheelnavOnlyinit !== null) {

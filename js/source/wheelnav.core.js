@@ -1,5 +1,5 @@
 ﻿/* ======================================================================================= */
-/*                                   wheelnav.js - v1.6.0                                  */
+/*                                   wheelnav.js - v1.6.1                                  */
 /* ======================================================================================= */
 /* This is a small JavaScript library for animated SVG based wheel navigation.             */
 /* Requires Raphaël JavaScript Vector Library (http://raphaeljs.com)                       */
@@ -153,6 +153,9 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     this.titleAttr = null;
     this.titleHoverAttr = null;
     this.titleSelectedAttr = null;
+    //When navTitle start with 'imgsrc:' it can parse as URL of image or data URI. The titleWidth and titleHeight properties are available for images.
+    this.titleWidth = null;
+    this.titleHeight = null;
 
     this.linePathAttr = null;
     this.lineHoverAttr = null;

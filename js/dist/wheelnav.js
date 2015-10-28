@@ -1,6 +1,6 @@
 ﻿///#source 1 1 /js/source/wheelnav.core.js
 /* ======================================================================================= */
-/*                                   wheelnav.js - v1.6.0                                  */
+/*                                   wheelnav.js - v1.6.1                                  */
 /* ======================================================================================= */
 /* This is a small JavaScript library for animated SVG based wheel navigation.             */
 /* Requires Raphaël JavaScript Vector Library (http://raphaeljs.com)                       */
@@ -154,6 +154,9 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     this.titleAttr = null;
     this.titleHoverAttr = null;
     this.titleSelectedAttr = null;
+    //When navTitle start with 'imgsrc:' it can parse as URL of image or data URI. The titleWidth and titleHeight properties are available for images.
+    this.titleWidth = null;
+    this.titleHeight = null;
 
     this.linePathAttr = null;
     this.lineHoverAttr = null;
@@ -547,6 +550,16 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
                     this.markerPathFunction = markerPath()[wheelnavMarkerPath];
                 }
             }
+            //data-wheelnav-titlewidth
+            var wheelnavTitleWidth = holderDiv.getAttribute("data-wheelnav-titlewidth");
+            if (wheelnavTitleWidth !== null) {
+                this.titleWidth = Number(wheelnavTitleWidth);
+            }
+            //data-wheelnav-titleheight
+            var wheelnavTitleHeight = holderDiv.getAttribute("data-wheelnav-titleheight");
+            if (wheelnavTitleHeight !== null) {
+                this.titleHeight = Number(wheelnavTitleHeight);
+            }
             //data-wheelnav-init
             var wheelnavOnlyinit = holderDiv.getAttribute("data-wheelnav-init");
             if (wheelnavOnlyinit !== null) {
@@ -687,8 +700,8 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     this.navigateHref = null;
     this.navigateFunction = null;
     //When navTitle start with 'imgsrc:' it can parse as URL of image or data URI. The titleWidth and titleHeight properties are available for images. Use after initWheel(), before createWheel()
-    this.titleWidth = 50;
-    this.titleHeight = 50;
+    this.titleWidth = 32;
+    this.titleHeight = 32;
 
     //Wheelnav properties
     this.animateeffect = null;
@@ -1203,6 +1216,8 @@ wheelnavItem.prototype.setWheelSettings = function (force) {
     if (this.wheelnav.titleAttr !== null) { this.titleAttr = JSON.parse(JSON.stringify(this.wheelnav.titleAttr)); }
     if (this.wheelnav.titleHoverAttr !== null) { this.titleHoverAttr = JSON.parse(JSON.stringify(this.wheelnav.titleHoverAttr)); }
     if (this.wheelnav.titleSelectedAttr !== null) { this.titleSelectedAttr = JSON.parse(JSON.stringify(this.wheelnav.titleSelectedAttr)); }
+    if (this.wheelnav.titleWidth !== null) { this.titleWidth = this.wheelnav.titleWidth; }
+    if (this.wheelnav.titleHeight !== null) { this.titleHeight = this.wheelnav.titleHeight; }
 
     //Set line from wheelnav
     if (this.wheelnav.linePathAttr !== null) { this.linePathAttr = JSON.parse(JSON.stringify(this.wheelnav.linePathAttr)); }
