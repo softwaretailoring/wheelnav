@@ -1,4 +1,12 @@
-## 1.6.0
+## 1.6.1
+
+* New data attributes: data-wheelnav-titlewidth, data-wheelnav-titleheight
+* Handle titleWidth and titleHeight property for path in navTitle
+* Handle hover and selected states of image and path in navTitle
+* New spreader properties: spreaderInTitleWidth, spreaderInTitleHeight, spreaderOutTitleWidth, spreaderOutTitleHeight
+* Spreader supports images
+
+### 1.6.0
 
 * New navTitle type: image, when navTitle start with 'imgsrc:' it can parse as URL of image or data URI 
 * selectedNavItemIndex property is public now for set first selected item
