@@ -171,6 +171,12 @@ footer {
     cursor: pointer;
 }
 
+.wheelnav-radialWheel-spreadertitle-in,
+.wheelnav-radialWheel-spreadertitle-out {
+    cursor: pointer;
+}
+
+
 .wheelnav-radialWheel-marker {
     stroke: orange;
     stroke-width: 3px;

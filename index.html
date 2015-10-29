@@ -33,8 +33,11 @@
                 var radialWheel = new wheelnav("radialWheel");
                 radialWheel.slicePathFunction = slicePath().MenuSliceWithoutLine;
                 radialWheel.spreaderEnable = true;
-                radialWheel.spreaderInTitle = icon.expand;
-                radialWheel.spreaderOutTitle = icon.contract;
+                radialWheel.spreaderInTitle = "imgsrc:wheelnav_demo.gif";
+                radialWheel.spreaderOutTitle = "imgsrc:wheelnav_favicon.png";
+                radialWheel.spreaderOutTitleHeight = 50;
+                radialWheel.spreaderInTitleHeight = 35;
+                
                 radialWheel.spreaderInPercent = 1.5;
                 radialWheel.spreaderOutPercent = 2.5;
                 radialWheel.clickModeRotate = false;

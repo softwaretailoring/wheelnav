@@ -208,18 +208,16 @@ wheelnavItem.prototype.createNavItem = function () {
     var currentTitle = this.initNavTitle;
 
     //Title defined by path
-    
     if (wheelnavTitle().isPathTitle(this.title)) {
         this.navTitle = this.wheelnav.raphael.path(currentTitle.path);
     }
+    //Title defined by image
+    else if (wheelnavTitle().isImageTitle(this.title)) {
+        this.navTitle = this.wheelnav.raphael.image(currentTitle.src, sliceInitPath.titlePosX - (this.titleWidth / 2), sliceInitPath.titlePosY - (this.titleHeight / 2), this.titleWidth, this.titleHeight);
+    }
     //Title defined by text
     else {
-        if (wheelnavTitle().isImageTitle(this.title)) {
-            this.navTitle = this.wheelnav.raphael.image(currentTitle.title.substr(7, currentTitle.title.length), sliceInitPath.titlePosX - (this.titleWidth / 2), sliceInitPath.titlePosY - (this.titleHeight / 2), this.titleWidth, this.titleHeight);
-        }
-        else {
-            this.navTitle = this.wheelnav.raphael.text(sliceInitPath.titlePosX, sliceInitPath.titlePosY, currentTitle.title);
-        }
+        this.navTitle = this.wheelnav.raphael.text(sliceInitPath.titlePosX, sliceInitPath.titlePosY, currentTitle.title);
     }
 
     this.navTitle.attr(this.titleAttr);
@@ -234,7 +232,7 @@ wheelnavItem.prototype.createNavItem = function () {
     if (this.initTransform.lineTransformString !== "") { this.navLineCurrentTransformString += this.initTransform.lineTransformString; }
 
     this.navTitleCurrentTransformString = "";
-    if (this.wheelnav.initTitleRotate) { this.navTitleCurrentTransformString += this.getTitleRotateString(); }
+    this.navTitleCurrentTransformString += this.getTitleRotateString(this.wheelnav.initTitleRotate);
     if (this.initTransform.titleTransformString !== "") { this.navTitleCurrentTransformString += this.initTransform.titleTransformString; }
     if (this.wheelnav.currentPercent < 0.05) {
         this.navTitleCurrentTransformString += ",s0.05";
@@ -366,7 +364,7 @@ wheelnavItem.prototype.setCurrentTransform = function (locked, withFinishFunctio
 
         //  Title
         this.navTitleCurrentTransformString = "";
-        this.navTitleCurrentTransformString += this.getTitleRotateString();
+        this.navTitleCurrentTransformString += this.getTitleRotateString(true);
 
         if (this.selected) {
             if (this.navTitleSizeSelectedTransform !== undefined) {
@@ -446,34 +444,32 @@ wheelnavItem.prototype.setCurrentTransform = function (locked, withFinishFunctio
         var currentTitle = this.getCurrentTitle();
         var titleTransformAttr = {};
 
-        if (this.navTitle.type === "path") {
+        if (wheelnavTitle().isPathTitle(currentTitle.title)) {
             titleTransformAttr = {
                 path: currentTitle.path,
                 transform: this.navTitleCurrentTransformString
             };
         }
+        else if (wheelnavTitle().isImageTitle(currentTitle.title)) {
+            titleTransformAttr = {
+                x: currentTitle.x,
+                y: currentTitle.y,
+                width: currentTitle.width,
+                height: currentTitle.height,
+                transform: this.navTitleCurrentTransformString
+            };
+
+            this.navTitle.attr({ src: currentTitle.src });
+        }
         else {
-            if (wheelnavTitle().isImageTitle(currentTitle.title)) {
-                titleTransformAttr = {
-                    x: currentTitle.x,
-                    y: currentTitle.y,
-                    width: currentTitle.width,
-                    height: currentTitle.height,
-                    transform: this.navTitleCurrentTransformString
-                };
+            titleTransformAttr = {
+                x: currentTitle.x,
+                y: currentTitle.y,
+                transform: this.navTitleCurrentTransformString
+            };
 
-                this.navTitle.attr({ src: currentTitle.title.substr(7, currentTitle.title.length) });
-            }
-            else {
-                titleTransformAttr = {
-                    x: currentTitle.x,
-                    y: currentTitle.y,
-                    transform: this.navTitleCurrentTransformString
-                };
-
-                if (currentTitle.title !== null) {
-                    this.navTitle.attr({ text: currentTitle.title });
-                }
+            if (currentTitle.title !== null) {
+                this.navTitle.attr({ text: currentTitle.title });
             }
         }
 
@@ -603,15 +599,15 @@ wheelnavItem.prototype.setWheelSettings = function (force) {
     if (this.wheelnav.titleHoverAttr !== null) { this.titleHoverAttr = JSON.parse(JSON.stringify(this.wheelnav.titleHoverAttr)); }
     if (this.wheelnav.titleSelectedAttr !== null) { this.titleSelectedAttr = JSON.parse(JSON.stringify(this.wheelnav.titleSelectedAttr)); }
     // Size
-    if (wheelnavTitle().isImageTitle(this.title)) {
-        // Image default value
-        if (this.titleWidth === null && this.wheelnav.titleWidth === null) { this.titleWidth = 32; }
-        if (this.titleHeight === null && this.wheelnav.titleHeight === null) { this.titleHeight = 32; }
-    }
     if (this.wheelnav.titleWidth !== null && this.titleWidth === null) { this.titleWidth = this.wheelnav.titleWidth; }
     if (this.wheelnav.titleHeight !== null && this.titleHeight === null) { this.titleHeight = this.wheelnav.titleHeight; }
     if (this.titleWidth !== null && this.titleHeight === null) { this.titleHeight = this.titleWidth; }
     if (this.titleWidth === null && this.titleHeight !== null) { this.titleWidth = this.titleHeight; }
+    if (wheelnavTitle().isImageTitle(this.title)) {
+        // Image default value
+        if (this.titleWidth === null) { this.titleWidth = 32; }
+        if (this.titleHeight === null) { this.titleHeight = 32; }
+    }
 
     if (this.wheelnav.titleHoverWidth !== null && this.titleHoverWidth === null) { this.titleHoverWidth = this.wheelnav.titleHoverWidth; }
     if (this.wheelnav.titleHoverHeight !== null && this.titleHoverHeight === null) { this.titleHoverHeight = this.wheelnav.titleHoverHeight; }
@@ -914,16 +910,15 @@ wheelnavItem.prototype.getItemRotateString = function () {
     return "r," + (this.currentRotateAngle).toString() + "," + this.wheelnav.centerX + "," + this.wheelnav.centerY;
 };
 
-wheelnavItem.prototype.getTitleRotateString = function () {
+wheelnavItem.prototype.getTitleRotateString = function (withTitleRotateAngle) {
 
     var titleRotate = "";
+    titleRotate += this.getItemRotateString();
 
-    if (this.wheelnav.titleRotateAngle !== null) {
-        titleRotate += this.getItemRotateString();
+    if (this.wheelnav.titleRotateAngle !== null && withTitleRotateAngle) {
         titleRotate += ",r," + (this.navAngle + this.wheelnav.titleRotateAngle).toString();
     }
     else {
-        titleRotate += this.getItemRotateString();
         titleRotate += ",r," + (-this.currentRotateAngle).toString();
     }
 
@@ -943,8 +938,8 @@ wheelnavTitle = function (title, raphael) {
             this.height = bbox.height;
             this.startX = this.relativePath[0][1];
             this.startY = this.relativePath[0][2];
-            this.title = "";
         }
+        this.title = title;
     }
     else {
         this.title = "";
@@ -991,7 +986,8 @@ wheelnavTitle.prototype.getTitlePercentAttr = function (currentX, currentY, titl
         this.relativePath[0][2] = pathCy;
 
         transformAttr = {
-            path: this.relativePath
+            path: this.relativePath,
+            title: this.title
         };
     }
     else {
@@ -1001,7 +997,8 @@ wheelnavTitle.prototype.getTitlePercentAttr = function (currentX, currentY, titl
                 y: currentY - (titleheight / 2),
                 width: titlewidth,
                 height: titleheight,
-                title: this.title
+                title: this.title,
+                src: this.title.substr(7, this.title.length)
             };
         }
         else {
