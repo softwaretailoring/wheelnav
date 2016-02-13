@@ -20,6 +20,7 @@
     <file>/js/source/slicePath/wheelnav.slicePath.Line.js</file>
     <file>/js/source/slicePath/wheelnav.slicePath.Eye.js</file>
     <file>/js/source/slicePath/wheelnav.slicePath.Wheel.js</file>
+    <file>/js/source/slicePath/wheelnav.slicePath.OuterStroke.js</file>
     <file>/js/source/slicePath/wheelnav.slicePath.Tab.js</file>
     <file>/js/source/slicePath/wheelnav.slicePath.YinYang.js</file>
     <file>/js/source/slicePath/wheelnav.slicePath.Web.js</file>

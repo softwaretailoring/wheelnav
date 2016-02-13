@@ -85,6 +85,17 @@
                 WheelSlice.slicePathFunction = slicePath().WheelSlice;
                 WheelSlice.createWheel();
 
+                var OuterStrokeSlice = new wheelnav("OuterStrokeSlice");
+                OuterStrokeSlice.slicePathFunction = slicePath().OuterStrokeSlice;
+                OuterStrokeSlice.slicePathAttr = { fill: "#333", cursor: 'pointer', stroke: "#111", "stroke-width": 4 };
+                OuterStrokeSlice.sliceHoverAttr = { fill: "#333", cursor: 'pointer', stroke: "#111", "stroke-width": 5 };
+                OuterStrokeSlice.sliceSelectedAttr = { fill: "#333", cursor: 'default', stroke: "#111", "stroke-width": 4 };
+                OuterStrokeSlice.linePathAttr = { fill: "#333", cursor: 'pointer', stroke: "#111", "stroke-width": 1 };
+                OuterStrokeSlice.lineHoverAttr = { fill: "#333", cursor: 'pointer', stroke: "#111", "stroke-width": 5 };
+                OuterStrokeSlice.lineSelectedAttr = { fill: "#333", cursor: 'default', stroke: "#111", "stroke-width": 1 };
+                OuterStrokeSlice.sliceClickablePathFunction = slicePath().PieSlice;
+                OuterStrokeSlice.createWheel();
+
                 var TabSlice = new wheelnav("TabSlice");
                 TabSlice.slicePathFunction = slicePath().TabSlice;
                 TabSlice.clickModeRotate = false;
@@ -163,6 +174,8 @@
     <div id="LineSlice" class="wheelNav"></div>
     <h2>WheelSlice</h2>
     <div id="WheelSlice" class="wheelNav"></div>
+    <h2>OuterStrokeSlice</h2>
+    <div id="OuterStrokeSlice" class="wheelNav"></div>
     <h2>TabSlice</h2>
     <div id="TabSlice" class="wheelNav"></div>
     <h2>YinYangSlice</h2>
