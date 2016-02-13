@@ -1,6 +1,6 @@
 ﻿///#source 1 1 /js/source/wheelnav.core.js
 /* ======================================================================================= */
-/*                                   wheelnav.js - v1.6.1                                  */
+/*                                   wheelnav.js - v1.6.2                                  */
 /* ======================================================================================= */
 /* This is a small JavaScript library for animated SVG based wheel navigation.             */
 /* Requires Raphaël JavaScript Vector Library (http://raphaeljs.com)                       */
@@ -692,14 +692,7 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
 
     this.currentRotateAngle = 0;
 
-    if (title === undefined) {
-        this.title = null;
-    }
-    else {
-        this.title = title;
-    }
-    this.titleHover = this.title;
-    this.titleSelected = this.title;
+    this.setTitle(title);
     this.tooltip = null;
     
     //Default settings
@@ -1188,6 +1181,17 @@ wheelnavItem.prototype.setCurrentTransform = function (locked, withFinishFunctio
             }
         }
     }
+};
+
+wheelnavItem.prototype.setTitle = function (title) {
+    if (title === undefined) {
+        this.title = null;
+    }
+    else {
+        this.title = title;
+    }
+    this.titleHover = this.title;
+    this.titleSelected = this.title;
 };
 
 wheelnavItem.prototype.setTooltip = function (tooltip) {

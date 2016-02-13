@@ -37,14 +37,7 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
 
     this.currentRotateAngle = 0;
 
-    if (title === undefined) {
-        this.title = null;
-    }
-    else {
-        this.title = title;
-    }
-    this.titleHover = this.title;
-    this.titleSelected = this.title;
+    this.setTitle(title);
     this.tooltip = null;
     
     //Default settings
@@ -533,6 +526,17 @@ wheelnavItem.prototype.setCurrentTransform = function (locked, withFinishFunctio
             }
         }
     }
+};
+
+wheelnavItem.prototype.setTitle = function (title) {
+    if (title === undefined) {
+        this.title = null;
+    }
+    else {
+        this.title = title;
+    }
+    this.titleHover = this.title;
+    this.titleSelected = this.title;
 };
 
 wheelnavItem.prototype.setTooltip = function (tooltip) {
