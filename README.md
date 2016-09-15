@@ -94,7 +94,3 @@ Licensed under [MIT][mit]. Enjoy the spinning.
 [jsdelivr]: http://www.jsdelivr.com/?query=wheelnav
 [vs2013]: https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx
 [webessentials]: http://vswebessentials.com/
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/softwaretailoring/wheelnav/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
