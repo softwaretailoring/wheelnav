@@ -1,4 +1,10 @@
-## 1.6.1
+## 1.7.0
+
+* New wheelnav properties: keynavigateEnabled, keynavigateOnlyFocus, keynavigateDownCode, keynavigateDownCodeAlt, keynavigateUpCode, keynavigateUpCodeAlt
+* New wheelnav methods: removeWheel, setTitle
+* New slicePath: OuterStrokeSlice
+
+### 1.6.1
 
 * New data attributes: data-wheelnav-titlewidth, data-wheelnav-titleheight
 * Handle titleWidth and titleHeight property for path in navTitle
