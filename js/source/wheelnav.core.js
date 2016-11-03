@@ -1,5 +1,5 @@
 ﻿/* ======================================================================================= */
-/*                                   wheelnav.js - v1.6.2                                  */
+/*                                   wheelnav.js - v1.7.0                                  */
 /* ======================================================================================= */
 /* This is a small JavaScript library for animated SVG based wheel navigation.             */
 /* Requires Raphaël JavaScript Vector Library (http://raphaeljs.com)                       */
@@ -197,6 +197,13 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     this.sliceInitPathFunction = null;
     this.sliceInitTransformFunction = null;
 
+    this.keynavigateEnabled = false;
+    this.keynavigateOnlyFocus = false;
+    this.keynavigateDownCode = 37; // left arrow
+    this.keynavigateDownCodeAlt = 40; // down arrow
+    this.keynavigateUpCode = 39; // right arrow
+    this.keynavigateUpCodeAlt = 38; // up arrow
+
     this.parseWheel(holderDiv);
 
     return this;
@@ -272,6 +279,53 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
         this.navItems[i].createNavItem();
     }
 
+    if (this.keynavigateEnabled) {
+        var thiswheelnav = this;
+        var keyelement = window;
+
+        if (this.keynavigateOnlyFocus) {
+            keyelement = document.getElementById(this.holderId);
+            if (!keyelement.hasAttribute("tabindex")) {
+                keyelement.setAttribute("tabindex", 0);
+            }
+        }
+
+        keyelement.addEventListener("keydown", this.keyNavigateFunction =  function (e) {
+            e = e || window.e;
+            var keyCodeEvent = e.which || e.keyCode;
+            if ([thiswheelnav.keynavigateDownCode, thiswheelnav.keynavigateDownCodeAlt, thiswheelnav.keynavigateUpCode, thiswheelnav.keynavigateUpCodeAlt].indexOf(e.keyCode) > -1) {
+                e.preventDefault();
+            }
+
+            var keynavigate = null;
+
+            if (keyCodeEvent === thiswheelnav.keynavigateUpCode || keyCodeEvent === thiswheelnav.keynavigateUpCodeAlt) {
+                if (thiswheelnav.currentClick === thiswheelnav.navItemCount - 1) {
+                    keynavigate = 0;
+                }
+                else {
+                    keynavigate = thiswheelnav.currentClick + 1;
+                }
+            }
+            if (keyCodeEvent === thiswheelnav.keynavigateDownCode || keyCodeEvent === thiswheelnav.keynavigateDownCodeAlt) {
+                if (thiswheelnav.currentClick === 0) {
+                    keynavigate = thiswheelnav.navItemCount - 1;
+                }
+                else {
+                    keynavigate = thiswheelnav.currentClick - 1;
+                }
+            }
+
+            if (keynavigate !== null) {
+                if (thiswheelnav.navItems[keynavigate].navigateFunction !== null) {
+                    thiswheelnav.navItems[keynavigate].navigateFunction();
+                }
+
+                thiswheelnav.navigateWheel(keynavigate);
+            }
+        });
+    }
+
     this.spreader = new spreader(this);
 
     this.marker = new marker(this);
@@ -283,6 +337,23 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
     }
 
     return this;
+};
+
+wheelnav.prototype.removeWheel = function () {
+    this.raphael.remove();
+
+    if (this.keynavigateEnabled) {
+        var keyelement = window;
+
+        if (this.keynavigateOnlyFocus) {
+            keyelement = document.getElementById(this.holderId);
+            if (keyelement.hasAttribute("tabindex")) {
+                keyelement.removeAttribute("tabindex");
+            }
+        }
+
+        keyelement.removeEventListener("keydown", this.keyNavigateFunction);
+    }
 };
 
 wheelnav.prototype.refreshWheel = function (withPathAndTransform) {

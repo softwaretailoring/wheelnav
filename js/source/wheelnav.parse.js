@@ -87,6 +87,38 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
             if (wheelnavTitleHeight !== null) {
                 this.titleHeight = Number(wheelnavTitleHeight);
             }
+
+            //data-wheelnav-keynav
+            var wheelnavKeynav = holderDiv.getAttribute("data-wheelnav-keynav");
+            if (wheelnavKeynav !== null) {
+                this.keynavigateEnabled = true;
+            }
+            //data-wheelnav-keynavonlyfocus
+            var wheelnavKeynavOnlyfocus = holderDiv.getAttribute("data-wheelnav-keynavonlyfocus");
+            if (wheelnavKeynavOnlyfocus !== null) {
+                this.keynavigateOnlyFocus = true;
+            }
+            //data-wheelnav-keynavdowncode
+            var wheelnavKeynavDowncode = holderDiv.getAttribute("data-wheelnav-keynavdowncode");
+            if (wheelnavKeynavDowncode !== null) {
+                this.keynavigateDownCode = Number(wheelnavKeynavDowncode);
+            }
+            //data-wheelnav-keynavdowncodealt
+            var wheelnavKeynavDowncodeAlt = holderDiv.getAttribute("data-wheelnav-keynavdowncodealt");
+            if (wheelnavKeynavDowncodeAlt !== null) {
+                this.keynavigateDownCodeAlt = Number(wheelnavKeynavDowncodeAlt);
+            }
+            //data-wheelnav-keynavupcode
+            var wheelnavKeynavUpcode = holderDiv.getAttribute("data-wheelnav-keynavupcode");
+            if (wheelnavKeynavUpcode !== null) {
+                this.keynavigateUpCode = Number(wheelnavKeynavUpcode);
+            }
+            //data-wheelnav-keynavupcodealt
+            var wheelnavKeynavUpcodeAlt = holderDiv.getAttribute("data-wheelnav-keynavupcodealt");
+            if (wheelnavKeynavUpcodeAlt !== null) {
+                this.keynavigateUpCodeAlt = Number(wheelnavKeynavUpcodeAlt);
+            }
+
             //data-wheelnav-init
             var wheelnavOnlyinit = holderDiv.getAttribute("data-wheelnav-init");
             if (wheelnavOnlyinit !== null) {

@@ -28,8 +28,9 @@
                 var myWheelnav = new wheelnav("divWheelnav");
                 myWheelnav.slicePathFunction = slicePath().DonutSlice;
                 myWheelnav.colors = new Array("mediumorchid", "royalblue", "darkorange");
+                myWheelnav.keynavigateEnabled = true;
                 myWheelnav.createWheel([icon.github, icon.people, icon.smile]);
-
+                
                 var radialWheel = new wheelnav("radialWheel");
                 radialWheel.slicePathFunction = slicePath().MenuSliceWithoutLine;
                 radialWheel.spreaderEnable = true;

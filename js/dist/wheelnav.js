@@ -1,6 +1,6 @@
 ﻿///#source 1 1 /js/source/wheelnav.core.js
 /* ======================================================================================= */
-/*                                   wheelnav.js - v1.6.2                                  */
+/*                                   wheelnav.js - v1.7.0                                  */
 /* ======================================================================================= */
 /* This is a small JavaScript library for animated SVG based wheel navigation.             */
 /* Requires Raphaël JavaScript Vector Library (http://raphaeljs.com)                       */
@@ -198,6 +198,13 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     this.sliceInitPathFunction = null;
     this.sliceInitTransformFunction = null;
 
+    this.keynavigateEnabled = false;
+    this.keynavigateOnlyFocus = false;
+    this.keynavigateDownCode = 37; // left arrow
+    this.keynavigateDownCodeAlt = 40; // down arrow
+    this.keynavigateUpCode = 39; // right arrow
+    this.keynavigateUpCodeAlt = 38; // up arrow
+
     this.parseWheel(holderDiv);
 
     return this;
@@ -273,6 +280,53 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
         this.navItems[i].createNavItem();
     }
 
+    if (this.keynavigateEnabled) {
+        var thiswheelnav = this;
+        var keyelement = window;
+
+        if (this.keynavigateOnlyFocus) {
+            keyelement = document.getElementById(this.holderId);
+            if (!keyelement.hasAttribute("tabindex")) {
+                keyelement.setAttribute("tabindex", 0);
+            }
+        }
+
+        keyelement.addEventListener("keydown", this.keyNavigateFunction =  function (e) {
+            e = e || window.e;
+            var keyCodeEvent = e.which || e.keyCode;
+            if ([thiswheelnav.keynavigateDownCode, thiswheelnav.keynavigateDownCodeAlt, thiswheelnav.keynavigateUpCode, thiswheelnav.keynavigateUpCodeAlt].indexOf(e.keyCode) > -1) {
+                e.preventDefault();
+            }
+
+            var keynavigate = null;
+
+            if (keyCodeEvent === thiswheelnav.keynavigateUpCode || keyCodeEvent === thiswheelnav.keynavigateUpCodeAlt) {
+                if (thiswheelnav.currentClick === thiswheelnav.navItemCount - 1) {
+                    keynavigate = 0;
+                }
+                else {
+                    keynavigate = thiswheelnav.currentClick + 1;
+                }
+            }
+            if (keyCodeEvent === thiswheelnav.keynavigateDownCode || keyCodeEvent === thiswheelnav.keynavigateDownCodeAlt) {
+                if (thiswheelnav.currentClick === 0) {
+                    keynavigate = thiswheelnav.navItemCount - 1;
+                }
+                else {
+                    keynavigate = thiswheelnav.currentClick - 1;
+                }
+            }
+
+            if (keynavigate !== null) {
+                if (thiswheelnav.navItems[keynavigate].navigateFunction !== null) {
+                    thiswheelnav.navItems[keynavigate].navigateFunction();
+                }
+
+                thiswheelnav.navigateWheel(keynavigate);
+            }
+        });
+    }
+
     this.spreader = new spreader(this);
 
     this.marker = new marker(this);
@@ -284,6 +338,23 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
     }
 
     return this;
+};
+
+wheelnav.prototype.removeWheel = function () {
+    this.raphael.remove();
+
+    if (this.keynavigateEnabled) {
+        var keyelement = window;
+
+        if (this.keynavigateOnlyFocus) {
+            keyelement = document.getElementById(this.holderId);
+            if (keyelement.hasAttribute("tabindex")) {
+                keyelement.removeAttribute("tabindex");
+            }
+        }
+
+        keyelement.removeEventListener("keydown", this.keyNavigateFunction);
+    }
 };
 
 wheelnav.prototype.refreshWheel = function (withPathAndTransform) {
@@ -568,6 +639,38 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
             if (wheelnavTitleHeight !== null) {
                 this.titleHeight = Number(wheelnavTitleHeight);
             }
+
+            //data-wheelnav-keynav
+            var wheelnavKeynav = holderDiv.getAttribute("data-wheelnav-keynav");
+            if (wheelnavKeynav !== null) {
+                this.keynavigateEnabled = true;
+            }
+            //data-wheelnav-keynavonlyfocus
+            var wheelnavKeynavOnlyfocus = holderDiv.getAttribute("data-wheelnav-keynavonlyfocus");
+            if (wheelnavKeynavOnlyfocus !== null) {
+                this.keynavigateOnlyFocus = true;
+            }
+            //data-wheelnav-keynavdowncode
+            var wheelnavKeynavDowncode = holderDiv.getAttribute("data-wheelnav-keynavdowncode");
+            if (wheelnavKeynavDowncode !== null) {
+                this.keynavigateDownCode = Number(wheelnavKeynavDowncode);
+            }
+            //data-wheelnav-keynavdowncodealt
+            var wheelnavKeynavDowncodeAlt = holderDiv.getAttribute("data-wheelnav-keynavdowncodealt");
+            if (wheelnavKeynavDowncodeAlt !== null) {
+                this.keynavigateDownCodeAlt = Number(wheelnavKeynavDowncodeAlt);
+            }
+            //data-wheelnav-keynavupcode
+            var wheelnavKeynavUpcode = holderDiv.getAttribute("data-wheelnav-keynavupcode");
+            if (wheelnavKeynavUpcode !== null) {
+                this.keynavigateUpCode = Number(wheelnavKeynavUpcode);
+            }
+            //data-wheelnav-keynavupcodealt
+            var wheelnavKeynavUpcodeAlt = holderDiv.getAttribute("data-wheelnav-keynavupcodealt");
+            if (wheelnavKeynavUpcodeAlt !== null) {
+                this.keynavigateUpCodeAlt = Number(wheelnavKeynavUpcodeAlt);
+            }
+
             //data-wheelnav-init
             var wheelnavOnlyinit = holderDiv.getAttribute("data-wheelnav-init");
             if (wheelnavOnlyinit !== null) {
