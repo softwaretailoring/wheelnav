@@ -88,7 +88,7 @@ Licensed under [MIT][mit]. Enjoy the spinning.
 [projectpage]: http://wheelnavjs.softwaretailoring.net
 [testpage]: http://wheelnavjs.softwaretailoring.net/test
 [mit]: http://www.opensource.org/licenses/mit-license.php
-[raphaeljs]: http://raphaeljs.com/
+[raphaeljs]: http://dmitrybaranovskiy.github.io/raphael
 [npm]: https://www.npmjs.com/package/wheelnav
 [bower]: http://bower.io/search/?q=wheelnav
 [jsdelivr]: http://www.jsdelivr.com/?query=wheelnav
