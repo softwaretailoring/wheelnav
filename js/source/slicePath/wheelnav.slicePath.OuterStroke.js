@@ -18,10 +18,14 @@ this.OuterStrokeSlice = function (helper, percent, custom) {
                  helper.LineTo(helper.endAngle, r)];
 
     slicePathString = [helper.MoveTo(helper.startAngle, r),
+                 helper.ArcTo(r, helper.middleAngle, r),
                  helper.ArcTo(r, helper.endAngle, r),
+                 helper.ArcBackTo(r, helper.middleAngle, r),
                  helper.ArcBackTo(r, helper.startAngle, r),
                  helper.MoveTo(helper.startAngle, innerRadius),
+                 helper.ArcTo(innerRadius, helper.middleAngle, innerRadius),
                  helper.ArcTo(innerRadius, helper.endAngle, innerRadius),
+                 helper.ArcBackTo(innerRadius, helper.middleAngle, innerRadius),
                  helper.ArcBackTo(innerRadius, helper.startAngle, innerRadius)];
 
     helper.setTitlePos();

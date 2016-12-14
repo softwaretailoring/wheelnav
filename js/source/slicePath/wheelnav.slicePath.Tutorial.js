@@ -37,6 +37,7 @@ this.TutorialSlice = function (helper, percent, custom) {
 
     linePathString = [helper.MoveToCenter(),
                  helper.LineTo(helper.startAngle, helper.sliceRadius),
+                 helper.ArcTo(helper.sliceRadius, helper.middleAngle, helper.sliceRadius),
                  helper.ArcTo(helper.sliceRadius, helper.endAngle, helper.sliceRadius),
                  helper.Close()];
 

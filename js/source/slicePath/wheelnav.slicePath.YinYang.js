@@ -7,6 +7,7 @@ this.YinYangSlice = function (helper, percent, custom) {
 
     slicePathString = [helper.MoveToCenter(),
                  helper.ArcTo(r / 2, helper.startAngle, r),
+                 helper.ArcTo(r, helper.middleAngle, r),
                  helper.ArcTo(r, helper.endAngle, r),
                  helper.ArcBackTo(r / 2, 0, 0),
                  helper.Close()];

@@ -24,8 +24,10 @@ this.DonutSlice = function (helper, percent, custom) {
 
     slicePathString = [helper.MoveTo(helper.startAngle, minRadius),
                  helper.LineTo(helper.startAngle, maxRadius),
+                 helper.ArcTo(maxRadius, helper.middleAngle, maxRadius),
                  helper.ArcTo(maxRadius, helper.endAngle, maxRadius),
                  helper.LineTo(helper.endAngle, minRadius),
+                 helper.ArcBackTo(minRadius, helper.middleAngle, minRadius),
                  helper.ArcBackTo(minRadius, helper.startAngle, minRadius),
                  helper.Close()];
 
