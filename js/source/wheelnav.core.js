@@ -317,10 +317,6 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
             }
 
             if (keynavigate !== null) {
-                if (thiswheelnav.navItems[keynavigate].navigateFunction !== null) {
-                    thiswheelnav.navItems[keynavigate].navigateFunction();
-                }
-
                 thiswheelnav.navigateWheel(keynavigate);
             }
         });
@@ -453,6 +449,10 @@ wheelnav.prototype.navigateWheel = function (clicked) {
             this.marker.setCurrentTransform();
         }
         this.spreader.setCurrentTransform(true);
+    }
+
+    if (this.navItems[clicked].navigateFunction !== null) {
+        this.navItems[clicked].navigateFunction();
     }
 };
 

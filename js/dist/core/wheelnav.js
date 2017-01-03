@@ -318,10 +318,6 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
             }
 
             if (keynavigate !== null) {
-                if (thiswheelnav.navItems[keynavigate].navigateFunction !== null) {
-                    thiswheelnav.navItems[keynavigate].navigateFunction();
-                }
-
                 thiswheelnav.navigateWheel(keynavigate);
             }
         });
@@ -454,6 +450,10 @@ wheelnav.prototype.navigateWheel = function (clicked) {
             this.marker.setCurrentTransform();
         }
         this.spreader.setCurrentTransform(true);
+    }
+
+    if (this.navItems[clicked].navigateFunction !== null) {
+        this.navItems[clicked].navigateFunction();
     }
 };
 
@@ -1030,11 +1030,6 @@ wheelnavItem.prototype.createNavItem = function () {
 
     if (this.enabled) {
         this.navItem.mouseup(function () {
-            
-            if (thisNavItem.navigateFunction !== null) {
-                thisNavItem.navigateFunction();
-            }
-
             thisWheelNav.navigateWheel(thisItemIndex);
         });
         this.navItem.mouseover(function () {
@@ -2001,6 +1996,16 @@ var pathHelper = function () {
 
     this.getTheta = function (angle) {
         return (angle % 360) * Math.PI / 180;
+    };
+
+    // Converts from degrees to radians.
+    this.radians = function (degrees) {
+        return degrees * Math.PI / 180;
+    };
+
+    // Converts from radians to degrees.
+    this.degrees = function (radians) {
+        return radians * 180 / Math.PI;
     };
 
     return this;

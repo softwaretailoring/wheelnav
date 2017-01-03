@@ -272,11 +272,6 @@ wheelnavItem.prototype.createNavItem = function () {
 
     if (this.enabled) {
         this.navItem.mouseup(function () {
-            
-            if (thisNavItem.navigateFunction !== null) {
-                thisNavItem.navigateFunction();
-            }
-
             thisWheelNav.navigateWheel(thisItemIndex);
         });
         this.navItem.mouseover(function () {

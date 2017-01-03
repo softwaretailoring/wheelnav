@@ -118,6 +118,16 @@ var pathHelper = function () {
         return (angle % 360) * Math.PI / 180;
     };
 
+    // Converts from degrees to radians.
+    this.radians = function (degrees) {
+        return degrees * Math.PI / 180;
+    };
+
+    // Converts from radians to degrees.
+    this.degrees = function (radians) {
+        return radians * 180 / Math.PI;
+    };
+
     return this;
 };
 
