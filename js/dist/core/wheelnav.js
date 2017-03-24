@@ -847,6 +847,7 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
 
     this.titleSpreadScale = null;
     this.sliceAngle = null;
+    this.titleRotateAngle = null;
 
     //Default navitem styles
     this.styleNavItem();
@@ -1355,6 +1356,8 @@ wheelnavItem.prototype.setWheelSettings = function (force) {
     if (this.wheelnav.titleAttr !== null) { this.titleAttr = JSON.parse(JSON.stringify(this.wheelnav.titleAttr)); }
     if (this.wheelnav.titleHoverAttr !== null) { this.titleHoverAttr = JSON.parse(JSON.stringify(this.wheelnav.titleHoverAttr)); }
     if (this.wheelnav.titleSelectedAttr !== null) { this.titleSelectedAttr = JSON.parse(JSON.stringify(this.wheelnav.titleSelectedAttr)); }
+    if (this.wheelnav.titleRotateAngle !== null && this.titleRotateAngle === null) { this.titleRotateAngle = this.wheelnav.titleRotateAngle; }
+
     // Size
     if (this.wheelnav.titleWidth !== null && this.titleWidth === null) { this.titleWidth = this.wheelnav.titleWidth; }
     if (this.wheelnav.titleHeight !== null && this.titleHeight === null) { this.titleHeight = this.wheelnav.titleHeight; }
@@ -1522,7 +1525,7 @@ wheelnavItem.prototype.initPathsAndTransforms = function () {
     //Set sliceTransforms
     //Default
     if (this.sliceTransformFunction !== null) {
-        this.sliceTransform = this.sliceTransformFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.wheelnav.titleRotateAngle, this.itemIndex, this.sliceTransformCustom);
+        this.sliceTransform = this.sliceTransformFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.titleRotateAngle, this.itemIndex, this.sliceTransformCustom);
     }
     else {
         this.sliceTransform = sliceTransform().NullTransform;
@@ -1530,7 +1533,7 @@ wheelnavItem.prototype.initPathsAndTransforms = function () {
 
     //Selected
     if (this.sliceSelectedTransformFunction !== null) {
-        this.selectTransform = this.sliceSelectedTransformFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.wheelnav.titleRotateAngle, this.itemIndex, this.sliceSelectedTransformCustom);
+        this.selectTransform = this.sliceSelectedTransformFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.titleRotateAngle, this.itemIndex, this.sliceSelectedTransformCustom);
     }
     else {
         this.selectTransform = sliceTransform().NullTransform;
@@ -1538,7 +1541,7 @@ wheelnavItem.prototype.initPathsAndTransforms = function () {
 
     //Hovered
     if (this.sliceHoverTransformFunction !== null) {
-        this.hoverTransform = this.sliceHoverTransformFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.wheelnav.titleRotateAngle, this.itemIndex, this.sliceHoverTransformCustom);
+        this.hoverTransform = this.sliceHoverTransformFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.titleRotateAngle, this.itemIndex, this.sliceHoverTransformCustom);
     }
     else {
         this.hoverTransform = sliceTransform().NullTransform;
@@ -1546,7 +1549,7 @@ wheelnavItem.prototype.initPathsAndTransforms = function () {
 
     //Initial transform
     if (this.sliceInitTransformFunction !== null) {
-        this.initTransform = this.sliceInitTransformFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.wheelnav.titleRotateAngle, this.itemIndex, this.sliceInitTransformCustom);
+        this.initTransform = this.sliceInitTransformFunction(this.wheelnav.centerX, this.wheelnav.centerY, this.wheelnav.wheelRadius, this.baseAngle, this.sliceAngle, this.titleRotateAngle, this.itemIndex, this.sliceInitTransformCustom);
     }
     else {
         this.initTransform = sliceTransform().NullTransform;
@@ -1672,8 +1675,8 @@ wheelnavItem.prototype.getTitleRotateString = function (withTitleRotateAngle) {
     var titleRotate = "";
     titleRotate += this.getItemRotateString();
 
-    if (this.wheelnav.titleRotateAngle !== null && withTitleRotateAngle) {
-        titleRotate += ",r," + (this.navAngle + this.wheelnav.titleRotateAngle).toString();
+    if (this.titleRotateAngle !== null && withTitleRotateAngle) {
+        titleRotate += ",r," + (this.navAngle + this.titleRotateAngle).toString();
     }
     else {
         titleRotate += ",r," + (-this.currentRotateAngle).toString();
