@@ -451,7 +451,8 @@ wheelnav.prototype.navigateWheel = function (clicked) {
         this.spreader.setCurrentTransform(true);
     }
 
-    if (this.navItems[clicked].navigateFunction !== null) {
+    if (clicked !== null &&
+        this.navItems[clicked].navigateFunction !== null) {
         this.navItems[clicked].navigateFunction();
     }
 };
