@@ -1,6 +1,6 @@
 {
     "name": "wheelnav",
-    "version": "1.7.0",
+    "version": "1.7.1",
     "description": "Animated wheel navigation JavaScript library based on Raphaël.js (SVG/VML). It can be a pie menu (radial menu, circular menu) and many more.",
     "homepage": "http://wheelnavjs.softwaretailoring.net",
     "main": "js/dist/wheelnav.js",

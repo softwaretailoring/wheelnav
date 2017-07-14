@@ -1,4 +1,12 @@
-## 1.7.0
+## 1.7.1
+
+* Fix render issue with slicaAngle > 180
+* Reorganize navigateFunction
+* Fix broken links in README
+* New navItem property: titleRotateAngle
+* Fixed navigateFunction bug in navigateWheel
+
+### 1.7.0
 
 * New wheelnav properties: keynavigateEnabled, keynavigateOnlyFocus, keynavigateDownCode, keynavigateDownCodeAlt, keynavigateUpCode, keynavigateUpCodeAlt
 * New wheelnav methods: removeWheel, setTitle
