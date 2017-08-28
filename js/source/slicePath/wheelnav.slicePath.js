@@ -57,12 +57,15 @@ this.PieSlice = function (helper, percent, custom) {
 
     var arcBaseRadius = helper.sliceRadius * custom.arcBaseRadiusPercent;
     var arcRadius = helper.sliceRadius * custom.arcRadiusPercent;
-
-    slicePathString = [helper.MoveTo(helper.middleAngle, custom.startRadiusPercent * helper.sliceRadius),
-                 helper.LineTo(helper.startAngle, arcBaseRadius),
-                 helper.ArcTo(arcRadius, helper.middleAngle, arcBaseRadius),
-                 helper.ArcTo(arcRadius, helper.endAngle, arcBaseRadius),
-                 helper.Close()];
+    
+    slicePathString = [];
+    slicePathString.push(helper.MoveTo(helper.middleAngle, custom.startRadiusPercent * helper.sliceRadius));
+    slicePathString.push(helper.LineTo(helper.startAngle, arcBaseRadius));
+    if (helper.sliceAngle > 180) {
+        slicePathString.push(helper.ArcTo(arcRadius, helper.middleAngle, arcBaseRadius));
+    }
+    slicePathString.push(helper.ArcTo(arcRadius, helper.endAngle, arcBaseRadius));
+    slicePathString.push(helper.Close());
     
     return {
         slicePathString: slicePathString,
