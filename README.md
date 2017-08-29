@@ -3,7 +3,7 @@ wheelnav.js
 
 [![Join the chat at https://gitter.im/softwaretailoring/wheelnav](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/softwaretailoring/wheelnav?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Animated wheel navigation JavaScript library based on [Raphaël.js][raphaeljs] (SVG/VML).
+Animated wheel navigation JavaScript library based on [modified][modifiedraphael] [Raphaël.js][raphaeljs] (SVG/VML).
 
 It works on all major desktop and mobile browser.
 
@@ -89,6 +89,7 @@ Licensed under [MIT][mit]. Enjoy the spinning.
 [testpage]: http://wheelnavjs.softwaretailoring.net/test
 [mit]: http://www.opensource.org/licenses/mit-license.php
 [raphaeljs]: http://dmitrybaranovskiy.github.io/raphael
+[modifiedraphael]: https://github.com/softwaretailoring/wheelnav/commits/master/js/required/raphael.js
 [npm]: https://www.npmjs.com/package/wheelnav
 [bower]: http://bower.io/search/?q=wheelnav
 [jsdelivr]: http://www.jsdelivr.com/?query=wheelnav
