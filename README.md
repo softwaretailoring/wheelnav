@@ -73,7 +73,8 @@ or CDN by [jsDelivr][jsdelivr]
 
 ```html
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/wheelnav@1.7.1/js/dist/wheelnav.min.js"></script>
-```
+```  
+[![](https://data.jsdelivr.com/v1/package/npm/wheelnav/badge)](https://www.jsdelivr.com/package/npm/wheelnav)
 
 ## Author
 
