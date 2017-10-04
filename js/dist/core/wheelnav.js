@@ -319,6 +319,10 @@ wheelnav.prototype.createWheel = function (titles, withSpread) {
 
             if (keynavigate !== null) {
                 thiswheelnav.navigateWheel(keynavigate);
+
+                if (thiswheelnav.navItems[keynavigate].navigateFunction !== null) {
+                    thiswheelnav.navItems[keynavigate].navigateFunction();
+                }
             }
         });
     }
@@ -450,11 +454,6 @@ wheelnav.prototype.navigateWheel = function (clicked) {
             this.marker.setCurrentTransform();
         }
         this.spreader.setCurrentTransform(true);
-    }
-
-    if (clicked !== null &&
-        this.navItems[clicked].navigateFunction !== null) {
-        this.navItems[clicked].navigateFunction();
     }
 };
 
@@ -1032,6 +1031,10 @@ wheelnavItem.prototype.createNavItem = function () {
 
     if (this.enabled) {
         this.navItem.mouseup(function () {
+            if (thisNavItem.navigateFunction !== null) {
+                thisNavItem.navigateFunction();
+            }
+
             thisWheelNav.navigateWheel(thisItemIndex);
         });
         this.navItem.mouseover(function () {
