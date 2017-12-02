@@ -15,7 +15,9 @@ Possible uses:
 - checkboxes
 - and more...
 
-For more insight please visit [http://wheelnavjs.softwaretailoring.net][projectpage]
+For more insight please visit [http://wheelnavjs.softwaretailoring.net][projectpage]  
+Demos are available on [CodePen][codepen]  
+You can find answers on [StackOverflow][stackoverflow] and [GitHub issues][issues]
 
 ## Using
 
@@ -97,3 +99,6 @@ Licensed under [MIT][mit]. Enjoy the spinning.
 [jsdelivr]: http://www.jsdelivr.com/?query=wheelnav
 [vs2013]: https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx
 [webessentials]: http://vswebessentials.com/
+[codepen]: https://codepen.io/collection/DORero/
+[stackoverflow]: https://stackoverflow.com/questions/tagged/wheelnav.js
+[issues]: https://github.com/softwaretailoring/wheelnav/issues
