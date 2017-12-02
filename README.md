@@ -8,8 +8,8 @@ Animated wheel navigation JavaScript library based on [modified][modifiedraphael
 It works on all major desktop and mobile browser.
 
 Possible uses:
-- tab navigation
-- pie menu (radial menu, circular menu)
+- [tab navigation][wheelizatetabs]
+- [pie menu (radial menu, circular menu)][pmg]
 - sub menu
 - option button
 - checkboxes
@@ -102,3 +102,5 @@ Licensed under [MIT][mit]. Enjoy the spinning.
 [codepen]: https://codepen.io/collection/DORero/
 [stackoverflow]: https://stackoverflow.com/questions/tagged/wheelnav.js
 [issues]: https://github.com/softwaretailoring/wheelnav/issues
+[wheelizatetabs]: http://wtabs.softwaretailoring.net/
+[pmg]: http://pmg.softwaretailoring.net/
