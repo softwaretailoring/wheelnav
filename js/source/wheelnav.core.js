@@ -98,6 +98,8 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     this.cssMode = false;
     this.selectedToFront = true;
     this.selectedNavItemIndex = 0;
+    this.hoverEnable = true;
+    this.hoveredToFront = true;
 
     this.navItemCount = 0;
     this.navItemCountLabeled = false;

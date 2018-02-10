@@ -99,6 +99,8 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     this.cssMode = false;
     this.selectedToFront = true;
     this.selectedNavItemIndex = 0;
+    this.hoverEnable = true;
+    this.hoveredToFront = true;
 
     this.navItemCount = 0;
     this.navItemCountLabeled = false;
@@ -1037,15 +1039,17 @@ wheelnavItem.prototype.createNavItem = function () {
 
             thisWheelNav.navigateWheel(thisItemIndex);
         });
-        this.navItem.mouseover(function () {
-            if (thisNavItem.hovered !== true) {
-                thisNavItem.hoverEffect(thisItemIndex, true);
-            }
-        });
-        this.navItem.mouseout(function () {
-            thisNavItem.hovered = false;
-            thisNavItem.hoverEffect(thisItemIndex, false);
-        });
+        if (this.wheelnav.hoverEnable) {
+            this.navItem.mouseover(function () {
+                if (thisNavItem.hovered !== true) {
+                    thisNavItem.hoverEffect(thisItemIndex, true);
+                }
+            });
+            this.navItem.mouseout(function () {
+                thisNavItem.hovered = false;
+                thisNavItem.hoverEffect(thisItemIndex, false);
+            });
+        }
     }
 
     this.setCurrentTransform(true, false);
@@ -1325,10 +1329,19 @@ wheelnavItem.prototype.refreshNavItem = function (withPathAndTransform) {
         }
     }
     else if (this.hovered) {
-        this.navSlice.attr(this.sliceHoverAttr).toFront();
-        this.navLine.attr(this.lineHoverAttr).toFront();
-        this.navTitle.attr(this.titleHoverAttr).toFront();
-        if (this.navClickableSlice !== null) { this.navClickableSlice.attr(this.sliceClickableHoverAttr).toFront(); }
+        if (this.wheelnav.hoverEnable) {
+            this.navSlice.attr(this.sliceHoverAttr);
+            this.navLine.attr(this.lineHoverAttr);
+            this.navTitle.attr(this.titleHoverAttr);
+            if (this.navClickableSlice !== null) { this.navClickableSlice.attr(this.sliceClickableHoverAttr); }
+
+            if (this.wheelnav.hoveredToFront) {
+                this.navSlice.toFront();
+                this.navLine.toFront();
+                this.navTitle.toFront();
+            }
+            if (this.navClickableSlice !== null) { this.navClickableSlice.toFront(); }
+        }
     }
     else {
         this.navSlice.attr(this.slicePathAttr);
