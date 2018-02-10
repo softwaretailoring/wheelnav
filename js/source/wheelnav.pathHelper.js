@@ -77,27 +77,40 @@ var pathHelper = function () {
     this.MoveTo = function (angle, length) {
         return ["M", this.getX(angle, length), this.getY(angle, length)];
     };
+    this.MoveToString = function (angle, length) {
+        return "M" + this.getX(angle, length) + " " + this.getY(angle, length);
+    };
 
     this.MoveToCenter = function () {
         return ["M", this.centerX, this.centerY];
     };
+    this.MoveToCenterString = function () {
+        return "M" + this.centerX + " " + this.centerY;
+    };
 
     this.LineTo = function (angle, length, angleY, lengthY) {
-        if (angleY === undefined) {
-            angleY = angle;
-        }
-        if (lengthY === undefined) {
-            lengthY = length;
-        }
+        if (angleY === undefined) { angleY = angle; }
+        if (lengthY === undefined) { lengthY = length; }
         return ["L", this.getX(angle, length), this.getY(angleY, lengthY)];
+    };
+    this.LineToString = function (angle, length, angleY, lengthY) {
+        if (angleY === undefined) { angleY = angle; }
+        if (lengthY === undefined) { lengthY = length; }
+        return "L" + this.getX(angle, length) + " " + this.getY(angleY, lengthY);
     };
 
     this.ArcTo = function (arcRadius, angle, length) {
-        return ["A", arcRadius, arcRadius, 0, 0, 1, this.getX(angle, length), this.getY(angle, length)]
+        return ["A", arcRadius, arcRadius, 0, 0, 1, this.getX(angle, length), this.getY(angle, length)];
+    };
+    this.ArcToString = function (arcRadius, angle, length) {
+        return "A" + arcRadius + " " + arcRadius + " 0 0 1 " + this.getX(angle, length) + " " + this.getY(angle, length);
     };
 
     this.ArcBackTo = function (arcRadius, angle, length) {
-        return ["A", arcRadius, arcRadius, 0, 0, 0, this.getX(angle, length), this.getY(angle, length)]
+        return ["A", arcRadius, arcRadius, 0, 0, 0, this.getX(angle, length), this.getY(angle, length)];
+    };
+    this.ArcBackToString = function (arcRadius, angle, length) {
+        return "A" + arcRadius + " " + arcRadius + " 0 0 0 " + this.getX(angle, length) + " " + this.getY(angle, length);
     };
 
     this.StartSpreader = function (spreaderPathString, angle, length) {
