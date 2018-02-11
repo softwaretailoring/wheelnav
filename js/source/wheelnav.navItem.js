@@ -91,9 +91,9 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     this.sliceAngle = null;
     this.titleRotateAngle = null;
 
-    this.titleCurved = true;
-    this.titleCurvedRadiusPercent = 0.55;
-    this.titleCurvedClockwise = true;
+    this.titleCurved = null;
+    this.titleCurvedRadiusPercent = null;
+    this.titleCurvedClockwise = null;
 
     //Default navitem styles
     this.styleNavItem();
@@ -674,6 +674,9 @@ wheelnavItem.prototype.setWheelSettings = function (force) {
     if (this.wheelnav.titleHoverAttr !== null) { this.titleHoverAttr = JSON.parse(JSON.stringify(this.wheelnav.titleHoverAttr)); }
     if (this.wheelnav.titleSelectedAttr !== null) { this.titleSelectedAttr = JSON.parse(JSON.stringify(this.wheelnav.titleSelectedAttr)); }
     if (this.wheelnav.titleRotateAngle !== null && this.titleRotateAngle === null) { this.titleRotateAngle = this.wheelnav.titleRotateAngle; }
+    if (this.wheelnav.titleCurved !== null && this.titleCurved === null) { this.titleCurved = this.wheelnav.titleCurved; }
+    if (this.wheelnav.titleCurvedRadiusPercent !== null && this.titleCurvedRadiusPercent === null) { this.titleCurvedRadiusPercent = this.wheelnav.titleCurvedRadiusPercent; }
+    if (this.wheelnav.titleCurvedClockwise !== null && this.titleCurvedClockwise === null) { this.titleCurvedClockwise = this.wheelnav.titleCurvedClockwise; }
 
     // Size
     if (this.wheelnav.titleWidth !== null && this.titleWidth === null) { this.titleWidth = this.wheelnav.titleWidth; }

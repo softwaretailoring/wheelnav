@@ -1,5 +1,5 @@
 ﻿/* ======================================================================================= */
-/*                                   wheelnav.js - v1.7.2                                  */
+/*                                   wheelnav.js - v1.8.0                                  */
 /* ======================================================================================= */
 /* This is a small JavaScript library for animated SVG based wheel navigation.             */
 /* Requires Raphaël JavaScript Vector Library (http://dmitrybaranovskiy.github.io/raphael/)*/
@@ -81,6 +81,9 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     this.navAngle = 0;
     this.sliceAngle = null;
     this.titleRotateAngle = null;
+    this.titleCurved = false;
+    this.titleCurvedRadiusPercent = 0.63;
+    this.titleCurvedClockwise = false;
     this.initTitleRotate = false;
     this.clickModeRotate = true;
     this.rotateRound = false;
