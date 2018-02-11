@@ -91,6 +91,10 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     this.sliceAngle = null;
     this.titleRotateAngle = null;
 
+    this.titleCurved = true;
+    this.titleCurvedRadiusPercent = 0.55;
+    this.titleCurvedClockwise = true;
+
     //Default navitem styles
     this.styleNavItem();
 
@@ -211,12 +215,30 @@ wheelnavItem.prototype.createNavItem = function () {
     }
     //Title defined by text
     else {
-        this.navTitle = this.wheelnav.raphael.text(sliceInitPath.titlePosX, sliceInitPath.titlePosY, currentTitle.title);
+        if (this.titleCurved) {
+            this.navTitle = this.wheelnav.raphael.text(sliceInitPath.titlePosX, sliceInitPath.titlePosY, ".");
+            this.addCurvedText(currentTitle.title);
+        }
+        else {
+            this.navTitle = this.wheelnav.raphael.text(sliceInitPath.titlePosX, sliceInitPath.titlePosY, currentTitle.title);
+        }
     }
 
-    this.navTitle.attr(this.titleAttr);
     this.navTitle.id = this.wheelnav.getTitleId(this.wheelItemIndex);
     this.navTitle.node.id = this.navTitle.id;
+    this.navTitle.attr(this.titleAttr);
+
+    //Tspan must be hide in case of curved text
+    if (this.titleCurved) {
+        var thisnode = document.getElementById(this.navTitle.node.id);
+        if (thisnode !== null) {
+            var tspans = thisnode.getElementsByTagName("tspan");
+            if (tspans.length > 0) {
+                tspans[0].setAttribute("fill", "transparent");
+                tspans[0].setAttribute("stroke", "transparent");
+            }
+        }
+    }
 
     //Set transforms
     this.navSliceCurrentTransformString = "";
@@ -227,7 +249,7 @@ wheelnavItem.prototype.createNavItem = function () {
 
     this.navTitleCurrentTransformString = "";
     this.navTitleCurrentTransformString += this.getTitleRotateString(this.wheelnav.initTitleRotate);
-    if (this.initTransform.titleTransformString !== "") { this.navTitleCurrentTransformString += this.initTransform.titleTransformString; }
+    if (this.initTransform.titleTransformString !== "" && this.initTransform.titleTransformString !== undefined) { this.navTitleCurrentTransformString += this.initTransform.titleTransformString; }
     if (this.wheelnav.currentPercent < 0.05) {
         this.navTitleCurrentTransformString += ",s0.05";
     }
@@ -293,6 +315,44 @@ wheelnavItem.prototype.createNavItem = function () {
     }
 
     this.setCurrentTransform(true, false);
+};
+
+wheelnavItem.prototype.addCurvedText = function (text) {
+    var sliceHelper = new pathHelper();
+    sliceHelper.centerX = this.wheelnav.centerX;
+    sliceHelper.centerY = this.wheelnav.centerY;
+    var startAngle = this.baseAngle;
+    var endAngle = this.baseAngle + this.sliceAngle;
+    var radius = this.wheelnav.wheelRadius * this.titleCurvedRadiusPercent;
+    var pathString = "";
+    if (this.titleCurvedClockwise) {
+        pathString = sliceHelper.MoveToString(startAngle, radius) + sliceHelper.ArcToString(radius, endAngle, radius);
+    }
+    else {
+        pathString = sliceHelper.MoveToString(endAngle, radius) + sliceHelper.ArcBackToString(radius, startAngle, radius);
+    }
+
+    this.navTitle.node.id = this.wheelnav.getTitleId(this.wheelItemIndex);
+    var pathid = this.navTitle.node.id + "-path";
+    var curvePath = window.document.createElementNS("http://www.w3.org/2000/svg", "path");
+    curvePath.setAttribute("id", pathid);
+    curvePath.setAttribute("d", pathString);
+    
+    var curveDefs = this.wheelnav.raphael.canvas.getElementsByTagName("defs")[0];
+    curveDefs.appendChild(curvePath);
+
+    var curvetextPath = window.document.createElementNS("http://www.w3.org/2000/svg", "textPath");
+    curvetextPath.setAttribute("href", "#" + pathid);
+    curvetextPath.setAttribute("startOffset", "50%");
+    curvetextPath.setAttribute("alignment-baseline", "baseline");
+    curvetextPath.textContent = text;
+
+    var thisnode = document.getElementById(this.navTitle.node.id);
+    thisnode.appendChild(curvetextPath);
+
+    if (this.titleRotateAngle === null) {
+        this.titleRotateAngle = -this.navAngle;
+    }
 };
 
 wheelnavItem.prototype.hoverEffect = function (hovered, isEnter) {
@@ -463,7 +523,7 @@ wheelnavItem.prototype.setCurrentTransform = function (locked, withFinishFunctio
                 transform: this.navTitleCurrentTransformString
             };
 
-            if (currentTitle.title !== null) {
+            if (currentTitle.title !== null && !this.titleCurved) {
                 this.navTitle.attr({ text: currentTitle.title });
             }
         }
