@@ -183,3 +183,8 @@ footer {
     fill: #666;
     fill-opacity: 0.3;
 }
+
+textPath {
+    dominant-baseline: middle;
+    alignment-baseline: middle;
+}
