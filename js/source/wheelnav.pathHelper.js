@@ -19,6 +19,7 @@ var pathHelper = function () {
     this.titlePosY = 0;
     this.titleRadius = 0;
     this.titleTheta = 0;
+    this.titleAngle = 0;
     this.custom = null;
     this.centerX = 0;
     this.centerY = 0;
@@ -26,6 +27,7 @@ var pathHelper = function () {
     this.itemIndex = 0;
     this.navItemCount = 0;
     this.navAngle = 0;
+    this.titleCurvedClockwise = false;
 
     this.setBaseValue = function (percent, custom) {
 
@@ -51,11 +53,13 @@ var pathHelper = function () {
             }
             if (custom.titleSliceAnglePercent !== null) {
                 this.titleTheta = this.getTheta(this.startAngle + this.sliceAngle * custom.titleSliceAnglePercent);
+                this.titleAngle = this.startAngle + this.sliceAngle * custom.titleSliceAnglePercent;
             }
         }
         else {
             this.titleRadius = this.sliceRadius * 0.5;
             this.titleTheta = this.middleTheta;
+            this.titleAngle = this.middleAngle;
         }
 
         this.setTitlePos();
@@ -81,6 +85,13 @@ var pathHelper = function () {
         return "M" + this.getX(angle, length) + " " + this.getY(angle, length);
     };
 
+    this.MoveToXY = function (posX, posY) {
+        return ["M", posX, posY];
+    };
+    this.MoveToXYString = function (posX, posY) {
+        return "M" + posX + " " + posY;
+    };
+
     this.MoveToCenter = function () {
         return ["M", this.centerX, this.centerY];
     };
@@ -99,6 +110,13 @@ var pathHelper = function () {
         return "L" + this.getX(angle, length) + " " + this.getY(angleY, lengthY);
     };
 
+    this.LineToXY = function (posX, posY) {
+        return ["L", posX, posY];
+    };
+    this.LineToXYString = function (posX, posY) {
+        return "L" + posX + " " + posY;
+    };
+
     this.ArcTo = function (arcRadius, angle, length) {
         return ["A", arcRadius, arcRadius, 0, 0, 1, this.getX(angle, length), this.getY(angle, length)];
     };
@@ -106,11 +124,25 @@ var pathHelper = function () {
         return "A" + arcRadius + " " + arcRadius + " 0 0 1 " + this.getX(angle, length) + " " + this.getY(angle, length);
     };
 
+    this.ArcToXY = function (arcRadius, posX, posY) {
+        return ["A", arcRadius, arcRadius, 0, 0, 1, posX, posY];
+    };
+    this.ArcToXYString = function (arcRadius, posX, posY) {
+        return "A" + arcRadius + " " + arcRadius + " 0 0 1 " + posX + " " + posY;
+    };
+
     this.ArcBackTo = function (arcRadius, angle, length) {
         return ["A", arcRadius, arcRadius, 0, 0, 0, this.getX(angle, length), this.getY(angle, length)];
     };
     this.ArcBackToString = function (arcRadius, angle, length) {
         return "A" + arcRadius + " " + arcRadius + " 0 0 0 " + this.getX(angle, length) + " " + this.getY(angle, length);
+    };
+
+    this.ArcBackToXY = function (arcRadius, posX, posY) {
+        return ["A", arcRadius, arcRadius, 0, 0, 0, posX, posY];
+    };
+    this.ArcBackToXYString = function (arcRadius, posX, posY) {
+        return "A" + arcRadius + " " + arcRadius + " 0 0 0 " + posX + " " + posY;
     };
 
     this.StartSpreader = function (spreaderPathString, angle, length) {
@@ -121,6 +153,19 @@ var pathHelper = function () {
             spreaderPathString.push(this.MoveToCenter());
             spreaderPathString.push(this.LineTo(angle, length));
         }
+    };
+
+    this.getCurvedTitlePathString = function (radius) {
+        var startAngle = this.titleAngle - (this.sliceAngle / 2);
+        var endAngle = this.titleAngle + (this.sliceAngle / 2);
+        var pathString = "";
+        if (this.titleCurvedClockwise) {
+            pathString = this.MoveToString(startAngle, radius) + this.ArcToString(radius, endAngle, radius);
+        }
+        else {
+            pathString = this.MoveToString(endAngle, radius) + this.ArcBackToString(radius, startAngle, radius);
+        }
+        return pathString;
     };
 
     this.Close = function () {
