@@ -88,15 +88,9 @@ var pathHelper = function () {
     this.MoveToXY = function (posX, posY) {
         return ["M", posX, posY];
     };
-    this.MoveToXYString = function (posX, posY) {
-        return "M" + posX + " " + posY;
-    };
 
     this.MoveToCenter = function () {
         return ["M", this.centerX, this.centerY];
-    };
-    this.MoveToCenterString = function () {
-        return "M" + this.centerX + " " + this.centerY;
     };
 
     this.LineTo = function (angle, length, angleY, lengthY) {
@@ -104,45 +98,25 @@ var pathHelper = function () {
         if (lengthY === undefined) { lengthY = length; }
         return ["L", this.getX(angle, length), this.getY(angleY, lengthY)];
     };
-    this.LineToString = function (angle, length, angleY, lengthY) {
-        if (angleY === undefined) { angleY = angle; }
-        if (lengthY === undefined) { lengthY = length; }
-        return "L" + this.getX(angle, length) + " " + this.getY(angleY, lengthY);
-    };
 
     this.LineToXY = function (posX, posY) {
         return ["L", posX, posY];
-    };
-    this.LineToXYString = function (posX, posY) {
-        return "L" + posX + " " + posY;
     };
 
     this.ArcTo = function (arcRadius, angle, length) {
         return ["A", arcRadius, arcRadius, 0, 0, 1, this.getX(angle, length), this.getY(angle, length)];
     };
-    this.ArcToString = function (arcRadius, angle, length) {
-        return "A" + arcRadius + " " + arcRadius + " 0 0 1 " + this.getX(angle, length) + " " + this.getY(angle, length);
-    };
 
     this.ArcToXY = function (arcRadius, posX, posY) {
         return ["A", arcRadius, arcRadius, 0, 0, 1, posX, posY];
-    };
-    this.ArcToXYString = function (arcRadius, posX, posY) {
-        return "A" + arcRadius + " " + arcRadius + " 0 0 1 " + posX + " " + posY;
     };
 
     this.ArcBackTo = function (arcRadius, angle, length) {
         return ["A", arcRadius, arcRadius, 0, 0, 0, this.getX(angle, length), this.getY(angle, length)];
     };
-    this.ArcBackToString = function (arcRadius, angle, length) {
-        return "A" + arcRadius + " " + arcRadius + " 0 0 0 " + this.getX(angle, length) + " " + this.getY(angle, length);
-    };
 
     this.ArcBackToXY = function (arcRadius, posX, posY) {
         return ["A", arcRadius, arcRadius, 0, 0, 0, posX, posY];
-    };
-    this.ArcBackToXYString = function (arcRadius, posX, posY) {
-        return "A" + arcRadius + " " + arcRadius + " 0 0 0 " + posX + " " + posY;
     };
 
     this.StartSpreader = function (spreaderPathString, angle, length) {
@@ -158,12 +132,14 @@ var pathHelper = function () {
     this.getCurvedTitlePathString = function (radius) {
         var startAngle = this.titleAngle - (this.sliceAngle / 2);
         var endAngle = this.titleAngle + (this.sliceAngle / 2);
-        var pathString = "";
+        var pathString = [];
         if (this.titleCurvedClockwise) {
-            pathString = this.MoveToString(startAngle, radius) + this.ArcToString(radius, endAngle, radius);
+            pathString.push(this.MoveTo(startAngle, radius));
+            pathString.push(this.ArcTo(radius, endAngle, radius));
         }
         else {
-            pathString = this.MoveToString(endAngle, radius) + this.ArcBackToString(radius, startAngle, radius);
+            pathString.push(this.MoveTo(endAngle, radius));
+            pathString.push(this.ArcBackTo(radius, startAngle, radius));
         }
         return pathString;
     };
