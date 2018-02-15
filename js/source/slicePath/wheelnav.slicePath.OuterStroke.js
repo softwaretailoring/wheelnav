@@ -30,10 +30,13 @@ this.OuterStrokeSlice = function (helper, percent, custom) {
 
     helper.setTitlePos();
 
+    titlePathString = helper.getCurvedTitlePathString();
+
     return {
         slicePathString: slicePathString,
         linePathString: linePathString,
         titlePosX: helper.titlePosX,
-        titlePosY: helper.titlePosY
+        titlePosY: helper.titlePosY,
+        titlePathString: titlePathString
     };
 };

@@ -24,10 +24,13 @@ this.WebSlice = function (helper, percent, custom) {
                  helper.LineTo(helper.endAngle, r * 0.95),
                  helper.Close()];
 
+    titlePathString = helper.getCurvedTitlePathString();
+
     return {
         slicePathString: "",
         linePathString: linePathString,
         titlePosX: helper.titlePosX,
-        titlePosY: helper.titlePosY
+        titlePosY: helper.titlePosY,
+        titlePathString: titlePathString
     };
 };

@@ -12,16 +12,22 @@ this.TabSlice = function (helper, percent, custom) {
     titlePosX = x;
     titlePosY = itemIndex * itemSize + y + (itemSize / 2) - rOriginal;
 
-    slicePathString = [["M", x - (itemSize / 2), itemIndex * itemSize + y - rOriginal],
-                 ["L", (itemSize / 2) + x, itemIndex * itemSize + y - rOriginal],
-                 ["L", (itemSize / 2) + x, (itemIndex + 1) * itemSize + y - rOriginal],
-                 ["L", x - (itemSize / 2), (itemIndex + 1) * itemSize + y - rOriginal],
-                 ["z"]];
+    slicePathString = [];
+    slicePathString.push(helper.MoveToXY(x - (itemSize / 2), itemIndex * itemSize + y - rOriginal));
+    slicePathString.push(helper.LineToXY((itemSize / 2) + x, itemIndex * itemSize + y - rOriginal));
+    slicePathString.push(helper.LineToXY((itemSize / 2) + x, (itemIndex + 1) * itemSize + y - rOriginal));
+    slicePathString.push(helper.LineToXY(x - (itemSize / 2), (itemIndex + 1) * itemSize + y - rOriginal));
+    slicePathString.push(helper.Close());
+
+    titlePathString = [];
+    titlePathString.push(helper.MoveToXY(x - (itemSize / 2), (itemIndex + 1) * itemSize + y - rOriginal));
+    titlePathString.push(helper.ArcToXY(itemSize * 2, (itemSize / 2) + x, itemIndex * itemSize + y - rOriginal));
 
     return {
         slicePathString: slicePathString,
         linePathString: "",
         titlePosX: titlePosX,
-        titlePosY: titlePosY
+        titlePosY: titlePosY,
+        titlePathString: titlePathString
     };
 };

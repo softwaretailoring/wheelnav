@@ -34,10 +34,13 @@ this.EyeSlice = function (helper, percent, custom) {
                  helper.ArcTo(r, endAngle, r),
                  helper.Close()];
 
+    titlePathString = helper.getCurvedTitlePathString();
+
     return {
         slicePathString: slicePathString,
         linePathString: "",
         titlePosX: helper.titlePosX,
-        titlePosY: helper.titlePosY
+        titlePosY: helper.titlePosY,
+        titlePathString: titlePathString
     };
 };

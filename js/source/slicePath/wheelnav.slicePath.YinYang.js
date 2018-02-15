@@ -15,10 +15,14 @@ this.YinYangSlice = function (helper, percent, custom) {
     titlePosX = helper.getX(helper.startAngle, r / 2);
     titlePosY = helper.getY(helper.startAngle, r / 2);
 
+    titlePathString = [helper.MoveToCenter(),
+                 helper.ArcTo(r / 4, helper.startAngle + helper.sliceAngle * 0.2, r * 0.8)];
+
     return {
         slicePathString: slicePathString,
         linePathString: slicePathString,
         titlePosX: titlePosX,
-        titlePosY: titlePosY
+        titlePosY: titlePosY,
+        titlePathString: titlePathString
     };
 };

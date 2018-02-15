@@ -31,10 +31,13 @@ this.DonutSlice = function (helper, percent, custom) {
                  helper.ArcBackTo(minRadius, helper.startAngle, minRadius),
                  helper.Close()];
 
+    titlePathString = helper.getCurvedTitlePathString();
+
     return {
         slicePathString: slicePathString,
         linePathString: "",
         titlePosX: helper.titlePosX,
-        titlePosY: helper.titlePosY
+        titlePosY: helper.titlePosY,
+        titlePathString: titlePathString
     };
 };

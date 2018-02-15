@@ -31,11 +31,14 @@ this.PieArrowSlice = function (helper, percent, custom) {
                  helper.ArcTo(r, helper.endAngle, r),
                  helper.Close()];
 
+    titlePathString = helper.getCurvedTitlePathString();
+
     return {
         slicePathString: slicePathString,
         linePathString: "",
         titlePosX: helper.titlePosX,
-        titlePosY: helper.titlePosY
+        titlePosY: helper.titlePosY,
+        titlePathString: titlePathString
     };
 };
 
@@ -52,6 +55,7 @@ this.PieArrowBasePieSlice = function (helper, percent, custom) {
         slicePathString: slicePath.slicePathString,
         linePathString: "",
         titlePosX: slicePath.titlePosX,
-        titlePosY: slicePath.titlePosY
+        titlePosY: slicePath.titlePosY,
+        titlePathString: slicePath.titlePathString
     };
 };

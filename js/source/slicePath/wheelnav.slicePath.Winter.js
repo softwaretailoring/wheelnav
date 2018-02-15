@@ -44,10 +44,13 @@ this.WinterSlice = function (helper, percent, custom) {
                  helper.MoveTo(borderAngle3, arcRadius / 2),
                  helper.LineTo(parallelAngle2, arcRadius)];
 
+    titlePathString = helper.getCurvedTitlePathString();
+
     return {
         slicePathString: slicePathString,
         linePathString: linePathString,
         titlePosX: helper.titlePosX,
-        titlePosY: helper.titlePosY
+        titlePosY: helper.titlePosY,
+        titlePathString: titlePathString
     };
 };

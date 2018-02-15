@@ -19,19 +19,30 @@ this.TutorialSlice = function (helper, percent, custom) {
     helper.setBaseValue(percent, custom);
 
     slicePathString = [];
+    titlePathString = [];
 
     slicePathString.push(helper.MoveToCenter());
+    titlePathString.push(helper.MoveToCenter());
+
     if (custom.isMoveTo === true) {
-        slicePathString.push(helper.MoveTo(helper.middleAngle, helper.sliceRadius / 4));
+        var moveTo = helper.MoveTo(helper.middleAngle, helper.sliceRadius / 4);
+        slicePathString.push(moveTo);
+        titlePathString.push(moveTo);
     }
     if (custom.isLineTo) {
-        slicePathString.push(helper.LineTo(helper.startAngle, helper.sliceRadius));
+        var lineTo = helper.LineTo(helper.startAngle, helper.sliceRadius);
+        slicePathString.push(lineTo);
+        titlePathString.push(lineTo);
     }
     if (custom.isArcTo) {
-        slicePathString.push(helper.ArcTo(helper.sliceRadius, helper.middleAngle, helper.sliceRadius));
+        var arcTo = helper.ArcTo(helper.sliceRadius, helper.middleAngle, helper.sliceRadius);
+        slicePathString.push(arcTo);
+        titlePathString.push(arcTo);
     }
     if (custom.isArcBackTo) {
-        slicePathString.push(helper.ArcBackTo(helper.sliceRadius, helper.endAngle, helper.sliceRadius));
+        var arcBackTo = helper.ArcBackTo(helper.sliceRadius, helper.endAngle, helper.sliceRadius);
+        slicePathString.push(arcBackTo);
+        titlePathString.push(arcBackTo);
     }
     slicePathString.push(helper.Close());
 
@@ -45,6 +56,7 @@ this.TutorialSlice = function (helper, percent, custom) {
         slicePathString: slicePathString,
         linePathString: linePathString,
         titlePosX: helper.titlePosX,
-        titlePosY: helper.titlePosY
+        titlePosY: helper.titlePosY,
+        titlePathString: titlePathString
     };
 };

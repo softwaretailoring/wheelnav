@@ -50,11 +50,14 @@ this.MenuSlice = function (helper, percent, custom) {
         }
     }
 
+    titlePathString = helper.getCurvedTitlePathString();
+
     return {
         slicePathString: slicePathString,
         linePathString: linePathString,
         titlePosX: helper.titlePosX,
-        titlePosY: helper.titlePosY
+        titlePosY: helper.titlePosY,
+        titlePathString: titlePathString
     };
 };
 
@@ -72,7 +75,8 @@ this.MenuSliceSelectedLine = function (helper, percent, custom) {
         slicePathString: slicePath.slicePathString,
         linePathString: slicePath.linePathString,
         titlePosX: slicePath.titlePosX,
-        titlePosY: slicePath.titlePosY
+        titlePosY: slicePath.titlePosY,
+        titlePathString: slicePath.titlePathString
     };
 };
 
@@ -84,6 +88,7 @@ this.MenuSliceWithoutLine = function (helper, percent, custom) {
         slicePathString: slicePath.slicePathString,
         linePathString: "",
         titlePosX: slicePath.titlePosX,
-        titlePosY: slicePath.titlePosY
+        titlePosY: slicePath.titlePosY,
+        titlePathString: slicePath.titlePathString
     };
 };

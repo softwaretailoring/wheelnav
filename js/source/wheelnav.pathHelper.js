@@ -129,17 +129,17 @@ var pathHelper = function () {
         }
     };
 
-    this.getCurvedTitlePathString = function (radius) {
+    this.getCurvedTitlePathString = function () {
         var startAngle = this.titleAngle - (this.sliceAngle / 2);
         var endAngle = this.titleAngle + (this.sliceAngle / 2);
         var pathString = [];
         if (this.titleCurvedClockwise) {
-            pathString.push(this.MoveTo(startAngle, radius));
-            pathString.push(this.ArcTo(radius, endAngle, radius));
+            pathString.push(this.MoveTo(startAngle, this.titleRadius));
+            pathString.push(this.ArcTo(this.titleRadius, endAngle, this.titleRadius));
         }
         else {
-            pathString.push(this.MoveTo(endAngle, radius));
-            pathString.push(this.ArcBackTo(radius, startAngle, radius));
+            pathString.push(this.MoveTo(endAngle, this.titleRadius));
+            pathString.push(this.ArcBackTo(this.titleRadius, startAngle, this.titleRadius));
         }
         return pathString;
     };
