@@ -887,29 +887,43 @@ this.TutorialSlice = function (helper, percent, custom) {
     titlePathString = [];
 
     slicePathString.push(helper.MoveToCenter());
-    titlePathString.push(helper.MoveToCenter());
+    titlePathRadius1 = helper.titleRadius;
+    titlePathRadius2 = helper.titleRadius;
+    titlePathEndangle = helper.startAngle;
+    titlePathStartRadius = 0;
 
     if (custom.isMoveTo === true) {
-        var moveTo = helper.MoveTo(helper.middleAngle, helper.sliceRadius / 4);
-        slicePathString.push(moveTo);
-        titlePathString.push(moveTo);
+        slicePathString.push(helper.MoveTo(helper.middleAngle, helper.sliceRadius / 4));
+        titlePathRadius1 *= 1.05;
+        titlePathRadius2 *= 0.95;
+        titlePathStartRadius += helper.sliceRadius / 16;
+        titlePathEndangle = helper.startAngle + (helper.sliceAngle / 8);
     }
     if (custom.isLineTo) {
-        var lineTo = helper.LineTo(helper.startAngle, helper.sliceRadius);
-        slicePathString.push(lineTo);
-        titlePathString.push(lineTo);
+        slicePathString.push(helper.LineTo(helper.startAngle, helper.sliceRadius));
+        titlePathRadius1 *= 1.1;
+        titlePathRadius2 *= 0.9;
+        titlePathStartRadius += helper.sliceRadius / 16;
+        titlePathEndangle = helper.startAngle + (helper.sliceAngle / 4);
     }
     if (custom.isArcTo) {
-        var arcTo = helper.ArcTo(helper.sliceRadius, helper.middleAngle, helper.sliceRadius);
-        slicePathString.push(arcTo);
-        titlePathString.push(arcTo);
+        slicePathString.push(helper.ArcTo(helper.sliceRadius, helper.middleAngle, helper.sliceRadius));
+        titlePathRadius1 *= 1.2;
+        titlePathRadius2 *= 0.8;
+        titlePathStartRadius += helper.sliceRadius / 8;
+        titlePathEndangle = helper.middleAngle - (helper.sliceAngle / 8);
     }
     if (custom.isArcBackTo) {
-        var arcBackTo = helper.ArcBackTo(helper.sliceRadius, helper.endAngle, helper.sliceRadius);
-        slicePathString.push(arcBackTo);
-        titlePathString.push(arcBackTo);
+        slicePathString.push(helper.ArcBackTo(helper.sliceRadius, helper.endAngle, helper.sliceRadius));
+        titlePathRadius1 *= 1.3;
+        titlePathRadius2 *= 0.7;
+        titlePathStartRadius += helper.sliceRadius / 8;
+        titlePathEndangle = helper.endAngle;
     }
     slicePathString.push(helper.Close());
+
+    titlePathString.push(helper.MoveTo(helper.startAngle, titlePathStartRadius));
+    titlePathString.push(helper.CubicBezierTo(helper.middleAngle - (helper.sliceAngle / 8), titlePathRadius1, helper.middleAngle + (helper.sliceAngle / 8), titlePathRadius2, titlePathEndangle, helper.sliceRadius));
 
     linePathString = [helper.MoveToCenter(),
                  helper.LineTo(helper.startAngle, helper.sliceRadius),
