@@ -119,6 +119,14 @@ var pathHelper = function () {
         return ["A", arcRadius, arcRadius, 0, 0, 0, posX, posY];
     };
 
+    this.CubicBezierTo = function (assist1Angle, assist1Length, assist2Angle, assist2Length, endAngle, endLength) {
+        return ["C", this.getX(assist1Angle, assist1Length), this.getY(assist1Angle, assist1Length), this.getX(assist2Angle, assist2Length), this.getY(assist2Angle, assist2Length), this.getX(endAngle, endLength), this.getY(endAngle, endLength)];
+    };
+
+    this.CubicBezierXY = function (assist1X, assist1Y, assist2X, assist2Y, endX, endY) {
+        return ["C", assist1X, assist1Y, assist2X, assist2Y, endX, endY];
+    };
+
     this.StartSpreader = function (spreaderPathString, angle, length) {
         if (this.endAngle - this.startAngle === 360) {
             spreaderPathString.push(this.MoveTo(angle, length));
