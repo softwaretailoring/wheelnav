@@ -82,8 +82,8 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
     this.sliceAngle = null;
     this.titleRotateAngle = null;
     this.titleCurved = false;
-    this.titleCurvedRadiusPercent = 0.63;
-    this.titleCurvedClockwise = false;
+    this.titleCurvedClockwise = null;
+    this.titleCurvedAutoRotate = true;
     this.initTitleRotate = false;
     this.clickModeRotate = true;
     this.rotateRound = false;
@@ -493,16 +493,21 @@ wheelnav.prototype.animateUnlock = function (force, withFinishFunction) {
         for (var f = 0; f < this.navItemCount; f++) {
             this.navItems[f].navSliceUnderAnimation = false;
             this.navItems[f].navTitleUnderAnimation = false;
+            this.navItems[f].navTitlePathUnderAnimation = false;
             this.navItems[f].navLineUnderAnimation = false;
             this.navItems[f].navSlice.stop();
             this.navItems[f].navLine.stop();
             this.navItems[f].navTitle.stop();
+            if (this.navItems[f].navTitlePath !== undefined) {
+                this.navItems[f].navTitlePath.stop();
+            }
         }
     }
     else {
         for (var i = 0; i < this.navItemCount; i++) {
             if (this.navItems[i].navSliceUnderAnimation === true ||
                 this.navItems[i].navTitleUnderAnimation === true ||
+                this.navItems[i].navTitlePathUnderAnimation === true ||
                 this.navItems[i].navLineUnderAnimation === true) {
                 return;
             }
@@ -539,6 +544,9 @@ wheelnav.prototype.getClickableSliceId = function (index) {
 };
 wheelnav.prototype.getTitleId = function (index) {
     return "wheelnav-" + this.holderId + "-title-" + index;
+};
+wheelnav.prototype.getTitlePathId = function (index) {
+    return "wheelnav-" + this.holderId + "-titlepath-" + index;
 };
 wheelnav.prototype.getLineId = function (index) {
     return "wheelnav-" + this.holderId + "-line-" + index;
