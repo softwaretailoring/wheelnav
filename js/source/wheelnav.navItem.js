@@ -337,15 +337,30 @@ wheelnavItem.prototype.addCurvedTitle = function (text) {
     this.navTitlePath.attr({ fill: "transparent", stroke: "transparent" });
     this.navTitlePath.node.id = pathid;
 
-    var curvetextPath = window.document.createElementNS("http://www.w3.org/2000/svg", "textPath");
-    curvetextPath.setAttribute("href", "#" + pathid);
-    curvetextPath.setAttribute("startOffset", "50%");
-    curvetextPath.setAttribute("dominant-baseline", "middle");
-    curvetextPath.setAttribute("alignment-baseline", "middle");
-    curvetextPath.textContent = text;
-
     var thisnode = document.getElementById(this.navTitle.node.id);
-    thisnode.appendChild(curvetextPath);
+    var textpaths = text.split('\n');
+    for (var i = 0; i < textpaths.length; i++) {
+        var curvetextPath = window.document.createElementNS("http://www.w3.org/2000/svg", "textPath");
+        curvetextPath.setAttribute("id", pathid + "-text-" + i);
+        curvetextPath.setAttribute("href", "#" + pathid);
+        curvetextPath.setAttribute("startOffset", "50%");
+        if (textpaths.length === 1) {
+            curvetextPath.setAttribute("dominant-baseline", "middle");
+            curvetextPath.setAttribute("alignment-baseline", "middle");
+        }
+        else {
+            if (i === 0) {
+                curvetextPath.setAttribute("dominant-baseline", "text-after-edge");
+                curvetextPath.setAttribute("alignment-baseline", "after-edge");
+            }
+            else {
+                curvetextPath.setAttribute("dominant-baseline", "text-before-edge");
+                curvetextPath.setAttribute("alignment-baseline", "before-edge");
+            }
+        }
+        curvetextPath.textContent = textpaths[i];
+        thisnode.appendChild(curvetextPath);
+    }
 
     if (this.titleCurvedAutoRotate && this.titleRotateAngle === null) {
         this.titleRotateAngle = -this.navAngle;
