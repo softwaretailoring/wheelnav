@@ -81,9 +81,6 @@ var pathHelper = function () {
     this.MoveTo = function (angle, length) {
         return ["M", this.getX(angle, length), this.getY(angle, length)];
     };
-    this.MoveToString = function (angle, length) {
-        return "M" + this.getX(angle, length) + " " + this.getY(angle, length);
-    };
 
     this.MoveToXY = function (posX, posY) {
         return ["M", posX, posY];
