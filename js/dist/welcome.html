@@ -106,8 +106,9 @@
             var wheel = new wheelnav("wheelDiv");
 
             //This is the place for code snippets from the documentation -> http://wheelnavjs.softwaretailoring.net/documentation.html
-
-            wheel.createWheel(["Thank you", "for", "download", icon.fave]);
+            wheel.titleCurved = true;
+            wheel.titleCurvedClockwise = true;
+            wheel.createWheel(["Thank\nyou", "for", "download", icon.fave]);
             wheel.navigateWheel(2);
 
             //Insert generated JavaScript code from here -> http://pmg.softwaretailoring.net
