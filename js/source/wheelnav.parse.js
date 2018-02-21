@@ -87,7 +87,21 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
             if (wheelnavTitleHeight !== null) {
                 this.titleHeight = Number(wheelnavTitleHeight);
             }
-
+            //data-wheelnav-titlecurved
+            var wheelnavTitleCurved = holderDiv.getAttribute("data-wheelnav-titlecurved");
+            if (wheelnavTitleCurved !== null) {
+                this.titleCurved = true;
+            }
+            //data-wheelnav-titlecurvedclockwise
+            var wheelnavTitleCurvedClockwise = holderDiv.getAttribute("data-wheelnav-titlecurvedclockwise");
+            if (wheelnavTitleCurvedClockwise !== null) {
+                this.titleCurvedClockwise = true;
+            }
+            //data-wheelnav-titlecurvedbyrotateangle
+            var wheelnavTitleCurvedByRotateAngle = holderDiv.getAttribute("data-wheelnav-titlecurvedbyrotateangle");
+            if (wheelnavTitleCurvedByRotateAngle !== null) {
+                this.titleCurvedByRotateAngle = true;
+            }
             //data-wheelnav-keynav
             var wheelnavKeynav = holderDiv.getAttribute("data-wheelnav-keynav");
             if (wheelnavKeynav !== null) {

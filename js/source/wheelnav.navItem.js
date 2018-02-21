@@ -712,7 +712,7 @@ wheelnavItem.prototype.setWheelSettings = function (force) {
     if (this.wheelnav.titleRotateAngle !== null && this.titleRotateAngle === null) { this.titleRotateAngle = this.wheelnav.titleRotateAngle; }
     if (this.wheelnav.titleCurved !== null && this.titleCurved === null) { this.titleCurved = this.wheelnav.titleCurved; }
     if (this.wheelnav.titleCurvedClockwise !== null && this.titleCurvedClockwise === null) { this.titleCurvedClockwise = this.wheelnav.titleCurvedClockwise; }
-    else if (this.titleCurvedClockwise === null) { this.titleCurvedClockwise = this.wheelnav.clockwise; }
+    else if (this.titleCurvedClockwise === null) { this.titleCurvedClockwise = !this.wheelnav.clockwise; }
     if (this.wheelnav.titleCurvedByRotateAngle !== null && this.titleCurvedByRotateAngle === null) { this.titleCurvedByRotateAngle = this.wheelnav.titleCurvedByRotateAngle; }
 
     // Size
