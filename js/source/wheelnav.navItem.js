@@ -94,7 +94,7 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
 
     this.titleCurved = null;
     this.titleCurvedClockwise = null;
-    this.titleCurvedAutoRotate = null;
+    this.titleCurvedByRotateAngle = null;
 
     //Default navitem styles
     this.styleNavItem();
@@ -362,7 +362,7 @@ wheelnavItem.prototype.addCurvedTitle = function (text) {
         thisnode.appendChild(curvetextPath);
     }
 
-    if (this.titleCurvedAutoRotate && this.titleRotateAngle === null) {
+    if (!this.titleCurvedByRotateAngle) {
         this.titleRotateAngle = -this.navAngle;
     }
 };
@@ -404,7 +404,9 @@ wheelnavItem.prototype.setCurrentTransform = function (locked, withFinishFunctio
             locked === true) {
             this.navSliceUnderAnimation = true;
             this.navTitleUnderAnimation = true;
-            this.navTitlePathUnderAnimation = true;
+            if (this.navTitlePath !== undefined) {
+                this.navTitlePathUnderAnimation = true;
+            }
             this.navLineUnderAnimation = true;
         }
 
@@ -566,7 +568,7 @@ wheelnavItem.prototype.setCurrentTransform = function (locked, withFinishFunctio
             thisNavItem.navTitleUnderAnimation = false;
             thisWheelnav.animateUnlock(false, withFinishFunction);
         });
-        if (this.titleCurved) {
+        if (this.titleCurved && this.navTitlePath !== undefined) {
             this.animTitlePath = Raphael.animation(titlePathTransformAttr, this.animatetime, this.animateeffect, function () {
                 thisNavItem.navTitlePathUnderAnimation = false;
                 thisWheelnav.animateUnlock(false, withFinishFunction);
@@ -711,7 +713,7 @@ wheelnavItem.prototype.setWheelSettings = function (force) {
     if (this.wheelnav.titleCurved !== null && this.titleCurved === null) { this.titleCurved = this.wheelnav.titleCurved; }
     if (this.wheelnav.titleCurvedClockwise !== null && this.titleCurvedClockwise === null) { this.titleCurvedClockwise = this.wheelnav.titleCurvedClockwise; }
     else if (this.titleCurvedClockwise === null) { this.titleCurvedClockwise = this.wheelnav.clockwise; }
-    if (this.wheelnav.titleCurvedAutoRotate !== null && this.titleCurvedAutoRotate === null) { this.titleCurvedAutoRotate = this.wheelnav.titleCurvedAutoRotate; }
+    if (this.wheelnav.titleCurvedByRotateAngle !== null && this.titleCurvedByRotateAngle === null) { this.titleCurvedByRotateAngle = this.wheelnav.titleCurvedByRotateAngle; }
 
     // Size
     if (this.wheelnav.titleWidth !== null && this.titleWidth === null) { this.titleWidth = this.wheelnav.titleWidth; }
