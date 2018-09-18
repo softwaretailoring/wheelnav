@@ -15,7 +15,7 @@ Possible uses:
 - checkboxes
 - and more...
 
-For more insight please visit [http://wheelnavjs.softwaretailoring.net][projectpage]  
+For more insight please visit [https://wheelnavjs.softwaretailoring.net][projectpage]  
 Demos are available on [CodePen][codepen]  
 You can find answers on [StackOverflow][stackoverflow] and [GitHub issues][issues]
 
