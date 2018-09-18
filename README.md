@@ -89,14 +89,14 @@ Development environment: [Visual Studio Community 2013][vs2013] with [Web Essent
 
 Licensed under [MIT][mit]. Enjoy the spinning.
 
-[projectpage]: http://wheelnavjs.softwaretailoring.net
-[testpage]: http://wheelnavjs.softwaretailoring.net/test
-[mit]: http://www.opensource.org/licenses/mit-license.php
+[projectpage]: https://wheelnavjs.softwaretailoring.net
+[testpage]: https://wheelnavjs.softwaretailoring.net/test
+[mit]: https://opensource.org/licenses/mit-license.php
 [raphaeljs]: http://dmitrybaranovskiy.github.io/raphael
 [modifiedraphael]: https://github.com/softwaretailoring/wheelnav/commits/master/js/required/raphael.js
 [npm]: https://www.npmjs.com/package/wheelnav
 [bower]: http://bower.io/search/?q=wheelnav
-[jsdelivr]: http://www.jsdelivr.com/?query=wheelnav
+[jsdelivr]: https://www.jsdelivr.com/?query=wheelnav
 [vs2013]: https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx
 [webessentials]: http://vswebessentials.com/
 [codepen]: https://codepen.io/collection/DORero/
