@@ -89,6 +89,8 @@ Development environment: [Visual Studio Community 2013][vs2013] with [Web Essent
 
 Licensed under [MIT][mit]. Enjoy the spinning.
 
+<a target="_blank" href="https://www.buymeacoffee.com/sftwrtlrng"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="Buy me a beer"><span style="margin-left:5px">Buy me a beer</span></a> - if you want to keep in spinning. Thanks a lot!
+
 [projectpage]: https://wheelnavjs.softwaretailoring.net
 [testpage]: https://wheelnavjs.softwaretailoring.net/test
 [mit]: https://opensource.org/licenses/mit-license.php
