@@ -98,7 +98,7 @@ Licensed under [MIT][mit]. Enjoy the spinning.
 [modifiedraphael]: https://github.com/softwaretailoring/wheelnav/commits/master/js/required/raphael.js
 [npm]: https://www.npmjs.com/package/wheelnav
 [bower]: http://bower.io/search/?q=wheelnav
-[jsdelivr]: https://www.jsdelivr.com/?query=wheelnav
+[jsdelivr]: https://www.jsdelivr.com/package/npm/wheelnav
 [vs2013]: https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx
 [webessentials]: http://vswebessentials.com/
 [codepen]: https://codepen.io/collection/DORero/
