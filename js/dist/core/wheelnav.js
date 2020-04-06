@@ -48,8 +48,8 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
             }
         }
 
-        for (var i = 0; i < removeChildrens.length; i++) {
-            holderDiv.removeChild(removeChildrens[i]);
+        for (var j = 0; j < removeChildrens.length; j++) {
+            holderDiv.removeChild(removeChildrens[j]);
         }
 
         if (divWidth !== undefined &&
@@ -417,7 +417,7 @@ wheelnav.prototype.navigateWheel = function (clicked) {
 
             navItem.currentRotateAngle -= rotationAngle;
             var currentAnimateTime;
-            if (this.animatetime != null) {
+            if (this.animatetime !== null) {
                 currentAnimateTime = this.animatetime;
             }
             else {
@@ -757,9 +757,9 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
             if (parsedNavItems.length > 0) {
                 this.initWheel(parsedNavItems);
 
-                for (var i = 0; i < parsedNavItemsOnmouseup.length; i++) {
-                    this.navItems[i].navigateFunction = parsedNavItemsOnmouseup[i];
-                    this.navItems[i].navigateHref = parsedNavItemsHref[i];
+                for (var k = 0; k < parsedNavItemsOnmouseup.length; k++) {
+                    this.navItems[k].navigateFunction = parsedNavItemsOnmouseup[i];
+                    this.navItems[k].navigateHref = parsedNavItemsHref[k];
                 }
 
                 if (!onlyInit) {
@@ -769,14 +769,14 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
         }
 
         var removeChildrens = [];
-        for (var i = 0; i < holderDiv.children.length; i++) {
-            if (holderDiv.children[i].localName !== "svg") {
-                removeChildrens.push(holderDiv.children[i]);
+        for (var l = 0; l < holderDiv.children.length; l++) {
+            if (holderDiv.children[l].localName !== "svg") {
+                removeChildrens.push(holderDiv.children[l]);
             }
         }
 
-        for (var i = 0; i < removeChildrens.length; i++) {
-            holderDiv.removeChild(removeChildrens[i]);
+        for (var m = 0; m < removeChildrens.length; m++) {
+            holderDiv.removeChild(removeChildrens[m]);
         }
     }
 };
@@ -1987,7 +1987,7 @@ wheelnavItem.prototype.styleNavItem = function () {
     this.sliceClickablePathAttr = { fill: "#FFF", stroke: "#FFF", "stroke-width": 0, cursor: 'pointer', "fill-opacity": 0.01 };
     this.sliceClickableHoverAttr = { stroke: "#FFF", "stroke-width": 0, cursor: 'pointer' };
     this.sliceClickableSelectedAttr = { stroke: "#FFF", "stroke-width": 0, cursor: 'default' };
-}
+};
 
 wheelnav.prototype.getSliceCssClass = function (index, subclass) {
     return "wheelnav-" + this.holderId + "-slice-" + subclass + "-" + index;
@@ -2800,8 +2800,8 @@ this.AntiStarSpreader = function (helper, percent, custom) {
 this.FlowerSpreaderCustomization = function () {
 
     var custom = new spreaderPathCustomization();
-    custom.minRadiusPercent = 0.63
-    custom.menuRadius = 7;;
+    custom.minRadiusPercent = 0.63;
+    custom.menuRadius = 7;
 
     return custom;
 };

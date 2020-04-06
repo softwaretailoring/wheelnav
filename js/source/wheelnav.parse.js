@@ -192,9 +192,9 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
             if (parsedNavItems.length > 0) {
                 this.initWheel(parsedNavItems);
 
-                for (var i = 0; i < parsedNavItemsOnmouseup.length; i++) {
-                    this.navItems[i].navigateFunction = parsedNavItemsOnmouseup[i];
-                    this.navItems[i].navigateHref = parsedNavItemsHref[i];
+                for (var k = 0; k < parsedNavItemsOnmouseup.length; k++) {
+                    this.navItems[k].navigateFunction = parsedNavItemsOnmouseup[k];
+                    this.navItems[k].navigateHref = parsedNavItemsHref[k];
                 }
 
                 if (!onlyInit) {
@@ -204,14 +204,14 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
         }
 
         var removeChildrens = [];
-        for (var i = 0; i < holderDiv.children.length; i++) {
-            if (holderDiv.children[i].localName !== "svg") {
-                removeChildrens.push(holderDiv.children[i]);
+        for (var l = 0; l < holderDiv.children.length; l++) {
+            if (holderDiv.children[l].localName !== "svg") {
+                removeChildrens.push(holderDiv.children[l]);
             }
         }
 
-        for (var i = 0; i < removeChildrens.length; i++) {
-            holderDiv.removeChild(removeChildrens[i]);
+        for (var m = 0; m < removeChildrens.length; m++) {
+            holderDiv.removeChild(removeChildrens[m]);
         }
     }
 };

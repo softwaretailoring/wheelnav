@@ -47,8 +47,8 @@ wheelnav = function (divId, raphael, divWidth, divHeight) {
             }
         }
 
-        for (var i = 0; i < removeChildrens.length; i++) {
-            holderDiv.removeChild(removeChildrens[i]);
+        for (var j = 0; j < removeChildrens.length; j++) {
+            holderDiv.removeChild(removeChildrens[j]);
         }
 
         if (divWidth !== undefined &&
@@ -416,7 +416,7 @@ wheelnav.prototype.navigateWheel = function (clicked) {
 
             navItem.currentRotateAngle -= rotationAngle;
             var currentAnimateTime;
-            if (this.animatetime != null) {
+            if (this.animatetime !== null) {
                 currentAnimateTime = this.animatetime;
             }
             else {

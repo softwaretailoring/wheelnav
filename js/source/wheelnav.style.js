@@ -63,7 +63,7 @@ wheelnavItem.prototype.styleNavItem = function () {
     this.sliceClickablePathAttr = { fill: "#FFF", stroke: "#FFF", "stroke-width": 0, cursor: 'pointer', "fill-opacity": 0.01 };
     this.sliceClickableHoverAttr = { stroke: "#FFF", "stroke-width": 0, cursor: 'pointer' };
     this.sliceClickableSelectedAttr = { stroke: "#FFF", "stroke-width": 0, cursor: 'default' };
-}
+};
 
 wheelnav.prototype.getSliceCssClass = function (index, subclass) {
     return "wheelnav-" + this.holderId + "-slice-" + subclass + "-" + index;

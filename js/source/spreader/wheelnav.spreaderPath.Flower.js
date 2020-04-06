@@ -2,8 +2,8 @@
 this.FlowerSpreaderCustomization = function () {
 
     var custom = new spreaderPathCustomization();
-    custom.minRadiusPercent = 0.63
-    custom.menuRadius = 7;;
+    custom.minRadiusPercent = 0.63;
+    custom.menuRadius = 7;
 
     return custom;
 };
