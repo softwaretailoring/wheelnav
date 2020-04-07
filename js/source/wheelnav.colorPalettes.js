@@ -1,8 +1,8 @@
 ﻿/* ======================================================================================== */
-/* Color palettes for slices from http://www.colourlovers.com                               */
+/* Color palettes for slices from https://www.colourlovers.com                              */
 /* ======================================================================================== */
 /* ======================================================================================== */
-/* Documentation: http://wheelnavjs.softwaretailoring.net/documentation/colorPalettes.html  */
+/* Documentation: https://wheelnavjs.softwaretailoring.net/documentation/colorPalettes.html */
 /* ======================================================================================== */
 
 var colorpalette = {

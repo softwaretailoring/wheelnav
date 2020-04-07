@@ -1,19 +1,19 @@
-﻿/* ======================================================================================= */
-/*                                   wheelnav.js - v1.8.0                                  */
-/* ======================================================================================= */
-/* This is a small JavaScript library for animated SVG based wheel navigation.             */
-/* Requires Raphaël JavaScript Vector Library (http://dmitrybaranovskiy.github.io/raphael/)*/
-/* ======================================================================================= */
-/* Check http://wheelnavjs.softwaretailoring.net for samples.                              */
-/* Fork https://github.com/softwaretailoring/wheelnav for contribution.                    */
-/* ======================================================================================= */
-/* Copyright © 2014-2020 Gábor Berkesi (http://softwaretailoring.net)                      */
-/* Licensed under MIT (https://github.com/softwaretailoring/wheelnav/blob/master/LICENSE)  */
-/* ======================================================================================= */
+﻿/* ======================================================================================== */
+/*                                   wheelnav.js - v1.8.0                                   */
+/* ======================================================================================== */
+/* This is a small JavaScript library for animated SVG based wheel navigation.              */
+/* Requires Raphaël JavaScript Vector Library (https://dmitrybaranovskiy.github.io/raphael/)*/
+/* ======================================================================================== */
+/* Check https://wheelnavjs.softwaretailoring.net for samples.                              */
+/* Fork https://github.com/softwaretailoring/wheelnav for contribution.                     */
+/* ======================================================================================== */
+/* Copyright © 2014-2020 Gábor Berkesi (https://softwaretailoring.net)                      */
+/* Licensed under MIT (https://github.com/softwaretailoring/wheelnav/blob/master/LICENSE)   */
+/* ======================================================================================== */
 
-/* ======================================================================================= */
-/* Documentation: http://wheelnavjs.softwaretailoring.net/documentation/core.html          */
-/* ======================================================================================= */
+/* ======================================================================================== */
+/* Documentation: https://wheelnavjs.softwaretailoring.net/documentation/core.html          */
+/* ======================================================================================== */
 
 wheelnav = function (divId, raphael, divWidth, divHeight) {
 

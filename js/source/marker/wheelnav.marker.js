@@ -2,7 +2,7 @@
 /* Marker of wheel                                                                         */
 /* ======================================================================================= */
 /* ======================================================================================= */
-/* Documentation: http://wheelnavjs.softwaretailoring.net/documentation/marker.html        */
+/* Documentation: https://wheelnavjs.softwaretailoring.net/documentation/marker.html       */
 /* ======================================================================================= */
 
 marker = function (wheelnav) {

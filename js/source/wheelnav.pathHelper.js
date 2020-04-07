@@ -1,8 +1,8 @@
 ﻿/* ======================================================================================= */
-/* Slice path helper functions                                                                  */
+/* Slice path helper functions                                                             */
 /* ======================================================================================= */
 /* ======================================================================================= */
-/* Documentation: http://wheelnavjs.softwaretailoring.net/documentation/slicePath.html     */
+/* Documentation: https://wheelnavjs.softwaretailoring.net/documentation/slicePath.html    */
 /* ======================================================================================= */
 
 var pathHelper = function () {

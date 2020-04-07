@@ -2,7 +2,7 @@
 /* Slice transform definitions                                                              */
 /* ======================================================================================== */
 /* ======================================================================================== */
-/* Documentation: http://wheelnavjs.softwaretailoring.net/documentation/sliceTransform.html */
+/* Documentation: https://wheelnavjs.softwaretailoring.net/documentation/sliceTransform.html*/
 /* ======================================================================================== */
 
 

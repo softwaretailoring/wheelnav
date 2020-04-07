@@ -2,7 +2,7 @@
 /* Navigation item                                                                         */
 /* ======================================================================================= */
 /* ======================================================================================= */
-/* Documentation: http://wheelnavjs.softwaretailoring.net/documentation/navItem.html       */
+/* Documentation: https://wheelnavjs.softwaretailoring.net/documentation/navItem.html      */
 /* ======================================================================================= */
 
 wheelnavItem = function (wheelnav, title, itemIndex) {

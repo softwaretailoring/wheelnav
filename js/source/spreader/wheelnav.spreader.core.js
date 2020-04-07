@@ -2,7 +2,7 @@
 /* Spreader of wheel                                                                       */
 /* ======================================================================================= */
 /* ======================================================================================= */
-/* Documentation: http://wheelnavjs.softwaretailoring.net/documentation/spreader.html      */
+/* Documentation: https://wheelnavjs.softwaretailoring.net/documentation/spreader.html     */
 /* ======================================================================================= */
 
 spreader = function (wheelnav) {

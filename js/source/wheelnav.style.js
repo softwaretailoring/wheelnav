@@ -2,7 +2,7 @@
 /* Default styles and available css classes                                                */
 /* ======================================================================================= */
 /* ======================================================================================= */
-/* Documentation: http://wheelnavjs.softwaretailoring.net/documentation/css3.html          */
+/* Documentation: https://wheelnavjs.softwaretailoring.net/documentation/css3.html         */
 /* ======================================================================================= */
 
 wheelnav.prototype.styleWheel = function () {

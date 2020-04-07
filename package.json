@@ -2,7 +2,7 @@
     "name": "wheelnav",
     "version": "1.7.1",
     "description": "Animated wheel navigation JavaScript library based on Raphaël.js (SVG/VML). It can be a pie menu (radial menu, circular menu) and many more.",
-    "homepage": "http://wheelnavjs.softwaretailoring.net",
+    "homepage": "https://wheelnavjs.softwaretailoring.net",
     "main": "js/dist/wheelnav.js",
     "repository": {
         "type": "git",
@@ -11,7 +11,7 @@
     "author": {
         "name": "Gábor Berkesi",
         "email": "gabor.berkesi@softwaretailoring.net",
-        "url": "http://softwaretailoring.net"
+        "url": "https://softwaretailoring.net"
     },
     "files": [
         "js/dist/wheelnav.js",

@@ -2,7 +2,7 @@
 /* Slice path definitions.                                                                 */
 /* ======================================================================================= */
 /* ======================================================================================= */
-/* Documentation: http://wheelnavjs.softwaretailoring.net/documentation/slicePath.html     */
+/* Documentation: https://wheelnavjs.softwaretailoring.net/documentation/slicePath.html    */
 /* ======================================================================================= */
 
 slicePath = function () {

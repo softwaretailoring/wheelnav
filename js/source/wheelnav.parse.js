@@ -2,7 +2,7 @@
 /* Parse html5 data- attributes, the onmouseup events and anchor links                     */
 /* ======================================================================================= */
 /* ======================================================================================= */
-/* Documentation: http://wheelnavjs.softwaretailoring.net/documentation/html5.html         */
+/* Documentation: https://wheelnavjs.softwaretailoring.net/documentation/html5.html        */
 /* ======================================================================================= */
 
 wheelnav.prototype.parseWheel = function (holderDiv) {
