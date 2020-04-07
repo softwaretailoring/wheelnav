@@ -1,4 +1,3 @@
-﻿///#source 1 1 /js/source/marker/wheelnav.marker.core.js
 /* ======================================================================================= */
 /* Marker of wheel                                                                         */
 /* ======================================================================================= */
@@ -71,7 +70,6 @@ marker.prototype.setCurrentTransform = function (navAngle) {
 
 
 
-///#source 1 1 /js/source/marker/wheelnav.markerPathStart.js
 /* ======================================================================================= */
 /* Marker path definitions.                                                                */
 /* ======================================================================================= */
@@ -95,7 +93,6 @@ markerPath = function () {
 
 
 
-///#source 1 1 /js/source/marker/wheelnav.markerPath.Triangle.js
 
 this.TriangleMarkerCustomization = function () {
 
@@ -132,7 +129,6 @@ this.TriangleMarker = function (helper, percent, custom) {
 };
 
 
-///#source 1 1 /js/source/marker/wheelnav.markerPath.PieLine.js
 
 this.PieLineMarkerCustomization = function () {
 
@@ -175,7 +171,6 @@ this.PieLineMarker = function (helper, percent, custom) {
 
 
 
-///#source 1 1 /js/source/marker/wheelnav.markerPath.Menu.js
 
 this.MenuMarkerCustomization = function () {
 
@@ -218,7 +213,6 @@ this.MenuMarker = function (helper, percent, custom) {
 };
 
 
-///#source 1 1 /js/source/marker/wheelnav.markerPath.Line.js
 
 this.LineMarkerCustomization = function () {
 
@@ -252,7 +246,6 @@ this.LineMarker = function (helper, percent, custom) {
 };
 
 
-///#source 1 1 /js/source/marker/wheelnav.markerPath.Drop.js
 
 this.DropMarkerCustomization = function () {
 
@@ -295,10 +288,6 @@ this.DropMarker = function (helper, percent, custom) {
 };
 
 
-///#source 1 1 /js/source/marker/wheelnav.markerPathEnd.js
 
     return this;
 };
-
-
-

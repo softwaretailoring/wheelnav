@@ -83,7 +83,7 @@ or CDN by [jsDelivr][jsdelivr]
 
 Developer: Gábor Berkesi (gabor.berkesi@softwaretailoring.net)
 
-Development environment: [Visual Studio Community 2013][vs2013] with [Web Essentials][webessentials]
+Development environment: [Visual Studio Community 2019][vs2019]
 
 ## License
 
@@ -99,8 +99,7 @@ Licensed under [MIT][mit]. Enjoy the spinning.
 [npm]: https://www.npmjs.com/package/wheelnav
 [bower]: http://bower.io/search/?q=wheelnav
 [jsdelivr]: https://www.jsdelivr.com/?query=wheelnav
-[vs2013]: https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx
-[webessentials]: http://vswebessentials.com/
+[vs2019]: https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx
 [codepen]: https://codepen.io/collection/DORero/
 [stackoverflow]: https://stackoverflow.com/questions/tagged/wheelnav.js
 [issues]: https://github.com/softwaretailoring/wheelnav/issues

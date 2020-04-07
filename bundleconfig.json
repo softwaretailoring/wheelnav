@@ -1,0 +1,100 @@
+[
+    {
+        "outputFileName": "js/source/slicePath/wheelnav.slicePath.js",
+        "inputFiles": [
+            "js/source/slicePath/wheelnav.slicePathStart.js",
+            "js/source/slicePath/wheelnav.slicePath.Pie.js",
+            "js/source/slicePath/wheelnav.slicePath.PieArrow.js",
+            "js/source/slicePath/wheelnav.slicePath.Donut.js",
+            "js/source/slicePath/wheelnav.slicePath.Cog.js",
+            "js/source/slicePath/wheelnav.slicePath.Star.js",
+            "js/source/slicePath/wheelnav.slicePath.Menu.js",
+            "js/source/slicePath/wheelnav.slicePath.Line.js",
+            "js/source/slicePath/wheelnav.slicePath.Eye.js",
+            "js/source/slicePath/wheelnav.slicePath.Wheel.js",
+            "js/source/slicePath/wheelnav.slicePath.OuterStroke.js",
+            "js/source/slicePath/wheelnav.slicePath.Tab.js",
+            "js/source/slicePath/wheelnav.slicePath.YinYang.js",
+            "js/source/slicePath/wheelnav.slicePath.Web.js",
+            "js/source/slicePath/wheelnav.slicePath.Winter.js",
+            "js/source/slicePath/wheelnav.slicePath.Tutorial.js",
+            "js/source/slicePath/wheelnav.slicePathEnd.js"
+        ]
+    },
+    {
+        "outputFileName": "js/source/slicePath/wheelnav.slicePath.core.js",
+        "inputFiles": [
+            "js/source/slicePath/wheelnav.slicePathStart.js",
+            "js/source/slicePath/wheelnav.slicePathEnd.js"
+        ]
+    },
+    {
+        "outputFileName": "js/source/spreader/wheelnav.spreader.js",
+        "inputFiles": [
+            "js/source/spreader/wheelnav.spreader.core.js",
+            "js/source/spreader/wheelnav.spreaderPathStart.js",
+            "js/source/spreader/wheelnav.spreaderPath.Pie.js",
+            "js/source/spreader/wheelnav.spreaderPath.Star.js",
+            "js/source/spreader/wheelnav.spreaderPath.AntiStar.js",
+            "js/source/spreader/wheelnav.spreaderPath.Flower.js",
+            "js/source/spreader/wheelnav.spreaderPath.Holder.js",
+            "js/source/spreader/wheelnav.spreaderPath.Line.js",
+            "js/source/spreader/wheelnav.spreaderPathEnd.js"
+        ]
+    },
+    {
+        "outputFileName": "js/source/marker/wheelnav.marker.js",
+        "inputFiles": [
+            "js/source/marker/wheelnav.marker.core.js",
+            "js/source/marker/wheelnav.markerPathStart.js",
+            "js/source/marker/wheelnav.markerPath.Triangle.js",
+            "js/source/marker/wheelnav.markerPath.PieLine.js",
+            "js/source/marker/wheelnav.markerPath.Menu.js",
+            "js/source/marker/wheelnav.markerPath.Line.js",
+            "js/source/marker/wheelnav.markerPath.Drop.js",
+            "js/source/marker/wheelnav.markerPathEnd.js"
+        ]
+    },
+    {
+        "outputFileName": "js/dist/wheelnav.js",
+        "inputFiles": [
+            "js/source/wheelnav.core.js",
+            "js/source/wheelnav.parse.js",
+            "js/source/wheelnav.navItem.js",
+            "js/source/wheelnav.style.js",
+            "js/source/wheelnav.pathHelper.js",
+            "js/source/slicePath/wheelnav.slicePath.js",
+            "js/source/wheelnav.sliceTransform.js",
+            "js/source/spreader/wheelnav.spreader.js",
+            "js/source/marker/wheelnav.marker.js",
+            "js/source/wheelnav.colorPalettes.js"
+        ]
+    },
+    {
+        "outputFileName": "js/dist/core/wheelnav.js",
+        "inputFiles": [
+            "js/source/wheelnav.core.js",
+            "js/source/wheelnav.parse.js",
+            "js/source/wheelnav.navItem.js",
+            "js/source/wheelnav.style.js",
+            "js/source/wheelnav.pathHelper.js",
+            "js/source/slicePath/wheelnav.slicePath.core.js",
+            "js/source/wheelnav.sliceTransform.js",
+            "js/source/spreader/wheelnav.spreader.js",
+            "js/source/marker/wheelnav.marker.js",
+            "js/source/wheelnav.colorPalettes.js"
+        ]
+    },
+    {
+        "outputFileName": "js/dist/raphael.min.js",
+        "inputFiles": [
+            "js/required/raphael.min.js"
+        ]
+    },
+    {
+        "outputFileName": "js/dist/raphael.icons.min.js",
+        "inputFiles": [
+            "js/required/raphael.icons.min.js"
+        ]
+    }
+]

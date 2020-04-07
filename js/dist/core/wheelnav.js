@@ -1,4 +1,3 @@
-﻿///#source 1 1 /js/source/wheelnav.core.js
 /* ======================================================================================= */
 /*                                   wheelnav.js - v1.8.0                                  */
 /* ======================================================================================= */
@@ -562,7 +561,6 @@ wheelnav.prototype.getMarkerId = function () {
     return "wheelnav-" + this.holderId + "-marker";
 };
 
-///#source 1 1 /js/source/wheelnav.parse.js
 /* ======================================================================================= */
 /* Parse html5 data- attributes, the onmouseup events and anchor links                     */
 /* ======================================================================================= */
@@ -758,7 +756,7 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
                 this.initWheel(parsedNavItems);
 
                 for (var k = 0; k < parsedNavItemsOnmouseup.length; k++) {
-                    this.navItems[k].navigateFunction = parsedNavItemsOnmouseup[i];
+                    this.navItems[k].navigateFunction = parsedNavItemsOnmouseup[k];
                     this.navItems[k].navigateHref = parsedNavItemsHref[k];
                 }
 
@@ -782,7 +780,6 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
 };
 
 
-///#source 1 1 /js/source/wheelnav.navItem.js
 /* ======================================================================================= */
 /* Navigation item                                                                         */
 /* ======================================================================================= */
@@ -1921,7 +1918,6 @@ wheelnavTitle.prototype.getTitleSizeTransform = function (titlewidth, titleheigh
     return transformAttr;
 };
 
-///#source 1 1 /js/source/wheelnav.style.js
 /* ======================================================================================= */
 /* Default styles and available css classes                                                */
 /* ======================================================================================= */
@@ -2008,7 +2004,6 @@ wheelnav.prototype.getMarkerCssClass = function () {
     return "wheelnav-" + this.holderId + "-marker";
 };
 
-///#source 1 1 /js/source/wheelnav.pathHelper.js
 /* ======================================================================================= */
 /* Slice path helper functions                                                                  */
 /* ======================================================================================= */
@@ -2222,8 +2217,6 @@ var markerPathCustomization = function () {
 };
 
 
-///#source 1 1 /js/source/slicePath/wheelnav.slicePath.core.js
-///#source 1 1 /js/source/slicePath/wheelnav.slicePathStart.js
 /* ======================================================================================= */
 /* Slice path definitions.                                                                 */
 /* ======================================================================================= */
@@ -2264,15 +2257,9 @@ slicePath = function () {
         };
     };
 
-///#source 1 1 /js/source/slicePath/wheelnav.slicePathEnd.js
 
     return this;
 };
-
-
-
-
-///#source 1 1 /js/source/wheelnav.sliceTransform.js
 /* ======================================================================================== */
 /* Slice transform definitions                                                              */
 /* ======================================================================================== */
@@ -2434,8 +2421,6 @@ var sliceTransformCustomization = function () {
 
 
 
-///#source 1 1 /js/source/spreader/wheelnav.spreader.js
-///#source 1 1 /js/source/spreader/wheelnav.spreader.core.js
 /* ======================================================================================= */
 /* Spreader of wheel                                                                       */
 /* ======================================================================================= */
@@ -2629,7 +2614,6 @@ spreader.prototype.setCurrentTransform = function (withoutAnimate) {
     }
 };
 
-///#source 1 1 /js/source/spreader/wheelnav.spreaderPathStart.js
 /* ======================================================================================= */
 /* Spreader path definitions.                                                              */
 /* ======================================================================================= */
@@ -2653,7 +2637,6 @@ spreaderPath = function () {
 
 
 
-///#source 1 1 /js/source/spreader/wheelnav.spreaderPath.Pie.js
 
 this.PieSpreaderCustomization = function () {
 
@@ -2689,7 +2672,6 @@ this.PieSpreader = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/spreader/wheelnav.spreaderPath.Star.js
 
 this.StarSpreaderCustomization = function () {
 
@@ -2739,7 +2721,6 @@ this.StarSpreader = function (helper, percent, custom) {
 };
 
 
-///#source 1 1 /js/source/spreader/wheelnav.spreaderPath.AntiStar.js
 
 this.AntiStarSpreaderCustomization = function () {
 
@@ -2795,7 +2776,6 @@ this.AntiStarSpreader = function (helper, percent, custom) {
 };
 
 
-///#source 1 1 /js/source/spreader/wheelnav.spreaderPath.Flower.js
 
 this.FlowerSpreaderCustomization = function () {
 
@@ -2854,7 +2834,6 @@ this.FlowerSpreader = function (helper, percent, custom) {
 };
 
 
-///#source 1 1 /js/source/spreader/wheelnav.spreaderPath.Holder.js
 
 this.HolderSpreaderCustomization = function () {
 
@@ -2914,7 +2893,6 @@ this.HolderSpreader = function (helper, percent, custom) {
 };
 
 
-///#source 1 1 /js/source/spreader/wheelnav.spreaderPath.Line.js
 
 this.LineSpreaderCustomization = function () {
 
@@ -2963,16 +2941,9 @@ this.LineSpreader = function (helper, percent, custom) {
 };
 
 
-///#source 1 1 /js/source/spreader/wheelnav.spreaderPathEnd.js
 
     return this;
 };
-
-
-
-
-///#source 1 1 /js/source/marker/wheelnav.marker.js
-///#source 1 1 /js/source/marker/wheelnav.marker.core.js
 /* ======================================================================================= */
 /* Marker of wheel                                                                         */
 /* ======================================================================================= */
@@ -3045,7 +3016,6 @@ marker.prototype.setCurrentTransform = function (navAngle) {
 
 
 
-///#source 1 1 /js/source/marker/wheelnav.markerPathStart.js
 /* ======================================================================================= */
 /* Marker path definitions.                                                                */
 /* ======================================================================================= */
@@ -3069,7 +3039,6 @@ markerPath = function () {
 
 
 
-///#source 1 1 /js/source/marker/wheelnav.markerPath.Triangle.js
 
 this.TriangleMarkerCustomization = function () {
 
@@ -3106,7 +3075,6 @@ this.TriangleMarker = function (helper, percent, custom) {
 };
 
 
-///#source 1 1 /js/source/marker/wheelnav.markerPath.PieLine.js
 
 this.PieLineMarkerCustomization = function () {
 
@@ -3149,7 +3117,6 @@ this.PieLineMarker = function (helper, percent, custom) {
 
 
 
-///#source 1 1 /js/source/marker/wheelnav.markerPath.Menu.js
 
 this.MenuMarkerCustomization = function () {
 
@@ -3192,7 +3159,6 @@ this.MenuMarker = function (helper, percent, custom) {
 };
 
 
-///#source 1 1 /js/source/marker/wheelnav.markerPath.Line.js
 
 this.LineMarkerCustomization = function () {
 
@@ -3226,7 +3192,6 @@ this.LineMarker = function (helper, percent, custom) {
 };
 
 
-///#source 1 1 /js/source/marker/wheelnav.markerPath.Drop.js
 
 this.DropMarkerCustomization = function () {
 
@@ -3269,15 +3234,9 @@ this.DropMarker = function (helper, percent, custom) {
 };
 
 
-///#source 1 1 /js/source/marker/wheelnav.markerPathEnd.js
 
     return this;
 };
-
-
-
-
-///#source 1 1 /js/source/wheelnav.colorPalettes.js
 /* ======================================================================================== */
 /* Color palettes for slices from http://www.colourlovers.com                               */
 /* ======================================================================================== */

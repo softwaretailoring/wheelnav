@@ -1,4 +1,3 @@
-﻿///#source 1 1 /js/source/slicePath/wheelnav.slicePathStart.js
 /* ======================================================================================= */
 /* Slice path definitions.                                                                 */
 /* ======================================================================================= */
@@ -39,7 +38,6 @@ slicePath = function () {
         };
     };
 
-///#source 1 1 /js/source/slicePath/wheelnav.slicePath.Pie.js
 
 this.PieSliceCustomization = function () {
 
@@ -102,7 +100,6 @@ this.FlowerSlice = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/slicePath/wheelnav.slicePath.PieArrow.js
 
 this.PieArrowSliceCustomization = function () {
 
@@ -165,7 +162,6 @@ this.PieArrowBasePieSlice = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/slicePath/wheelnav.slicePath.Donut.js
 
 this.DonutSliceCustomization = function () {
 
@@ -210,7 +206,6 @@ this.DonutSlice = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/slicePath/wheelnav.slicePath.Cog.js
 
 this.CogSliceCustomization = function () {
 
@@ -325,7 +320,6 @@ this.CogBasePieSlice = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/slicePath/wheelnav.slicePath.Star.js
 
 this.StarSliceCustomization = function () {
 
@@ -395,7 +389,6 @@ this.StarBasePieSlice = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/slicePath/wheelnav.slicePath.Menu.js
 
 this.MenuSliceCustomization = function () {
 
@@ -491,7 +484,6 @@ this.MenuSliceWithoutLine = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/slicePath/wheelnav.slicePath.Line.js
 
 this.LineSlice = function (helper, percent, custom) {
 
@@ -548,7 +540,6 @@ this.LineSlice = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/slicePath/wheelnav.slicePath.Eye.js
 
 this.EyeSliceCustomization = function () {
 
@@ -596,7 +587,6 @@ this.EyeSlice = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/slicePath/wheelnav.slicePath.Wheel.js
 
 this.WheelSlice = function (helper, percent, custom) {
 
@@ -657,7 +647,6 @@ this.WheelSlice = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/slicePath/wheelnav.slicePath.OuterStroke.js
 
 this.OuterStrokeSlice = function (helper, percent, custom) {
 
@@ -701,7 +690,6 @@ this.OuterStrokeSlice = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/slicePath/wheelnav.slicePath.Tab.js
 
 this.TabSlice = function (helper, percent, custom) {
 
@@ -736,7 +724,6 @@ this.TabSlice = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/slicePath/wheelnav.slicePath.YinYang.js
 
 this.YinYangSlice = function (helper, percent, custom) {
 
@@ -766,7 +753,6 @@ this.YinYangSlice = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/slicePath/wheelnav.slicePath.Web.js
 
 this.WebSlice = function (helper, percent, custom) {
 
@@ -804,7 +790,6 @@ this.WebSlice = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/slicePath/wheelnav.slicePath.Winter.js
 
 this.WinterSliceCustomization = function () {
 
@@ -862,7 +847,6 @@ this.WinterSlice = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/slicePath/wheelnav.slicePath.Tutorial.js
 
 this.TutorialSliceCustomization = function () {
 
@@ -940,10 +924,6 @@ this.TutorialSlice = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/slicePath/wheelnav.slicePathEnd.js
 
     return this;
 };
-
-
-

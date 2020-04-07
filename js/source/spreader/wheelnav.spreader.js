@@ -1,4 +1,3 @@
-﻿///#source 1 1 /js/source/spreader/wheelnav.spreader.core.js
 /* ======================================================================================= */
 /* Spreader of wheel                                                                       */
 /* ======================================================================================= */
@@ -192,7 +191,6 @@ spreader.prototype.setCurrentTransform = function (withoutAnimate) {
     }
 };
 
-///#source 1 1 /js/source/spreader/wheelnav.spreaderPathStart.js
 /* ======================================================================================= */
 /* Spreader path definitions.                                                              */
 /* ======================================================================================= */
@@ -216,7 +214,6 @@ spreaderPath = function () {
 
 
 
-///#source 1 1 /js/source/spreader/wheelnav.spreaderPath.Pie.js
 
 this.PieSpreaderCustomization = function () {
 
@@ -252,7 +249,6 @@ this.PieSpreader = function (helper, percent, custom) {
     };
 };
 
-///#source 1 1 /js/source/spreader/wheelnav.spreaderPath.Star.js
 
 this.StarSpreaderCustomization = function () {
 
@@ -302,7 +298,6 @@ this.StarSpreader = function (helper, percent, custom) {
 };
 
 
-///#source 1 1 /js/source/spreader/wheelnav.spreaderPath.AntiStar.js
 
 this.AntiStarSpreaderCustomization = function () {
 
@@ -358,7 +353,6 @@ this.AntiStarSpreader = function (helper, percent, custom) {
 };
 
 
-///#source 1 1 /js/source/spreader/wheelnav.spreaderPath.Flower.js
 
 this.FlowerSpreaderCustomization = function () {
 
@@ -417,7 +411,6 @@ this.FlowerSpreader = function (helper, percent, custom) {
 };
 
 
-///#source 1 1 /js/source/spreader/wheelnav.spreaderPath.Holder.js
 
 this.HolderSpreaderCustomization = function () {
 
@@ -477,7 +470,6 @@ this.HolderSpreader = function (helper, percent, custom) {
 };
 
 
-///#source 1 1 /js/source/spreader/wheelnav.spreaderPath.Line.js
 
 this.LineSpreaderCustomization = function () {
 
@@ -526,10 +518,6 @@ this.LineSpreader = function (helper, percent, custom) {
 };
 
 
-///#source 1 1 /js/source/spreader/wheelnav.spreaderPathEnd.js
 
     return this;
 };
-
-
-
