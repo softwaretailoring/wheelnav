@@ -744,6 +744,7 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
                     for (var j = 0; j < holderDiv.children[i].children.length; j++) {
                         if (holderDiv.children[i].children[j].getAttribute('href') !== undefined) {
                             parsedNavItemsHref.push(holderDiv.children[i].children[j].getAttribute('href'));
+                            foundHref = true;
                         }
                     }
                     if (!foundHref) {
