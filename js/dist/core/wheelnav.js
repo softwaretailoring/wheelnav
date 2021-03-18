@@ -7,7 +7,7 @@
 /* Check https://wheelnavjs.softwaretailoring.net for samples.                              */
 /* Fork https://github.com/softwaretailoring/wheelnav for contribution.                     */
 /* ======================================================================================== */
-/* Copyright © 2014-2020 Gábor Berkesi (https://softwaretailoring.net)                      */
+/* Copyright © 2014-2021 Gábor Berkesi (https://softwaretailoring.net)                      */
 /* Licensed under MIT (https://github.com/softwaretailoring/wheelnav/blob/master/LICENSE)   */
 /* ======================================================================================== */
 
